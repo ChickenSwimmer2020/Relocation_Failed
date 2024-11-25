@@ -31,6 +31,9 @@ class Player extends FlxSprite {
 
 	public var isMoving:Bool = false;
     public var stamina:Int = 100;
+    #if (flixel >= "6.0.0")
+    public var health:Int = 100;
+    #end
     public var maxStamina:Int = 100;
     public var maxHealth:Int = 100;
 
