@@ -18,7 +18,7 @@
     
     <source path="source"/>
     <assets path="assets"/>
-    <assets path="fonts" />
+    <assets path="assets/fonts" />
 
     <haxelib name="flixel"/>
     <haxelib name="flixel-addons"/>
