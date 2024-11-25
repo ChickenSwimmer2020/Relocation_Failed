@@ -1,5 +1,6 @@
 package objects;
 
+import backend.Assets;
 import substates.PausemenuSubState;
 import backend.HUD;
 
@@ -15,7 +16,7 @@ class Player extends FlxSprite {
 	public function new(xPos:Float, yPos:Float) {
 		super(xPos, yPos);
 		// makeGraphic(50, 50, FlxColor.LIME); //OLD
-		loadGraphic('assets/Player.png', true, Std.int(101.2), 215, true);
+		loadGraphic(Assets.image('Player'), true, Std.int(101.2), 215, true);
 		drag.x = DRAG;
 		drag.y = DRAG;
 
@@ -105,11 +106,10 @@ class Player extends FlxSprite {
 		FlxG.watch.addQuick('Stamina', HUD.STAMINA);
 		FlxG.watch.addQuick('Speed', SPEED);
 		#end
-		if(HUD.STAMINA == 0) {
-			if(HUD.STAMINA < 50) {
-				SPEED = 100;
-			}
-		}
+
+		if(HUD.STAMINA < 20)
+			SPEED = 100;
+		
 		if(isSprinting && HUD.STAMINA != 0 && isMoving){
 			HUD.STAMINA -= 1;
 		}
