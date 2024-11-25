@@ -1,5 +1,6 @@
 package menu;
 
+import backend.Assets;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import backend.Functions;
@@ -24,7 +25,7 @@ class MainMenu extends FlxState {
 
     override public function create() {
         //background
-        BG = new FlxBackdrop('assets/MainMenuBGSKY.png', XY, 0, 0);
+        BG = new FlxBackdrop(Assets.image('MainMenuBGSKY'), XY, 0, 0);
         BG.velocity.x = -100;
         add(BG);
 
