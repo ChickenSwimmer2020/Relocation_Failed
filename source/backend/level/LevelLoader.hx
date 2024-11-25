@@ -2,34 +2,42 @@ package backend.level;
 
 import haxe.Json;
 
+typedef LevelHeader = 
+{
+    var LevelID:String; //levels internal name
+    var Chapter:Int; //what chapter it takes place in
+    var Boundries:Array<Float>; //the boundries of the level, how far can the player move before being stopped?
+}
+
 typedef LevelObject =
 {
-    var Name:String;
-    var Alpha:Float;
-    var X:Float;
-    var Y:Float;
-    var ScaleX:Float;
-    var ScaleY:Float;
-    var SFX:Float;
-    var SFY:Float;
-    var IMG:String;
-    var CollidesWithPlayer:Bool;
+    var Name:String; //internal name
+    var Alpha:Float; //how transparent is the object
+    var X:Float; //X positional value
+    var Y:Float; //Y positional value
+    var ScaleX:Float; //X scale factor
+    var ScaleY:Float; //Y scale factor
+    var SFX:Float; //X scroll factor
+    var SFY:Float; //Y scroll factor
+    var IMG:String; //what image do we load
+    var CollidesWithPlayer:Bool; //should it collide with player?
     var IsBackground:Bool; //automatically scales across entire screen
-    var ?IsAnimated:Bool;
-    var ?ParrallaxBG:Bool;
+    var ?IsAnimated:Bool; //should it be animated?
+    var ?ParrallaxBG:Bool; //should it be a parrallax?
 
     //animation data if added
-    var ?AnimFrames:Array<Int>;
-    var ?AnimName:String;
-    var ?AnimFPS:Int;
-    var ?AnimLoop:Bool;
-    var ?AnimFlipX:Bool;
-    var ?AnimFlipY:Bool;
+    var ?AnimFrames:Array<Int>; //anim frames
+    var ?AnimName:String; //anim name
+    var ?AnimFPS:Int; //anim FPS
+    var ?AnimLoop:Bool; //should anim loop
+    var ?AnimFlipX:Bool; //should anim be flipped on the x axis
+    var ?AnimFlipY:Bool; //should the anim be flipped on the y axis
 }
 
 typedef LevelData = 
 {
     var objects:Array<LevelObject>;
+    var header:LevelHeader;
 }
 
 class LevelLoader

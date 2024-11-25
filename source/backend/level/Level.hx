@@ -1,13 +1,21 @@
 package backend.level;
 
+import flixel.math.FlxRect;
+import backend.level.LevelLoader.LevelHeader;
+import backend.level.LevelExceptions.LevelNullException;
 import haxe.PosInfos;
 import backend.level.LevelLoader.LevelData;
 import flixel.group.FlxGroup;
 
 class Level extends FlxGroup
 {
-    var levelData:LevelData;
-    var objects:Map<String, FlxSprite> = new Map();
+    public var levelData:LevelData;
+    public var levelHeader:LevelHeader;
+    public var objects:Map<String, FlxSprite> = new Map();
+
+    public var LevelID:String;
+    public var ChapterID:Int;
+    public var MapBounds:FlxRect;
 
     override public function new(levelData:LevelData) {
         super();
@@ -18,6 +26,16 @@ class Level extends FlxGroup
     {
         if (levelData == null)
             throw new LevelExceptions.LevelNullException('Level is null!', '', _);
+
+        levelHeader = levelData.header;
+
+        if (levelHeader == null)
+            throw new LevelExceptions.LevelNullException('Level header is null!', '', _);
+        
+
+        LevelID = levelHeader.LevelID;
+        ChapterID = levelHeader.Chapter;
+        MapBounds = new FlxRect(0,0,levelHeader.Boundries[0],levelHeader.Boundries[1]);
 
         for (object in levelData.objects){
             var obj = new FlxSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG));

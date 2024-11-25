@@ -10,16 +10,21 @@ class Playstate extends FlxState {
     var Player:Player;
     var HeadsUpDispalay:HUD;
     var Level:Level;
+    
 
     override public function create() {
         super.create();
+
         HeadsUpDispalay = new HUD();
         Player = new Player(0, 0);
         Level = new Level(LevelLoader.ParseLevelData(Assets.asset('level1.json')));
         Level.loadLevel();
+
         add(Level);
         add(Player);
         add(HeadsUpDispalay);
+
+        trace(Level.levelData);
     }
 
     override public function update(elapsed:Float) {
