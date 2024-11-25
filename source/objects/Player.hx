@@ -41,14 +41,14 @@ class Player extends FlxSprite {
         health = 100;
         this.playstate = playstate;
         curPhysProperties = nonSprintPhysProps;
-		loadGraphic(Assets.image('Player'), true, 101, 215, true);
+		loadGraphic(Assets.image('Player'), true, 51, 51, true);
 		drag.set(curPhysProperties.drag, curPhysProperties.drag);
 
-		animation.add("idle", [1], 30, false, false, false);
+		animation.add("idle", [0], 30, false, false, false);
 
-		animation.add("left", [2], 30, false, false, false);
-		animation.add("right", [0], 30, false, false, false);
-		animation.add("up", [3], 30, false, false, false);
+		animation.add("left", [1], 30, false, false, false);
+		animation.add("right", [3], 30, false, false, false);
+		animation.add("up", [2], 30, false, false, false);
 		animation.add("down", [4], 30, false, false, false);
 
 		animation.play('idle');
