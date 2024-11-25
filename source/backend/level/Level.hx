@@ -50,8 +50,9 @@ class Level extends FlxGroup
             if(object.IsBackground)
                 {
                     obj.setPosition(0, 0);
-                    obj.scale.set(FlxG.width, FlxG.height);
-                    obj.screenCenter;
+                    obj.setGraphicSize(levelHeader.Boundries[0],levelHeader.Boundries[1]);
+                    obj.scrollFactor.set(0,0);
+                    obj.screenCenter(XY);
                 }
 
             objects.set(object.Name, obj);

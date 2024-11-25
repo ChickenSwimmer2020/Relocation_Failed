@@ -43,20 +43,16 @@ class MainMenu extends FlxState {
         Suffix.antialiasing = false;
         add(Suffix);
 
-        platFormText = new FlxText(0, 680, 0, "", 8, true);
-        platFormText.setFormat(null, 12, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        platFormText = new FlxText(0, 690, 0, "", 8, true);
+        platFormText.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
         platFormText.text = Functions.GetPlatform();
         platFormText.antialiasing = false;
-        platFormText.scale.set(1.5,1.5);
-        platFormText.updateHitbox();
         add(platFormText);
 
-        versiontext = new FlxText(0, 700, 0, "", 8, true);
-        versiontext.setFormat(null, 12, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        versiontext = new FlxText(0, 670, 0, "", 8, true);
+        versiontext.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
         versiontext.text = "V " + Application.current.meta.get('version');
         versiontext.antialiasing = false;
-        versiontext.scale.set(1.5,1.5);
-        versiontext.updateHitbox();
         add(versiontext);
 
         //buttons handling

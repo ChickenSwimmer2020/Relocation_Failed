@@ -7,6 +7,19 @@
         },
     "objects":[
         {
+            "Name": "BG",
+            "Alpha": 1,
+            "X": 0,
+            "Y": 0,
+            "ScaleX": 1,
+            "ScaleY": 1,
+            "SFX": 1,
+            "SFY": 1,
+            "IMG": "lebackgroundtestsprite",
+            "CollidesWithPlayer": false,
+            "IsBackground": true
+        },
+        {
             "Name": "TestObject1",
             "Alpha": 1,
             "X": 0,
