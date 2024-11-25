@@ -7,15 +7,15 @@ class Playstate extends FlxState {
     
     var Player:Player;
     var HeadsUpDispalay:HUD;
+    //var Level:Level;
 
     override public function create() {
         super.create();
         HeadsUpDispalay = new HUD();
         Player = new Player(0, 0);
+        //Level = new Level();
 
-        //other
-
-        
+        //add(Level);
         add(Player);
         add(HeadsUpDispalay);
     }
