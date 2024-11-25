@@ -8,6 +8,13 @@ typedef LevelObject =
     var X:Float;
     var Y:Float;
     var IMG:String;
+    var CollidesWithPlayer:Bool;
+    var isBackground:Bool;
+    @:optional var parrallaxBG:Bool;
+    @:optional var IsAnimated:Bool;
+    @:optional var AnimFrames:Array<Int>;
+    @:optional var AnimName:String;
+    @:optional var AnimFPS:Int;
 }
 
 typedef LevelData = 
