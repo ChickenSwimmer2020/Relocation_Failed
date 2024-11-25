@@ -83,16 +83,41 @@ class Player extends FlxSprite {
 		animation.play(curMovementDir);
 		isMoving = curMovementDir != none;
 
+        var movementDirs = [FlxG.keys.anyPressed([LEFT, A]), FlxG.keys.anyPressed([RIGHT, D]), FlxG.keys.anyPressed([UP, W]), FlxG.keys.anyPressed([DOWN, S])];
+        for (dirID in 0...movementDirs.length)
+        {
+            if (movementDirs[dirID])
+                switch (dirID)
+                {
+                    case 0 | 1:
+                        if (dirID == 0 && !movementDirs[dirID+1])
+                            velocity.x = -curPhysProperties.speed;
+                        else if (dirID == 1 && !movementDirs[dirID-1])
+                            velocity.x = curPhysProperties.speed;
+                        else
+                            velocity.x = 0;
+
+                    case 2 | 3:
+                        if (dirID == 2 && !movementDirs[dirID+1])
+                            velocity.y = -curPhysProperties.speed;
+                        else if (dirID == 3 && !movementDirs[dirID-1])
+                            velocity.y = curPhysProperties.speed;
+                        else
+                            velocity.y = 0;
+                         
+                    default:
+                }
+        }
         switch (curMovementDir)
         {
             case right:
-                velocity.x = curPhysProperties.speed;
+                
             case left:
-                velocity.x = -curPhysProperties.speed;
+                
             case up:
-                velocity.y = -curPhysProperties.speed;
+                
             case down:
-                velocity.y = curPhysProperties.speed;
+                
             default:
                 // literally nothing.
         }
