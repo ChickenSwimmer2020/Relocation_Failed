@@ -12,8 +12,6 @@ class Button extends FlxSprite
      * @param BG static graphic
      * @param PRS what to do when pressed FORMAT: [ () -> {Your Code;} ]
      * @param SCL scale of everything
-     * @param TXT what text should be displayed?
-     * @param TXTS what size should the font be?
      * @param BGANIM OPTIONAL. allows for addition of animation to the static graphic
      */
     public function new(X:Float, Y:Float, BG:String, PRS:Void->Void, SCL:Float, ?BGANIM:Bool)
