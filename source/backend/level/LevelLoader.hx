@@ -5,16 +5,26 @@ import haxe.Json;
 typedef LevelObject =
 {
     var Name:String;
+    var Alpha:Float;
     var X:Float;
     var Y:Float;
+    var ScaleX:Float;
+    var ScaleY:Float;
+    var SFX:Float;
+    var SFY:Float;
     var IMG:String;
     var CollidesWithPlayer:Bool;
-    var isBackground:Bool;
-    @:optional var parrallaxBG:Bool;
-    @:optional var IsAnimated:Bool;
-    @:optional var AnimFrames:Array<Int>;
-    @:optional var AnimName:String;
-    @:optional var AnimFPS:Int;
+    var IsBackground:Bool; //automatically scales across entire screen
+    var ?IsAnimated:Bool;
+    var ?ParrallaxBG:Bool;
+
+    //animation data if added
+    var ?AnimFrames:Array<Int>;
+    var ?AnimName:String;
+    var ?AnimFPS:Int;
+    var ?AnimLoop:Bool;
+    var ?AnimFlipX:Bool;
+    var ?AnimFlipY:Bool;
 }
 
 typedef LevelData = 

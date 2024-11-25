@@ -2,15 +2,29 @@
     "objects":[
         {
             "Name": "TestObject1",
+            "Alpha": 1,
             "X": 0,
             "Y": 0,
-            "IMG": "ButtonTEST"
+            "ScaleX": 1,
+            "ScaleY": 1,
+            "SFX": 1,
+            "SFY": 1,
+            "IMG": "ButtonTEST",
+            "CollidesWithPlayer": false,
+            "IsBackground": false
         },
         {
             "Name": "TestObject2",
-            "X": 500,
+            "Alpha": 1,
+            "X": 0,
             "Y": 0,
-            "IMG": "ButtonTEST"
+            "ScaleX": 1,
+            "ScaleY": 1,
+            "SFX": 1,
+            "SFY": 1,
+            "IMG": "ButtonTEST",
+            "CollidesWithPlayer": false,
+            "IsBackground": false
         }
     ]
 }

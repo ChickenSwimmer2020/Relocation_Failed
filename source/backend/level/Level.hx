@@ -21,6 +21,21 @@ class Level extends FlxGroup
 
         for (object in levelData.objects){
             var obj = new FlxSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG));
+            obj.scale.set(object.ScaleX, object.ScaleY);
+            obj.scrollFactor.set(object.SFX, object.SFY);
+            if(object.ParrallaxBG != null && object.ParrallaxBG == true)
+                //do something
+
+            if(object.IsAnimated != null && object.IsAnimated == true)
+                obj.animation.add(object.AnimName, object.AnimFrames, object.AnimFPS, object.AnimLoop, object.AnimFlipX, object.AnimFlipY);
+
+            if(object.IsBackground)
+                {
+                    obj.setPosition(0, 0);
+                    obj.scale.set(FlxG.width, FlxG.height);
+                    obj.screenCenter;
+                }
+
             objects.set(object.Name, obj);
             add(obj);
         }
