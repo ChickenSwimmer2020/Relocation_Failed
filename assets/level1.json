@@ -1,0 +1,16 @@
+{
+    "objects":[
+        {
+            "NAME": "TestObject1",
+            "X": 0,
+            "Y": 0,
+            "IMG": "assets/ButtonTEST.png"
+        },
+        {
+            "NAME": "Penis",
+            "X": 0,
+            "Y": 0,
+            "IMG": "assets/ButtonTEST.png"
+        }
+    ]
+}

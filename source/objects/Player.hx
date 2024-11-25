@@ -45,7 +45,7 @@ class Player extends FlxSprite {
 		final down = FlxG.keys.anyPressed([DOWN, S]);
 		final sprint = FlxG.keys.anyPressed([SHIFT, SHIFT]);
 
-		if (sprint && !isSprinting && HUD.STAMINA != 0 && isMoving) {
+		if (sprint && !isSprinting && HUD.STAMINA > 10 && isMoving) {
 			SPEED = SPEED * 2;
 			DRAG = DRAG * 5;
 			isSprinting = true;

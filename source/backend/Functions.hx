@@ -5,7 +5,7 @@ class Functions
     static inline public function GetPlatform():String
         #if Browser return "Html5"; #else #if Computer return "Windows"; #else return "Unknown"; #end #end
     
-    static inline public function DoButtonShtuff(Button:String)
+    static public function DoButtonShtuff(Button:String)
         {
             switch(Button)
                 {
