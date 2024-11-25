@@ -4,21 +4,40 @@ import backend.Assets;
 import substates.PauseMenuSubState;
 import backend.HUD;
 
-class Player extends FlxSprite {
-	public var SPEED:Float = 300;
-	public var DRAG:Float = 1000;
+typedef PhysicProperties = {
+    var speed:Float;
+    var drag:Float;
+}
 
-	private var isSprinting:Bool = false;
+enum abstract MovementDirection(String) from String to String
+{
+    var left = 'left';
+    var up = 'up';
+    var right = 'right';
+    var down = 'down';
+    var none = 'idle';
+}
+
+class Player extends FlxSprite {
+    public var nonSprintPhysProps:PhysicProperties = {
+        speed: 300,
+        drag: 1000
+    };
+    public var sprintPhysProps:PhysicProperties = {
+        speed: 375,
+        drag: 5000
+    };
+    public var curPhysProperties:PhysicProperties;
+    public var curMovementDir:MovementDirection;
 	var isMoving:Bool = false;
 
 	
 
 	public function new(xPos:Float, yPos:Float) {
 		super(xPos, yPos);
-		// makeGraphic(50, 50, FlxColor.LIME); //OLD
-		loadGraphic(Assets.image('Player'), true, Std.int(101.2), 215, true);
-		drag.x = DRAG;
-		drag.y = DRAG;
+        curPhysProperties = nonSprintPhysProps;
+		loadGraphic(Assets.image('Player'), true, 101, 215, true);
+		drag.set(curPhysProperties.drag, curPhysProperties.drag);
 
 		animation.add("idle", [1], 30, false, false, false);
 
@@ -31,71 +50,47 @@ class Player extends FlxSprite {
 	}
 
 	function checkForPauseMenu() {
-		final escape = FlxG.keys.anyPressed([ESCAPE]);
-
-		if (escape) {
+		if (FlxG.keys.anyPressed([ESCAPE]))
 			FlxG.state.openSubState(new substates.PauseMenuSubState());
-		}
 	}
 
 	function movement() {
-		final left = FlxG.keys.anyPressed([LEFT, A]);
-		final right = FlxG.keys.anyPressed([RIGHT, D]);
-		final up = FlxG.keys.anyPressed([UP, W]);
-		final down = FlxG.keys.anyPressed([DOWN, S]);
-		final sprint = FlxG.keys.anyPressed([SHIFT, SHIFT]);
+		if (FlxG.keys.anyPressed([SHIFT]) && HUD.STAMINA > 0 && isMoving){
+			curPhysProperties = sprintPhysProps;
+            HUD.STAMINA--;
+        }else{
+			curPhysProperties = nonSprintPhysProps;
+            if(HUD.STAMINA < 100 && !FlxG.keys.anyPressed([SHIFT]))
+                HUD.STAMINA++;
+        }
 
-		if (sprint && !isSprinting && HUD.STAMINA > 10 && isMoving) {
-			SPEED = SPEED * 1.25;
-			DRAG = DRAG * 5;
-			isSprinting = true;
-		} else if (isSprinting && !sprint || HUD.STAMINA == 0) {
-			SPEED = 300;
-			DRAG = 1000;
-			isSprinting = false;
-			if(isMoving) //quick fix so that stamina hopefully comes back even while moving
-				isSprinting = false;
-		}
+        if (FlxG.keys.anyPressed([LEFT, A]))
+            curMovementDir = left;
+        else if (FlxG.keys.anyPressed([RIGHT, D]))
+            curMovementDir = right;
+        else if (FlxG.keys.anyPressed([UP, W]))
+            curMovementDir = up;
+        else if (FlxG.keys.anyPressed([DOWN, S]))
+            curMovementDir = down;
+        else
+            curMovementDir = none;
 
-		if (left || right || up || down) {
-			if (left)
-				animation.play("left");
-				isMoving = true;
-			if (right)
-				animation.play("right");
-				isMoving = true;
-			if (up)
-				animation.play("up");
-				isMoving = true;
-			if (down)
-				animation.play("down");
-				isMoving = true;
-		} else {
-			animation.play("idle");
-			isMoving = false;
-		}
+		animation.play(curMovementDir);
+		isMoving = curMovementDir != none;
 
-		if (right) {
-			velocity.x = SPEED;
-		} else if (left) {
-			velocity.x = -SPEED;
-		}
-
-		if (left && right) {
-			velocity.x = 0;
-			animation.play('idle');
-		}
-
-		if (up) {
-			velocity.y = -SPEED;
-		} else if (down) {
-			velocity.y = SPEED;
-		}
-
-		if (up && down) {
-			velocity.y = 0;
-			animation.play('idle');
-		}
+        switch (curMovementDir)
+        {
+            case right:
+                velocity.x = curPhysProperties.speed;
+            case left:
+                velocity.x = -curPhysProperties.speed;
+            case up:
+                velocity.y = -curPhysProperties.speed;
+            case down:
+                velocity.y = curPhysProperties.speed;
+            default:
+                // literally nothing.
+        }
 	}
 
 	override function update(elapsed:Float) {
@@ -104,18 +99,7 @@ class Player extends FlxSprite {
 		checkForPauseMenu();
 		#if debug
 		FlxG.watch.addQuick('Stamina', HUD.STAMINA);
-		FlxG.watch.addQuick('Speed', SPEED);
+		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
 		#end
-
-		if(HUD.STAMINA < 20)
-			SPEED = 300;
-		
-		if(isSprinting && HUD.STAMINA != 0 && isMoving){
-			HUD.STAMINA -= 1;
-		}
-		if (!isSprinting) {
-			if(HUD.STAMINA < 100)
-				HUD.STAMINA += 1;
-		}
 	}
 }
