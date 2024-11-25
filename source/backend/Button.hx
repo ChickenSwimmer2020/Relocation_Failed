@@ -18,11 +18,8 @@ class Button extends FlxSprite
      */
     public function new(X:Float, Y:Float, BG:String, PRS:Void->Void, SCL:Float, ?BGANIM:Bool)
         {
-   
-            Pressed = PRS;
-
             super(X, Y, BG);
-
+            Pressed = PRS;
             StaticBG.loadGraphic(BG, BGANIM);
             StaticBG.setPosition(X,Y);
             StaticBG.scale.set(SCL, SCL);
@@ -33,21 +30,14 @@ class Button extends FlxSprite
         super.update(elapsed);
         CheckHover();
         if(FlxG.mouse.overlaps(this) && FlxG.mouse.justPressed)
-            {
-                Pressed();
-            }
+            Pressed();
     }
-    inline function CheckHover()
+
+    function CheckHover()
         {
             if(Hover)
-                {
-                    trace('Hovering');
-                    this.color = 0xff159cea;
-                }
+                this.color = 0xff159cea;
             else
-                {
-                    trace('Not hovering');
-                    this.color = 0xffffffff;
-                }
+                this.color = 0xffffffff;
         }
 }

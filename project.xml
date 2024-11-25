@@ -30,9 +30,5 @@
     <haxedef name="FLX_NO_DEBUG" unless="debug"/>
     <haxedef name="NAPE_RELEASE_BUILD" unless="debug"/>
 
-    <!--Platform detection-->
-    <haxedef name="Computer" if="desktop"/>
-    <haxedef name="Browser"  if="html5"/>
-
     <!--icon stuff goes here when addable-->
 </project>

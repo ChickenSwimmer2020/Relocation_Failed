@@ -1,11 +1,11 @@
 package objects;
 
 import backend.Assets;
-import substates.PausemenuSubState;
+import substates.PauseMenuSubState;
 import backend.HUD;
 
 class Player extends FlxSprite {
-	public var SPEED:Float = 100;
+	public var SPEED:Float = 300;
 	public var DRAG:Float = 1000;
 
 	private var isSprinting:Bool = false;
@@ -34,7 +34,7 @@ class Player extends FlxSprite {
 		final escape = FlxG.keys.anyPressed([ESCAPE]);
 
 		if (escape) {
-			FlxG.state.openSubState(new substates.PausemenuSubState());
+			FlxG.state.openSubState(new substates.PauseMenuSubState());
 		}
 	}
 
@@ -46,11 +46,11 @@ class Player extends FlxSprite {
 		final sprint = FlxG.keys.anyPressed([SHIFT, SHIFT]);
 
 		if (sprint && !isSprinting && HUD.STAMINA > 10 && isMoving) {
-			SPEED = SPEED * 2;
+			SPEED = SPEED * 1.25;
 			DRAG = DRAG * 5;
 			isSprinting = true;
 		} else if (isSprinting && !sprint || HUD.STAMINA == 0) {
-			SPEED = 100;
+			SPEED = 300;
 			DRAG = 1000;
 			isSprinting = false;
 			if(isMoving) //quick fix so that stamina hopefully comes back even while moving
@@ -108,7 +108,7 @@ class Player extends FlxSprite {
 		#end
 
 		if(HUD.STAMINA < 20)
-			SPEED = 100;
+			SPEED = 300;
 		
 		if(isSprinting && HUD.STAMINA != 0 && isMoving){
 			HUD.STAMINA -= 1;

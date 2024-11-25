@@ -1,16 +1,16 @@
 {
     "objects":[
         {
-            "NAME": "TestObject1",
+            "Name": "TestObject1",
             "X": 0,
             "Y": 0,
-            "IMG": "assets/ButtonTEST.png"
+            "IMG": "ButtonTEST"
         },
         {
-            "NAME": "Penis",
+            "Name": "TestObject2",
             "X": 0,
             "Y": 0,
-            "IMG": "assets/ButtonTEST.png"
+            "IMG": "ButtonTEST"
         }
     ]
 }

@@ -3,7 +3,7 @@ package backend;
 class Functions
 {
     static inline public function GetPlatform():String
-        #if Browser return "Html5"; #else #if Computer return "Windows"; #else return "Unknown"; #end #end
+        #if html5 return "Html5"; #else #if cpp return "Windows"; #else #if hl return "HashLink"; #else return "Unknown"; #end #end #end
     
     static public function DoButtonShtuff(Button:String)
         {

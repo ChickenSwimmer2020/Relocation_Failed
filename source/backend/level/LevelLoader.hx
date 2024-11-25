@@ -1,4 +1,4 @@
-package backend;
+package backend.level;
 
 import haxe.Json;
 
@@ -18,5 +18,10 @@ typedef LevelData =
 class LevelLoader
 {
     inline static public function ParseLevelData(FILE:String):LevelData
-        return Json.parse(FILE);
+    {
+        try{
+            return Json.parse(openfl.Assets.getText(FILE));
+        }catch(e)
+            throw new LevelExceptions.LevelParseErrorException(e.message, e.stack.toString());
+    }
 }

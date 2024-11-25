@@ -21,11 +21,10 @@ class MainMenu extends FlxState {
 
     var BG:FlxBackdrop;
 
-    
-
     override public function create() {
         //background
-        BG = new FlxBackdrop(Assets.image('MainMenuBGSKY'), XY, 0, 0);
+        BG = new FlxBackdrop('', XY, 0, 0);
+        BG.loadGraphic(Assets.image('MainMenuBGSKY'));
         BG.velocity.x = -100;
         add(BG);
 
@@ -61,11 +60,13 @@ class MainMenu extends FlxState {
         add(versiontext);
 
         //buttons handling
-        Button_Play = new Button(600, 360, Assets.image('ButtonTEST'), ()->{ Functions.DoButtonShtuff('Play'); }, 1, false);
-        add(Button_Play);
+        Button_Play = new Button(600, 360, '', ()->{ Functions.DoButtonShtuff('Play'); }, 1, false);
+        Button_Play.loadGraphic(Assets.image('ButtonTEST'));
         Button_Play.screenCenter(XY);
+        add(Button_Play);
 
-        Button_Settings = new Button(Button_Play.x, Button_Play.y + 160, Assets.image('ButtonTEST'), ()->{ Functions.DoButtonShtuff('Settings'); }, 1, false);
+        Button_Settings = new Button(Button_Play.x, Button_Play.y + 160, '', ()->{ Functions.DoButtonShtuff('Settings'); }, 1, false);
+        Button_Settings.loadGraphic(Assets.image('ButtonTEST'));
         add(Button_Settings);
 
     }

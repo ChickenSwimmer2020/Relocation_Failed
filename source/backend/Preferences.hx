@@ -1,9 +1,3 @@
 package backend;
 
-@:structInit class Varibles {
-
-}
-
-class Preferences {
-
-}
+class Preferences {}

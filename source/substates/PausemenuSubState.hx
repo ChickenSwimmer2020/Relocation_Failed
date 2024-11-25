@@ -1,6 +1,6 @@
 package substates;
 
-class PausemenuSubState extends FlxSubState {
+class PauseMenuSubState extends FlxSubState {
     var icon:FlxText;
     
     var button_backToGame:FlxButton;
@@ -11,10 +11,10 @@ class PausemenuSubState extends FlxSubState {
         icon.setFormat(null, 48, FlxColor.BLUE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
         add(icon);
 
-        button_backToGame = new FlxButton(0, icon.y + 75, "Back", function() {close();});
+        button_backToGame = new FlxButton(0, icon.y + 75, "Back", () -> {close();});
         add(button_backToGame);
 
-        button_backToGame = new FlxButton(0, button_backToGame.y + 20, "Main Menu", function() {close(); FlxG.switchState(new menu.MainMenu());});
+        button_backToGame = new FlxButton(0, button_backToGame.y + 20, "Main Menu", () -> {close(); FlxG.switchState(new menu.MainMenu());});
         add(button_backToGame);
     }
 }
