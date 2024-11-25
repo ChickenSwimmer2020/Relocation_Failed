@@ -17,4 +17,11 @@ class Functions
                         trace('BUTTON TYPE WASNT DECLARED.');
                 }
         }
+    static public function logToLinear(x:Float, minValue:Float = 0.001):Float {
+        // Ensure x is between minValue and 1
+        x = Math.max(minValue, Math.min(1, x));
+
+        // Convert logarithmic scale to linear
+        return 1 - (Math.log(x) / Math.log(minValue));
+    }
 }

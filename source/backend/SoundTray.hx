@@ -74,9 +74,9 @@ class FunkinSoundTray extends FlxSoundTray
     y = -height;
     screenCenter();
 
-    volumeUpSound = Paths.sound("soundtray/Volup");
-    volumeDownSound = Paths.sound("soundtray/Voldown");
-    volumeMaxSound = Paths.sound("soundtray/VolMAX");
+    volumeUpSound = Assets.sound("Volup");
+    volumeDownSound = Assets.sound("Voldown");
+    volumeMaxSound = Assets.sound("VolMAX");
 
     trace("Custom tray added!");
   }
@@ -128,7 +128,7 @@ class FunkinSoundTray extends FlxSoundTray
     lerpYPos = 10;
     visible = true;
     active = true;
-    var globalVolume:Int = Math.round(FlxG.sound.logToLinear(FlxG.sound.volume) * 10);
+    var globalVolume:Int = Math.round(Functions.logToLinear(FlxG.sound.volume) * 10);
 
     if (FlxG.sound.muted || FlxG.sound.volume == 0)
     {
