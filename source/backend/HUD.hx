@@ -1,26 +1,23 @@
 package backend;
 
+import flixel.system.ui.FlxSoundTray;
 import flixel.math.FlxPoint;
 using flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxSpriteGroup {
-    private var HUDBG:FlxSprite;
+    public var HUDBG:FlxSprite;
+    public var HPTXT:FlxText;
+    public var SMTXT:FlxText;
+    public var FACEBG:FlxSprite;
 
-    private var HPTXT:FlxText;
-    private var SMTXT:FlxText;
-    private var stamBar:FlxBar;
-    private var healthBar:FlxBar;
+    public var stamBar:FlxBar;
+    public var healthBar:FlxBar;
 
-    private var faceBG:FlxSprite;
+    public var playstate:Playstate;
 
-    public static var HEALTH:Int;
-    private static var maxHEALTH:Int;
-
-    public static var STAMINA:Int;
-    private static var maxSTAMINA:Int;
-
-    public function new() {
+    public function new(playstate:Playstate) {
         super();
+        this.playstate = playstate;
 
         scrollFactor.set(0, 0);
 
@@ -28,12 +25,10 @@ class HUD extends FlxSpriteGroup {
         HUDBG.drawPolygon([new FlxPoint(0, 0), new FlxPoint(300, 0), new FlxPoint(250, 60), new FlxPoint(0, 60), new FlxPoint(0,0)], FlxColor.BLACK);
         add(HUDBG);
 
-        faceBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
-        add(faceBG);
+        FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
+        add(FACEBG);
         
-        maxHEALTH = 100;
-        HEALTH = 100;
-        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 200, 25);
+        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 200, 25, playstate.Player, 'health');
         healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
         add(healthBar);
 
@@ -43,9 +38,7 @@ class HUD extends FlxSpriteGroup {
         HPTXT.text = "Health";
         add(HPTXT);
 
-        maxSTAMINA = 100;
-        STAMINA = 100;
-        stamBar = new FlxBar(healthBar.x, healthBar.y + 25, LEFT_TO_RIGHT, 150, 25);
+        stamBar = new FlxBar(healthBar.x, healthBar.y + 25, LEFT_TO_RIGHT, 150, 25, playstate.Player, 'stamina');
         stamBar.createFilledBar(0xFF0083A0, 0xFF00B7FF);
         add(stamBar);
 
@@ -57,12 +50,10 @@ class HUD extends FlxSpriteGroup {
     }
 
     override public function update(elapsed:Float) {
-
-        healthBar.value = HEALTH;
-        healthBar.setRange(0, maxHEALTH);
-
-        stamBar.value = STAMINA;
-        stamBar.setRange(0, maxSTAMINA);
+        healthBar.setRange(0, playstate.Player.maxHealth);
+        stamBar.setRange(0, playstate.Player.maxStamina);
+        healthBar.value = playstate.Player.health;
+        stamBar.value = playstate.Player.stamina;
     }
 
 }

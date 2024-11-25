@@ -7,22 +7,27 @@ import backend.level.*;
 
 class Playstate extends FlxState {
     
-    var Player:Player;
-    var HeadsUpDispalay:HUD;
-    var Level:Level;
+    public static var instance:Playstate;
+    public var Player:Player;
+    public var Hud:HUD;
+    public var Level:Level;
     
+    override public function new() {
+        super();
+        instance = this;
+    }
 
     override public function create() {
         super.create();
 
-        HeadsUpDispalay = new HUD();
-        Player = new Player(0, 0);
+        Hud = new HUD(this);
+        Player = new Player(0, 0, this);
         Level = new Level(LevelLoader.ParseLevelData(Assets.asset('level1.json')));
         Level.loadLevel();
 
         add(Level);
         add(Player);
-        add(HeadsUpDispalay);
+        add(Hud);
 
         trace(Level.levelData);
     }

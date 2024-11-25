@@ -2,7 +2,6 @@ package objects;
 
 import backend.Assets;
 import substates.PauseMenuSubState;
-import backend.HUD;
 
 typedef PhysicProperties = {
     var speed:Float;
@@ -11,10 +10,10 @@ typedef PhysicProperties = {
 
 enum abstract MovementDirection(String) from String to String
 {
-    var left = 'left';
     var up = 'up';
-    var right = 'right';
     var down = 'down';
+    var left = 'left';
+    var right = 'right';
     var none = 'idle';
 }
 
@@ -29,12 +28,18 @@ class Player extends FlxSprite {
     };
     public var curPhysProperties:PhysicProperties;
     public var curMovementDir:MovementDirection;
-	var isMoving:Bool = false;
 
-	
+	public var isMoving:Bool = false;
+    public var stamina:Int = 100;
+    public var maxStamina:Int = 100;
+    public var maxHealth:Int = 100;
 
-	public function new(xPos:Float, yPos:Float) {
+	public var playstate:Playstate;
+
+	public function new(xPos:Float, yPos:Float, playstate:Playstate) {
 		super(xPos, yPos);
+        health = 100;
+        this.playstate = playstate;
         curPhysProperties = nonSprintPhysProps;
 		loadGraphic(Assets.image('Player'), true, 101, 215, true);
 		drag.set(curPhysProperties.drag, curPhysProperties.drag);
@@ -55,13 +60,13 @@ class Player extends FlxSprite {
 	}
 
 	function movement() {
-		if (FlxG.keys.anyPressed([SHIFT]) && HUD.STAMINA > 0 && isMoving){
+		if (FlxG.keys.anyPressed([SHIFT]) && stamina > 0 && isMoving){
 			curPhysProperties = sprintPhysProps;
-            HUD.STAMINA--;
+            stamina--;
         }else{
 			curPhysProperties = nonSprintPhysProps;
-            if(HUD.STAMINA < 100 && !FlxG.keys.anyPressed([SHIFT]))
-                HUD.STAMINA++;
+            if(stamina < 100 && !FlxG.keys.anyPressed([SHIFT]))
+                stamina++;
         }
 
         if (FlxG.keys.anyPressed([LEFT, A]))
@@ -98,7 +103,7 @@ class Player extends FlxSprite {
 		movement();
 		checkForPauseMenu();
 		#if debug
-		FlxG.watch.addQuick('Stamina', HUD.STAMINA);
+		FlxG.watch.addQuick('Stamina', stamina);
 		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
 		#end
 	}
