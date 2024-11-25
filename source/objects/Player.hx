@@ -1,7 +1,7 @@
 package objects;
 
 import backend.Assets;
-import substates.PauseMenuSubState;
+import substates.PausemenuSubState;
 import backend.HUD;
 
 class Player extends FlxSprite {
@@ -34,7 +34,7 @@ class Player extends FlxSprite {
 		final escape = FlxG.keys.anyPressed([ESCAPE]);
 
 		if (escape) {
-			FlxG.state.openSubState(new substates.PauseMenuSubState());
+			FlxG.state.openSubState(new substates.PausemenuSubState());
 		}
 	}
 
