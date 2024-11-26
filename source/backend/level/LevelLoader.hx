@@ -9,6 +9,15 @@ typedef LevelHeader =
     var Boundries:Array<Float>; //the boundries of the level, how far can the player move before being stopped?
 }
 
+typedef AnimData = {
+    var ?AnimFrames:Array<Int>; //anim frames
+    var ?AnimName:String; //anim name
+    var ?AnimFPS:Int; //anim FPS
+    var ?AnimLoop:Bool; //should anim loop
+    var ?AnimFlipX:Bool; //should anim be flipped on the x axis
+    var ?AnimFlipY:Bool; //should the anim be flipped on the y axis
+}
+
 typedef LevelObject =
 {
     var Name:String; //internal name
@@ -20,18 +29,11 @@ typedef LevelObject =
     var SFX:Float; //X scroll factor
     var SFY:Float; //Y scroll factor
     var IMG:String; //what image do we load
-    var CollidesWithPlayer:Bool; //should it collide with player?
-    var IsBackground:Bool; //automatically scales across entire screen
+    var ?CollidesWithPlayer:Bool; //should it collide with player?
+    var ?IsBackground:Bool; //automatically scales across entire screen
     var ?IsAnimated:Bool; //should it be animated?
     var ?ParrallaxBG:Bool; //should it be a parrallax?
-
-    //animation data if added
-    var ?AnimFrames:Array<Int>; //anim frames
-    var ?AnimName:String; //anim name
-    var ?AnimFPS:Int; //anim FPS
-    var ?AnimLoop:Bool; //should anim loop
-    var ?AnimFlipX:Bool; //should anim be flipped on the x axis
-    var ?AnimFlipY:Bool; //should the anim be flipped on the y axis
+    var ?Anims:Array<AnimData>; // animation data if needed
 }
 
 typedef LevelData = 

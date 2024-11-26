@@ -16,7 +16,6 @@
             "SFX": 1,
             "SFY": 1,
             "IMG": "lebackgroundtestsprite",
-            "CollidesWithPlayer": false,
             "IsBackground": true
         },
         {
@@ -28,9 +27,7 @@
             "ScaleY": 1,
             "SFX": 3,
             "SFY": 1,
-            "IMG": "ButtonTEST",
-            "CollidesWithPlayer": false,
-            "IsBackground": false
+            "IMG": "ButtonTEST"
         },
         {
             "Name": "TestObject2",
@@ -42,8 +39,7 @@
             "SFX": 1,
             "SFY": 1,
             "IMG": "ButtonTEST",
-            "CollidesWithPlayer": false,
-            "IsBackground": false
+            "CollidesWithPlayer": false
         }
     ]
 }

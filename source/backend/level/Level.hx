@@ -11,7 +11,8 @@ class Level extends FlxGroup
 {
     public var levelData:LevelData;
     public var levelHeader:LevelHeader;
-    public var objects:Map<String, FlxSprite> = new Map();
+    public var objects:Map<String, LevelSprite> = new Map();
+    public var colliders:Array<LevelSprite>;
 
     public var LevelID:String;
     public var ChapterID:Int;
@@ -38,25 +39,36 @@ class Level extends FlxGroup
         MapBounds = new FlxRect(0,0,levelHeader.Boundries[0],levelHeader.Boundries[1]);
 
         for (object in levelData.objects){
-            var obj = new FlxSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG));
+            var obj = cast(new LevelSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG)), LevelSprite);
             obj.scale.set(object.ScaleX, object.ScaleY);
             obj.scrollFactor.set(object.SFX, object.SFY);
-            if(object.ParrallaxBG != null && object.ParrallaxBG == true)
+            if (object.CollidesWithPlayer != null) 
+                obj.isCollider = object.CollidesWithPlayer;
+            if(object.ParrallaxBG != null)
                 //do something
 
-            if(object.IsAnimated != null && object.IsAnimated == true)
-                obj.animation.add(object.AnimName, object.AnimFrames, object.AnimFPS, object.AnimLoop, object.AnimFlipX, object.AnimFlipY);
+            if(object.IsAnimated != null)
+                if (object.IsAnimated)
+                    for (anim in object.Anims)
+                        obj.animation.add(anim.AnimName, anim.AnimFrames, anim.AnimFPS, anim.AnimLoop, anim.AnimFlipX, anim.AnimFlipY);
 
-            if(object.IsBackground)
-                {
-                    obj.setPosition(0, 0);
-                    obj.setGraphicSize(levelHeader.Boundries[0],levelHeader.Boundries[1]);
-                    obj.scrollFactor.set(0,0);
-                    obj.screenCenter(XY);
-                }
+
+            if (object.IsBackground != null)
+                if(object.IsBackground)
+                    {
+                        obj.setPosition(0, 0);
+                        obj.setGraphicSize(levelHeader.Boundries[0],levelHeader.Boundries[1]);
+                        obj.scrollFactor.set(0,0);
+                        obj.screenCenter(XY);
+                    }
 
             objects.set(object.Name, obj);
             add(obj);
         }
     }
+}
+
+class LevelSprite extends FlxSprite
+{
+    public var isCollider:Bool = false;
 }
