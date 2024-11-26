@@ -56,8 +56,8 @@ class Player extends FlxSprite {
 
         animation.add("DIAGNOAL_upleft", [5], 30, false, false, false);
         animation.add("DIAGNOAL_upright", [6], 30, false, false, false);
-        animation.add("DIAGNOAL_downleft", [7], 30, false, false, false);
-        animation.add("DIAGNOAL_downright", [8], 30, false, false, false);
+        animation.add("DIAGNOAL_downright", [7], 30, false, false, false);
+        animation.add("DIAGNOAL_downleft", [8], 30, false, false, false);
 
 		animation.play('idle');
 	}
@@ -92,6 +92,11 @@ class Player extends FlxSprite {
 		isMoving = curMovementDir != none;
 
         var movementDirs = [FlxG.keys.anyPressed([LEFT, A]), FlxG.keys.anyPressed([RIGHT, D]), FlxG.keys.anyPressed([UP, W]), FlxG.keys.anyPressed([DOWN, S])];
+        var count = 0;
+        var allOn = false;
+        for (dir in movementDirs) if (dir) count++;
+        if (count == 4)
+            allOn = true;
         for (dirID in 0...movementDirs.length)
         {
             if (movementDirs[dirID])
@@ -116,6 +121,17 @@ class Player extends FlxSprite {
                     default:
                 }
         }
+
+        if (count < 3){
+            if (movementDirs[2] && movementDirs[0]) animation.play('DIAGNOAL_upleft');
+            if (movementDirs[2] && movementDirs[1]) animation.play('DIAGNOAL_upright');
+            if (movementDirs[3] && movementDirs[0]) animation.play('DIAGNOAL_downleft');
+            if (movementDirs[3] && movementDirs[1]) animation.play('DIAGNOAL_downright');
+        }
+        if (movementDirs[0] && movementDirs[1] && movementDirs[3]) animation.play('down', true);
+        if (movementDirs[0] && movementDirs[1] && movementDirs[2]) animation.play('up', true);
+
+        if (allOn) animation.play('idle');
 	}
 
 	override function update(elapsed:Float) {
