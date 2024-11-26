@@ -28,7 +28,7 @@ class HUD extends FlxSpriteGroup {
         HUDBG.drawPolygon([new FlxPoint(0, 0), new FlxPoint(300, 0), new FlxPoint(250, 60), new FlxPoint(0, 60), new FlxPoint(0,0)], FlxColor.BLACK);
         add(HUDBG);
 
-        ammocounter_LINE = new FlxSprite(205, 42).makeGraphic(40, 1, FlxColor.WHITE);
+        ammocounter_LINE = new FlxSprite(210, 42).makeGraphic(32, 1, FlxColor.WHITE);
         add(ammocounter_LINE);
 
         ammocounter_AMMOTEXT = new FlxText(210, 30, 0, "AMMO", 8, true);

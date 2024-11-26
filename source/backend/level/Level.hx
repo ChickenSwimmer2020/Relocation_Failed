@@ -44,6 +44,10 @@ class Level extends FlxGroup
             obj.scrollFactor.set(object.SFX, object.SFY);
             if (object.CollidesWithPlayer != null) 
                 obj.isCollider = object.CollidesWithPlayer;
+
+            if(object.RenderOverPlayer)
+                obj.cameras = [Playstate.FGCAM];
+
             if(object.ParrallaxBG != null)
                 //do something
 

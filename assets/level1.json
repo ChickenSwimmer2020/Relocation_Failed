@@ -39,7 +39,7 @@
             "ScaleX": 10,
             "ScaleY": 1,
             "SFX": 3,
-            "SFY": 1,
+            "SFY": 0,
             "IMG": "ButtonTEST"
         },
         {
@@ -53,6 +53,19 @@
             "SFY": 1,
             "IMG": "ButtonTEST",
             "CollidesWithPlayer": false
+        },
+        {
+            "Name": "TESTOVERLAYSPRITE",
+            "Alpha": 1,
+            "X": 500,
+            "Y": 0,
+            "ScaleX": 2,
+            "ScaleY": 2,
+            "SFX": 1,
+            "SFY": 1,
+            "IMG": "ButtonTEST",
+            "CollidesWithPlayer": false,
+            "RenderOverPlayer": true
         }
     ]
 }

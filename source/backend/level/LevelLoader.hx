@@ -31,6 +31,7 @@ typedef LevelObject =
     var IMG:String; //what image do we load
     var ?CollidesWithPlayer:Bool; //should it collide with player?
     var ?IsBackground:Bool; //automatically scales across entire screen
+    var ?RenderOverPlayer:Bool; //should the sprite cover the player?
     var ?IsAnimated:Bool; //should it be animated?
     var ?ParrallaxBG:Bool; //should it be a parrallax?
     var ?Anims:Array<AnimData>; // animation data if needed
