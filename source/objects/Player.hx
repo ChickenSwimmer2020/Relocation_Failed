@@ -54,6 +54,11 @@ class Player extends FlxSprite {
 		animation.add("up", [2], 30, false, false, false);
 		animation.add("down", [4], 30, false, false, false);
 
+        animation.add("DIAGNOAL_upleft", [5], 30, false, false, false);
+        animation.add("DIAGNOAL_upright", [6], 30, false, false, false);
+        animation.add("DIAGNOAL_downleft", [7], 30, false, false, false);
+        animation.add("DIAGNOAL_downright", [8], 30, false, false, false);
+
 		animation.play('idle');
 	}
 
@@ -110,19 +115,6 @@ class Player extends FlxSprite {
                          
                     default:
                 }
-        }
-        switch (curMovementDir)
-        {
-            case right:
-                
-            case left:
-                
-            case up:
-                
-            case down:
-                
-            default:
-                // literally nothing.
         }
 	}
 

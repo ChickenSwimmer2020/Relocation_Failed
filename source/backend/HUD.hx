@@ -1,6 +1,5 @@
 package backend;
 
-import flixel.system.ui.FlxSoundTray;
 import flixel.math.FlxPoint;
 using flixel.util.FlxSpriteUtil;
 
