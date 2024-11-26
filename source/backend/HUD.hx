@@ -14,6 +14,10 @@ class HUD extends FlxSpriteGroup {
 
     public var playstate:Playstate;
 
+    public var ammocounter_AMMOTEXT:FlxText;
+    public var ammocounter_LINE:FlxSprite;
+    //public var ammocounter_AMMOSPR:FlxSprite;
+
     public function new(playstate:Playstate) {
         super();
         this.playstate = playstate;
@@ -23,6 +27,12 @@ class HUD extends FlxSpriteGroup {
         HUDBG = new FlxSprite(0, 0).makeGraphic(500, 60, FlxColor.TRANSPARENT);
         HUDBG.drawPolygon([new FlxPoint(0, 0), new FlxPoint(300, 0), new FlxPoint(250, 60), new FlxPoint(0, 60), new FlxPoint(0,0)], FlxColor.BLACK);
         add(HUDBG);
+
+        ammocounter_LINE = new FlxSprite(205, 42).makeGraphic(40, 1, FlxColor.WHITE);
+        add(ammocounter_LINE);
+
+        ammocounter_AMMOTEXT = new FlxText(210, 30, 0, "AMMO", 8, true);
+        add(ammocounter_AMMOTEXT);
 
         FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
         add(FACEBG);

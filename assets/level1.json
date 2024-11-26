@@ -19,6 +19,19 @@
             "IsBackground": true
         },
         {
+            "Name": "COLLTEST",
+            "Alpha": 1,
+            "X": 500,
+            "Y": 500,
+            "ScaleX": 1,
+            "ScaleY": 1,
+            "SFX": 1,
+            "SFY": 1,
+            "IMG": "ButtonTEST",
+            "IsBackground": false,
+            "CollidesWithPlayer": true
+        },
+        {
             "Name": "TestObject1",
             "Alpha": 1,
             "X": 0,
