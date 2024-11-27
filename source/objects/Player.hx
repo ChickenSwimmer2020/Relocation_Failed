@@ -156,7 +156,6 @@ class Aimer extends FlxSprite {
     public function new() {
         super();
 		loadGraphic(Assets.image('Player_upper'), true, 32, 32, true);
-        
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);

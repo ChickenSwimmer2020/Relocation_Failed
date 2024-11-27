@@ -1,5 +1,7 @@
 package backend;
 
+import flixel.graphics.frames.FlxAtlasFrames;
+
 class Assets
 {
     #if html5
@@ -20,4 +22,7 @@ class Assets
 
     static public function asset(Key:String):String
         return 'assets/$Key';
+    
+    inline static public function getSparrowAtlas(key:String):FlxAtlasFrames
+            return FlxAtlasFrames.fromSparrow(key, 'images/$key' + '.xml');
 }

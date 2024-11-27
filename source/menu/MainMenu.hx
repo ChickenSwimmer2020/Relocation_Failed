@@ -6,6 +6,7 @@ import flixel.tweens.FlxTween;
 import backend.Functions;
 import backend.Button;
 import flixel.addons.display.FlxBackdrop;
+import menu.Intro;
 
 
 class MainMenu extends FlxState {
@@ -24,6 +25,7 @@ class MainMenu extends FlxState {
     override public function create() {
         if(FlxG.sound.music == null)
             FlxG.sound.playMusic(Assets.sound('MENU.ogg'));
+        openSubState(new Intro());
         //background
         BG = new FlxBackdrop('', XY, 0, 0);
         BG.loadGraphic(Assets.image('MainMenuBGSKY'));
