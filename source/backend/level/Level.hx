@@ -46,7 +46,7 @@ class Level extends FlxGroup
                 obj.isCollider = object.CollidesWithPlayer;
 
             if(object.RenderOverPlayer)
-                obj.cameras = [Playstate.FGCAM];
+                obj.cameras = [Playstate.instance.FGCAM];
 
             if(object.ParrallaxBG != null)
                 //do something

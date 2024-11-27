@@ -8,12 +8,14 @@ import backend.level.*;
 class Playstate extends FlxState {
     
     public static var instance:Playstate;
+    //we have to create the player in a stupid way thanks to my ideas.
     public var Player:Player;
+    public var Player2:Aimer;
     public var Hud:HUD;
     public var Level:Level;
 
-    public static var FGCAM:FlxCamera;
-    private static var HUDCAM:FlxCamera;
+    public var FGCAM:FlxCamera;
+    public var HUDCAM:FlxCamera;
     
     override public function new() {
         super();
@@ -34,11 +36,13 @@ class Playstate extends FlxState {
         Hud = new HUD(this);
         Hud.cameras = [HUDCAM];
         Player = new Player(0, 0, this);
+        Player2 = new Aimer();
         Level = new Level(LevelLoader.ParseLevelData(Assets.asset('level1.json')));
         Level.loadLevel();
 
         add(Level);
         add(Player);
+        add(Player2);
         add(Hud);
 
         trace(Level.levelData);

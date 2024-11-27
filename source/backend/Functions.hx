@@ -24,4 +24,28 @@ class Functions
         // Convert logarithmic scale to linear
         return 1 - (Math.log(x) / Math.log(minValue));
     }
+    static public function getSpriteAngleFromMousePos():Float
+        {
+            //thanks chatGPT!
+            var angle:Float = 0;
+            var screencenterX = FlxG.width / 2;
+            var screencenterY = FlxG.height / 2;
+            var mouseX = FlxG.mouse.getScreenPosition(Playstate.instance.HUDCAM).x;
+            var mouseY = FlxG.mouse.getScreenPosition(Playstate.instance.HUDCAM).y;
+            var relativeX = mouseX - screencenterX;
+            var relativeY = mouseY - screencenterY;
+
+            angle = Math.atan2(relativeY, relativeX) * 180 / Math.PI;
+
+            #if debug
+            FlxG.watch.addQuick('CurAngle', angle);
+            FlxG.watch.addQuick('screenCenterX', screencenterX);
+            FlxG.watch.addQuick('screencenterY', screencenterY);
+            FlxG.watch.addQuick('mouseX', FlxG.mouse.screenX);
+            FlxG.watch.addQuick('mouseY', FlxG.mouse.screenY);
+            FlxG.watch.addQuick('relativeX', relativeX);
+            FlxG.watch.addQuick('relativeY', relativeY);
+            #end
+            return angle;
+        }
 }

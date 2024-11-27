@@ -22,6 +22,8 @@ class MainMenu extends FlxState {
     var BG:FlxBackdrop;
 
     override public function create() {
+        if(FlxG.sound.music == null)
+            FlxG.sound.playMusic(Assets.sound('MENU.ogg'));
         //background
         BG = new FlxBackdrop('', XY, 0, 0);
         BG.loadGraphic(Assets.image('MainMenuBGSKY'));
@@ -49,7 +51,7 @@ class MainMenu extends FlxState {
         platFormText.antialiasing = false;
         add(platFormText);
 
-        versiontext = new FlxText(0, 670, 0, "", 8, true);
+        versiontext = new FlxText(0, 665, 0, "", 8, true);
         versiontext.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
         versiontext.text = "V " + Application.current.meta.get('version');
         versiontext.antialiasing = false;

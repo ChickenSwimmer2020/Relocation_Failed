@@ -1,5 +1,7 @@
 package objects;
 
+import backend.Functions;
+import flixel.math.FlxMath;
 import backend.Assets;
 import substates.PauseMenuSubState;
 
@@ -39,12 +41,15 @@ class Player extends FlxSprite {
 
 	public var playstate:Playstate;
 
+    public static var AimerPOSy:Float;
+    public static var AimerPOSx:Float;
+
 	public function new(xPos:Float, yPos:Float, playstate:Playstate) {
 		super(xPos, yPos);
         health = 100;
         this.playstate = playstate;
         curPhysProperties = nonSprintPhysProps;
-		loadGraphic(Assets.image('Player'), true, 51, 51, true);
+		loadGraphic(Assets.image('Player_LEGS'), true, 51, 51, true);
 		drag.set(curPhysProperties.drag, curPhysProperties.drag);
 
 		animation.add("idle", [0], 30, false, false, false);
@@ -138,9 +143,37 @@ class Player extends FlxSprite {
 		super.update(elapsed);
 		movement();
 		checkForPauseMenu();
+        AimerPOSx = this.x;
+        AimerPOSy = this.y;
 		#if debug
 		FlxG.watch.addQuick('Stamina', stamina);
 		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
 		#end
 	}
+}
+class Aimer extends FlxSprite {
+    static public var curAngle:Float;
+    public function new() {
+        super();
+		loadGraphic(Assets.image('Player_upper'), true, 32, 32, true);
+        
+    }
+    override public function update(elapsed:Float) {
+        super.update(elapsed);
+        this.x = Player.AimerPOSx;
+        this.y = Player.AimerPOSy;
+        AimAtCusor();
+        curAngle = this.angle;
+    }
+    public function AimAtCusor()
+        {
+            //angle is a float, singular number between 360, and -360. somehow, i need to get a value like that from the mouse coords. how the fuck does that work???
+            //answer: triga-fucking-nomitry.
+            angle = Functions.getSpriteAngleFromMousePos();
+                    //flip the player based on what angle is current
+            if(Aimer.curAngle < -90 || Aimer.curAngle > 90)
+                this.flipY = true;
+            else
+                this.flipY = false;
+        }
 }
