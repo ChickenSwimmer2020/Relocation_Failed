@@ -7,7 +7,7 @@
     <set name="SWF_VERSION" value="11.8"/>
 
     
-    <window if="html5" fps="60" vsync="false" width="0" height="0" resizeable="false" hardware="false" fullscreen="false"/>
+    <window if="html5" fps="60" vsync="false" width="0" height="0" resizable="false" hardware="false" fullscreen="false"/>
     <window background="null" if="html5" />
 
     <set name="BUILD_DIR" value="export"/>
