@@ -45,13 +45,13 @@ class MainMenu extends FlxState {
         Suffix.antialiasing = false;
         add(Suffix);
 
-        platFormText = new FlxText(0, 690, 0, "", 8, true);
+        platFormText = new FlxText(0, #if html5 700 #else 690 #end, 0, "", 8, true);
         platFormText.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
         platFormText.text = Functions.GetPlatform();
         platFormText.antialiasing = false;
         add(platFormText);
 
-        versiontext = new FlxText(0, 665, 0, "", 8, true);
+        versiontext = new FlxText(0, #if html5 690 #else 665 #end, 0, "", 8, true);
         versiontext.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
         versiontext.text = "V " + Application.current.meta.get('version');
         versiontext.antialiasing = false;

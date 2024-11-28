@@ -18,8 +18,8 @@ class HUD extends FlxSpriteGroup {
     public var ammocounter_LINE:FlxSprite;
     //public var ammocounter_AMMOSPR:FlxSprite;
 
-    public function new(playstate:Playstate) {
-        super();
+    public function new(X:Float, playstate:Playstate) {
+        super(X);
         this.playstate = playstate;
 
         scrollFactor.set(0, 0);
@@ -31,7 +31,7 @@ class HUD extends FlxSpriteGroup {
         ammocounter_LINE = new FlxSprite(210, 42).makeGraphic(32, 1, FlxColor.WHITE);
         add(ammocounter_LINE);
 
-        ammocounter_AMMOTEXT = new FlxText(210, 30, 0, "AMMO", 8, true);
+        ammocounter_AMMOTEXT = new FlxText(210,30, 0, "AMMO", 8, true);
         add(ammocounter_AMMOTEXT);
 
         FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
@@ -47,11 +47,11 @@ class HUD extends FlxSpriteGroup {
         HPTXT.text = "Health";
         add(HPTXT);
 
-        stamBar = new FlxBar(healthBar.x, healthBar.y + 25, LEFT_TO_RIGHT, 150, 25, playstate.Player, 'stamina');
+        stamBar = new FlxBar(50, 30, LEFT_TO_RIGHT, 150, 25, playstate.Player, 'stamina');
         stamBar.createFilledBar(0xFF0083A0, 0xFF00B7FF);
         add(stamBar);
 
-        SMTXT = new FlxText(HPTXT.x, HPTXT.y + 25);
+        SMTXT = new FlxText(53, HPTXT.y + 25);
         SMTXT.scale.set(1.2,1.2);
         SMTXT.alignment = LEFT;
         SMTXT.text = "Stamina";
