@@ -60,7 +60,9 @@ class SoundTray extends FlxSoundTray {
 		y += 90;
 
 		var thatstupidmask:Sprite = new Sprite(); //omfg, FUCK openfl sprites.
-		thatstupidmask.graphics.drawRect(1320, 0, 50, 100);
+		thatstupidmask.graphics.beginFill();
+		thatstupidmask.graphics.drawRect(1320, 0, 50, 100); //THIS IS FUCKING STUPID.
+		thatstupidmask.graphics.endFill();
 		addChild(thatstupidmask);
 	}
 
