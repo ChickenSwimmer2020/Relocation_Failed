@@ -7,10 +7,8 @@ import backend.level.*;
 
 class Playstate extends FlxState {
 
-    #if html5
     private static var border_left:FlxSprite = new FlxSprite(0,0);
     private static var border_right:FlxSprite = new FlxSprite(1320, 0); 
-    #end
 
     public static var instance:Playstate;
     //we have to create the player in a stupid way thanks to my ideas.
@@ -38,16 +36,14 @@ class Playstate extends FlxState {
         FlxG.cameras.add(HUDCAM, false);
         HUDCAM.bgColor = 0x0011FF00;
 
-        #if html5
         border_left.makeGraphic(50, 790, FlxColor.BLACK);
         border_right.makeGraphic(50, 790, FlxColor.BLACK);
         border_left.cameras = [HUDCAM];
         border_right.cameras = [HUDCAM];
         add(border_left);
         add(border_right);
-        #end
 
-        Hud = new HUD(#if html5 50, #else 0, #end this);
+        Hud = new HUD(50, this);
         Hud.cameras = [HUDCAM];
         Player = new Player(0, 0, this);
         Player2 = new Aimer();
