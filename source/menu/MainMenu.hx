@@ -45,17 +45,17 @@ class MainMenu extends FlxState {
         Suffix.antialiasing = false;
         add(Suffix);
 
-        platFormText = new FlxText(0, 700, 0, "", 8, true);
-        platFormText.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
-        platFormText.text = Functions.GetPlatform();
-        platFormText.antialiasing = false;
-        add(platFormText);
-
-        versiontext = new FlxText(0, 690, 0, "", 8, true);
+        versiontext = new FlxText(0, 630, 0, "", 8, true);
         versiontext.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
         versiontext.text = "V " + Application.current.meta.get('version');
         versiontext.antialiasing = false;
         add(versiontext);
+
+        platFormText = new FlxText(0, versiontext.y + 25, 0, "", 8, true);
+        platFormText.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        platFormText.text = Functions.GetPlatform();
+        platFormText.antialiasing = false;
+        add(platFormText);
 
         //buttons handling
         Button_Play = new Button(600, 360, '', ()->{ Functions.DoButtonShtuff('Play'); }, 1, false);
