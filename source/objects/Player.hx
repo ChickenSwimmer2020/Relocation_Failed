@@ -206,8 +206,8 @@ class Player extends FlxSprite {
 		checkForPauseMenu();
         resetPauseMenu();
         #if !mobile
-        AimerPOSx = this.x;
-        AimerPOSy = this.y;
+        AimerPOSx = this.getGraphicMidpoint().x - 15;
+        AimerPOSy = this.getGraphicMidpoint().y - 15;
         #else
         #end
 		#if debug

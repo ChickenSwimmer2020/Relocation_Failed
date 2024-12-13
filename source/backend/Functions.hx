@@ -21,10 +21,10 @@ class Functions
       * ```
       * ---
       * @return String
-      * @since RF_DEV_0.0.9
+      * @since RF_DEV_0.0.4
       */
     static inline public function GetPlatform():String
-        #if html5 return "Html5"; #else #if cpp return "Windows"; #else #if hl return "HashLink/Windows"; #else return "Unknown"; #end #end #end
+        #if modded #if html5 return "Html5 (MODDED)"; #else #if cpp return "Windows (MODDED)"; #else #if hl return "HashLink/Windows (MODDED)"; #else return "Unknown (MODDED)"; #end #end #end #else #if html5 return "Html5"; #else #if cpp return "Windows"; #else #if hl return "HashLink/Windows"; #else return "Unknown"; #end #end #end #end
     /**
       * # traceOnce();
       * ## *why flood, when you can trace!*
@@ -61,7 +61,7 @@ class Functions
       * ---
       * Example: how to format the function
       * ```
-      * Functions.wait(1, (_) -> { code block; } )
+      * Functions.wait(1, () -> { code block; });
       * ```
       * ---
       * @param Time Interger
@@ -93,8 +93,8 @@ class Functions
             var angle:Float = 0;
             var screencenterX = FlxG.width / 2;
             var screencenterY = FlxG.height / 2;
-            var mouseX = FlxG.mouse.getScreenPosition(Playstate.instance.HUDCAM).x;
-            var mouseY = FlxG.mouse.getScreenPosition(Playstate.instance.HUDCAM).y;
+            var mouseX = FlxG.mouse.getViewPosition(Playstate.instance.HUDCAM).x;
+            var mouseY = FlxG.mouse.getViewPosition(Playstate.instance.HUDCAM).y;
             var relativeX = mouseX - screencenterX;
             var relativeY = mouseY - screencenterY;
 
@@ -104,12 +104,66 @@ class Functions
             FlxG.watch.addQuick('CurAngle', angle);
             FlxG.watch.addQuick('screenCenterX', screencenterX);
             FlxG.watch.addQuick('screencenterY', screencenterY);
-            FlxG.watch.addQuick('mouseX', FlxG.mouse.screenX);
-            FlxG.watch.addQuick('mouseY', FlxG.mouse.screenY);
+            FlxG.watch.addQuick('mouseX', FlxG.mouse.viewX);
+            FlxG.watch.addQuick('mouseY', FlxG.mouse.viewY);
             FlxG.watch.addQuick('relativeX', relativeX);
             FlxG.watch.addQuick('relativeY', relativeY);
             #end
             return angle;
+        }
+    #end
+    #if desktop //window transparency stuff
+        #if windows
+        /**
+          * # setWindowTransparencyColor();
+          * ## *Just be transparent if you really love them*
+          * allows for changing of the color that a window will automatically set as transparent
+          * ---
+          * @param red Interager (0-255)
+          * @param green Interager (0-255)
+          * @param blue Interager (0-255)
+          * @param alpha Interager (0-255)
+          * @since RF_DEV_0.1.0
+          */
+        @:functionCode('
+            HWND window = GetActiveWindow();
+
+            if (transparencyEnabled) {
+                SetWindowLong(window, GWL_EXSTYLE, GetWindowLong(window, GWL_EXSTYLE) ^ WS_EX_LAYERED);
+                SetLayeredWindowAttributes(window, RGB(0, 0, 0), 255, LWA_COLORKEY | LWA_ALPHA);
+            }
+            // make window layered
+            int result = SetWindowLong(window, GWL_EXSTYLE, GetWindowLong(window, GWL_EXSTYLE) | WS_EX_LAYERED);
+            if (alpha > 255) alpha = 255;
+            if (alpha < 0) alpha = 0;
+            SetLayeredWindowAttributes(window, RGB(red, green, blue), alpha, LWA_COLORKEY | LWA_ALPHA);
+            alpha = result;
+            transparencyEnabled = true;
+        ')
+        #end
+        public static function setWindowTransparencyColor(red:Int, green:Int, blue:Int, alpha:Int = 255) {
+            return alpha;
+        }
+        #if windows
+        /**
+          * # disableWindowTransparency();
+          * ## *The first friend who doesnt look through you, should be a friend you stay with*
+          * allows for toggling window transparency
+          * ---
+          * @param result Bool
+          * @since RF_DEV_0.1.0
+          */
+        @:functionCode('
+            if (!transparencyEnabled) return false;
+            
+            HWND window = GetActiveWindow();
+            SetWindowLong(window, GWL_EXSTYLE, GetWindowLong(window, GWL_EXSTYLE) ^ WS_EX_LAYERED);
+            SetLayeredWindowAttributes(window, RGB(0, 0, 0), 255, LWA_COLORKEY | LWA_ALPHA);
+            transparencyEnabled = false;
+        ')
+        #end
+        public static function disableWindowTransparency(result:Bool = true) {
+            return result;
         }
     #end
 }

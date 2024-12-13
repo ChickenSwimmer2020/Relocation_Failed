@@ -1,5 +1,6 @@
 package;
 
+import flixel.math.FlxRandom;
 import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.animation.FlxAnimationController;
@@ -79,10 +80,25 @@ class Playstate extends FlxState {
             FlxG.camera.follow(Player, PLATFORMER, 15 * elapsed);
             FGCAM.follow(Player, PLATFORMER, 15 * elapsed);
         }
+        if(FlxG.keys.anyPressed([PAGEUP]) && FlxG.camera.zoom < 2) {
+            FlxG.camera.zoom += 0.05;
+            FGCAM.zoom += 0.05;
+        }
+        if(FlxG.keys.anyPressed([PAGEDOWN]) && FlxG.camera.zoom > 1) {
+            FlxG.camera.zoom -= 0.05;
+            FGCAM.zoom -= 0.05;
+        }
+        if(FlxG.camera.zoom > 2) FlxG.camera.zoom = 2;
+        if(FGCAM.zoom > 2) FGCAM.zoom = 2;
+
+        if(FlxG.camera.zoom < 1) FlxG.camera.zoom > 1;
+        if(FGCAM.zoom < 1) FGCAM.zoom = 1;
+        
         #if !mobile
         if(FlxG.mouse.justPressed) {
             var mousePos = FlxG.mouse.getPosition();
-            BulletGroup.add(new Bullet(Player2.x, Player2.y, mousePos, PISTOLROUNDS));
+            var randY:Int = FlxRandom.float(-0.5, 0.5);
+            BulletGroup.add(new Bullet(Player2.getGraphicMidpoint().x, Player2.getGraphicMidpoint().y, mousePos, PISTOLROUNDS));
         }
         #else
         #end
