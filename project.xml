@@ -8,6 +8,9 @@
     <window if="cpp" width="1280" height="720" fps="60" background="#000000" hardware="false" vsync="false"/>
     <window if="hl" width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false"/>
 
+    <window if="mobile" width="0" height="0" background="#FFFFFF" fps="60" />
+    <android target-sdk-version="17" />
+
     <!--HTML5 settings-->
     <window if="html5" width="0" height="0" resizeable="false"/>
 

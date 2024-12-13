@@ -4,6 +4,7 @@ import backend.Functions;
 import flixel.math.FlxMath;
 import backend.Assets;
 import substates.PauseMenuSubState;
+import backend.HUD;
 
 typedef PhysicProperties = {
     var speed:Float;
@@ -48,8 +49,8 @@ class Player extends FlxSprite {
 		super(xPos, yPos);
         health = 100;
         this.playstate = playstate;
-        curPhysProperties = nonSprintPhysProps;
-		loadGraphic(Assets.image('Player_LEGS'), true, 51, 51, true);
+        curPhysProperties = nonSprintPhysProps;		
+        loadGraphic(Assets.image('Player_LEGS'), true, 51, 51, true);
 		drag.set(curPhysProperties.drag, curPhysProperties.drag);
 
 		animation.add("idle", [0], 30, false, false, false);
@@ -68,11 +69,17 @@ class Player extends FlxSprite {
 	}
 
 	function checkForPauseMenu() {
+        #if !mobile
 		if (FlxG.keys.anyPressed([ESCAPE]))
 			FlxG.state.openSubState(new substates.PauseMenuSubState());
+        #else
+        if (HUD.virtualPad.buttonC.pressed)
+            FlxG.state.openSubState(new substates.PauseMenuSubState()); //support for mobile pausing
+        #end
 	}
 
 	function movement() {
+        #if !mobile
 		if (FlxG.keys.anyPressed([SHIFT]) && stamina > 0 && isMoving){
 			curPhysProperties = sprintPhysProps;
             stamina--;
@@ -81,7 +88,18 @@ class Player extends FlxSprite {
             if(stamina < 100 && !FlxG.keys.anyPressed([SHIFT]))
                 stamina++;
         }
+        #else
+		if (HUD.virtualPad.buttonX.pressed && stamina > 0 && isMoving){ //mobile gamepad support
+			curPhysProperties = sprintPhysProps;
+            stamina--;
+        }else{
+			curPhysProperties = nonSprintPhysProps;
+            if(stamina < 100 && !HUD.virtualPad.buttonX.pressed)
+                stamina++;
+        }
+        #end
 
+        #if !mobile
         if (FlxG.keys.anyPressed([LEFT, A]))
             curMovementDir = left;
         else if (FlxG.keys.anyPressed([RIGHT, D]))
@@ -92,11 +110,27 @@ class Player extends FlxSprite {
             curMovementDir = down;
         else
             curMovementDir = none;
+        #else
+        if (HUD.virtualPad.buttonLeft.pressed)
+            curMovementDir = left;
+        else if (HUD.virtualPad.buttonRight.pressed)
+            curMovementDir = right;
+        else if (HUD.virtualPad.buttonUp.pressed)
+            curMovementDir = up;
+        else if (HUD.virtualPad.buttonRight.pressed)
+            curMovementDir = down;
+        else
+            curMovementDir = none;
+        #end
 
 		animation.play(curMovementDir);
 		isMoving = curMovementDir != none;
 
+        #if !mobile
         var movementDirs = [FlxG.keys.anyPressed([LEFT, A]), FlxG.keys.anyPressed([RIGHT, D]), FlxG.keys.anyPressed([UP, W]), FlxG.keys.anyPressed([DOWN, S])];
+        #else
+        var movementDirs = [HUD.virtualPad.buttonLeft.pressed, HUD.virtualPad.buttonRight.pressed, HUD.virtualPad.buttonUp.pressed, HUD.virtualPad.buttonRight.pressed];
+        #end
         var count = 0;
         var allOn = false;
         for (dir in movementDirs) if (dir) count++;
@@ -143,36 +177,44 @@ class Player extends FlxSprite {
 		super.update(elapsed);
 		movement();
 		checkForPauseMenu();
-        AimerPOSx = this.x;
-        AimerPOSy = this.y;
+        //AimerPOSx = this.x;
+        //AimerPOSy = this.y;
 		#if debug
 		FlxG.watch.addQuick('Stamina', stamina);
 		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
 		#end
 	}
 }
-class Aimer extends FlxSprite {
-    static public var curAngle:Float;
-    public function new() {
-        super();
-		loadGraphic(Assets.image('Player_upper'), true, 32, 32, true);
-    }
-    override public function update(elapsed:Float) {
-        super.update(elapsed);
-        this.x = Player.AimerPOSx;
-        this.y = Player.AimerPOSy;
-        AimAtCusor();
-        curAngle = this.angle;
-    }
-    public function AimAtCusor()
-        {
-            //angle is a float, singular number between 360, and -360. somehow, i need to get a value like that from the mouse coords. how the fuck does that work???
-            //answer: triga-fucking-nomitry.
-            angle = Functions.getSpriteAngleFromMousePos();
-                    //flip the player based on what angle is current
-            if(Aimer.curAngle < -90 || Aimer.curAngle > 90)
-                this.flipY = true;
-            else
-                this.flipY = false;
-        }
-}
+//class Aimer extends FlxSprite {
+//    static public var curAngle:Float;
+//    public function new() {
+//        super();
+//		loadGraphic(Assets.image('Player_upper'), true, 32, 32, true);
+//    }
+//    override public function update(elapsed:Float) {
+//        super.update(elapsed);
+//        this.x = Player.AimerPOSx;
+//        this.y = Player.AimerPOSy;
+//        #if !mobile
+//        AimAtCusor();
+//        #else
+//        //TODO: DO THIS
+//        #end
+//        curAngle = this.angle;
+//    }
+//    #if !mobile
+//    public function AimAtCusor()
+//        {
+//            //angle is a float, singular number between 360, and -360. somehow, i need to get a value like that from the mouse coords. how the fuck does that work???
+//            //answer: triga-fucking-nomitry.
+//            angle = Functions.getSpriteAngleFromMousePos();
+//                    //flip the player based on what angle is current
+//            if(Aimer.curAngle < -90 || Aimer.curAngle > 90)
+//                this.flipY = true;
+//            else
+//                this.flipY = false;
+//        }
+//    #else
+//    //TODO: IMPLEMENT MOBILE SUPPORT FOR THE AIMER
+//    #end
+//}

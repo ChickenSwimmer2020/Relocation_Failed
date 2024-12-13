@@ -1,5 +1,8 @@
 package backend;
 
+import flixel.input.touch.FlxTouchManager;
+import flixel.input.touch.FlxTouch;
+
 class Button extends FlxSprite
 {
     private var StaticBG:FlxSprite = new FlxSprite(0, 0);
@@ -27,8 +30,15 @@ class Button extends FlxSprite
     override public function update(elapsed:Float) {
         super.update(elapsed);
         CheckHover();
+        #if !mobile
         if(FlxG.mouse.overlaps(this) && FlxG.mouse.justPressed)
             Pressed();
+        #else
+        for (touch in FlxG.touches.justReleased()) {
+            if (touch.overlaps(this) && touch.justPressed)
+                Pressed();
+        }
+        #end
     }
 
     function CheckHover()
@@ -38,4 +48,15 @@ class Button extends FlxSprite
             else
                 this.color = 0xffffffff;
         }
+}
+
+class Txt extends FlxText{
+
+    public function new(TXT:String, FNTSIZE:Int, X:Float, Y:Float, ?ALIGN:FlxTextAlign = CENTER) {
+        super(X, Y, 0, TXT, FNTSIZE, false);
+        this.alignment = ALIGN;
+        this.updateHitbox();
+        this.text = TXT;
+        this.antialiasing = false;
+    }
 }

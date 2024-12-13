@@ -10,7 +10,7 @@ class Playstate extends FlxState {
     public static var instance:Playstate;
     //we have to create the player in a stupid way thanks to my ideas.
     public var Player:Player;
-    public var Player2:Aimer;
+    //public var Player2:Aimer;
     public var Hud:HUD;
     public var Level:Level;
 
@@ -36,21 +36,23 @@ class Playstate extends FlxState {
         Hud = new HUD(this);
         Hud.cameras = [HUDCAM];
         Player = new Player(0, 0, this);
-        Player2 = new Aimer();
+        //Player2 = new Aimer();
         Level = new Level(LevelLoader.ParseLevelData(Assets.asset('level1.json')));
         Level.loadLevel();
 
         add(Level);
         add(Player);
-        add(Player2);
+        //add(Player2);
         add(Hud);
 
         trace(Level.levelData);
     }
 
     override public function update(elapsed:Float) {
-        FlxG.camera.follow(Player, PLATFORMER, 15 * elapsed);
-        FGCAM.follow(Player, PLATFORMER, 15 * elapsed);
+        if(!Level.CameraLocked) { //camera locking so we can have static rooms
+            FlxG.camera.follow(Player, PLATFORMER, 15 * elapsed);
+            FGCAM.follow(Player, PLATFORMER, 15 * elapsed);
+        }
         super.update(elapsed);
     }
 }

@@ -1,5 +1,7 @@
 package backend;
 
+import flixel.input.touch.FlxTouch;
+
 class Functions
 {
     static inline public function GetPlatform():String
@@ -24,6 +26,7 @@ class Functions
         // Convert logarithmic scale to linear
         return 1 - (Math.log(x) / Math.log(minValue));
     }
+    #if !mobile
     static public function getSpriteAngleFromMousePos():Float
         {
             //thanks chatGPT!
@@ -48,4 +51,5 @@ class Functions
             #end
             return angle;
         }
+    #end
 }

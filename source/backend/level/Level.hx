@@ -17,6 +17,7 @@ class Level extends FlxGroup
     public var LevelID:String;
     public var ChapterID:Int;
     public var MapBounds:FlxRect;
+    public var CameraLocked:Bool = false;
 
     override public function new(levelData:LevelData) {
         super();
@@ -36,6 +37,7 @@ class Level extends FlxGroup
 
         LevelID = levelHeader.LevelID;
         ChapterID = levelHeader.Chapter;
+        CameraLocked = levelHeader.CameraLocked;
         MapBounds = new FlxRect(0,0,levelHeader.Boundries[0],levelHeader.Boundries[1]);
 
         for (object in levelData.objects){

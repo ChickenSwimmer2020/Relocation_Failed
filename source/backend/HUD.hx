@@ -3,6 +3,10 @@ package backend;
 import flixel.math.FlxPoint;
 using flixel.util.FlxSpriteUtil;
 
+#if mobile
+import flixel.ui.FlxVirtualPad;
+#end
+
 class HUD extends FlxSpriteGroup {
     public var HUDBG:FlxSprite;
     public var HPTXT:FlxText;
@@ -17,6 +21,10 @@ class HUD extends FlxSpriteGroup {
     public var ammocounter_AMMOTEXT:FlxText;
     public var ammocounter_LINE:FlxSprite;
     //public var ammocounter_AMMOSPR:FlxSprite;
+
+    #if mobile
+    public static var virtualPad:FlxVirtualPad;
+    #end
 
     public function new(playstate:Playstate) {
         super();
@@ -56,6 +64,10 @@ class HUD extends FlxSpriteGroup {
         SMTXT.alignment = LEFT;
         SMTXT.text = "Stamina";
         add(SMTXT);
+        #if mobile
+        virtualPad = new FlxVirtualPad(FULL, NONE);
+        add(virtualPad);
+        #end
     }
 
     override public function update(elapsed:Float) {

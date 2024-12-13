@@ -3,7 +3,8 @@
         {
             "LevelID": "TestMap01",
             "Chapter": 0,
-            "Boundries": [1280, 720]
+            "Boundries": [1280, 720],
+            "CameraLocked": false
         },
     "objects":[
         {

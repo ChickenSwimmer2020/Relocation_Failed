@@ -18,6 +18,7 @@ class MainMenu extends FlxState {
     var curPlatform:String;
 
     var Button_Play:Button;
+    var BP_text:Txt;
     var Button_Settings:Button;
 
     var BG:FlxBackdrop;
@@ -25,7 +26,7 @@ class MainMenu extends FlxState {
     override public function create() {
         if(FlxG.sound.music == null)
             FlxG.sound.playMusic(Assets.sound('MENU.ogg'));
-        openSubState(new Intro());
+        //openSubState(new Intro());
         //background
         BG = new FlxBackdrop('', XY, 0, 0);
         BG.loadGraphic(Assets.image('MainMenuBGSKY'));
@@ -63,7 +64,9 @@ class MainMenu extends FlxState {
         Button_Play = new Button(600, 360, '', ()->{ Functions.DoButtonShtuff('Play'); }, 1, false);
         Button_Play.loadGraphic(Assets.image('ButtonTEST'));
         Button_Play.screenCenter(XY);
+        BP_text = new Txt('Play!', 18, 620, 260);
         add(Button_Play);
+        add(BP_text);
 
         Button_Settings = new Button(Button_Play.x, Button_Play.y + 160, '', ()->{ Functions.DoButtonShtuff('Settings'); }, 1, false);
         Button_Settings.loadGraphic(Assets.image('ButtonTEST'));
@@ -74,6 +77,7 @@ class MainMenu extends FlxState {
     override public function update(elapsed:Float) {
             super.update(elapsed);
 
+            #if !mobile
             if(FlxG.mouse.overlaps(Button_Play))
                 {
                     FlxTween.cancelTweensOf(Button_Play);
@@ -107,5 +111,6 @@ class MainMenu extends FlxState {
                         ease: FlxEase.circOut
                     });
                 }
+            #end
     }
 }
