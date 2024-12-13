@@ -10,7 +10,10 @@ class Playstate extends FlxState {
     public static var instance:Playstate;
     //we have to create the player in a stupid way thanks to my ideas.
     public var Player:Player;
-    //public var Player2:Aimer;
+    #if !mobile
+    public var Player2:Aimer;
+    #else
+    #end
     public var Hud:HUD;
     public var Level:Level;
 
@@ -24,6 +27,13 @@ class Playstate extends FlxState {
 
     override public function create() {
         super.create();
+        
+        #if !mobile
+            #if debug
+                var DebuggerHelper = new backend.DEBUGKEYS();
+                add(DebuggerHelper);
+            #end
+        #end
 
         FGCAM = new FlxCamera();
         FlxG.cameras.add(FGCAM, false);
@@ -36,13 +46,20 @@ class Playstate extends FlxState {
         Hud = new HUD(this);
         Hud.cameras = [HUDCAM];
         Player = new Player(0, 0, this);
-        //Player2 = new Aimer();
+        Player.solid = true; //collisions
+        #if !mobile
+        Player2 = new Aimer();
+        #else
+        #end
         Level = new Level(LevelLoader.ParseLevelData(Assets.asset('level1.json')));
         Level.loadLevel();
 
         add(Level);
         add(Player);
-        //add(Player2);
+        #if !mobile
+        add(Player2);
+        #else
+        #end
         add(Hud);
 
         trace(Level.levelData);

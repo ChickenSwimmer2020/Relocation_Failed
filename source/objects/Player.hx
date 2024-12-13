@@ -29,6 +29,10 @@ class Player extends FlxSprite {
         speed: 375,
         drag: 5000
     };
+    public var collisionPhysProps:PhysicProperties = {
+        speed: 300,
+        drag: 999999999999
+    };
     public var curPhysProperties:PhysicProperties;
     public var curMovementDir:MovementDirection;
 
@@ -67,6 +71,16 @@ class Player extends FlxSprite {
 
 		animation.play('idle');
 	}
+
+    public function CheckCollision(obj:FlxSprite):Bool {
+        if(this.overlaps(obj)) {
+            trace('player is colliding!');
+            FlxG.collide(this, obj, null);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 	function checkForPauseMenu() {
         #if !mobile
@@ -177,44 +191,51 @@ class Player extends FlxSprite {
 		super.update(elapsed);
 		movement();
 		checkForPauseMenu();
-        //AimerPOSx = this.x;
-        //AimerPOSy = this.y;
+        #if !mobile
+        AimerPOSx = this.x;
+        AimerPOSy = this.y;
+        #else
+        #end
 		#if debug
 		FlxG.watch.addQuick('Stamina', stamina);
 		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
 		#end
 	}
 }
-//class Aimer extends FlxSprite {
-//    static public var curAngle:Float;
-//    public function new() {
-//        super();
-//		loadGraphic(Assets.image('Player_upper'), true, 32, 32, true);
-//    }
-//    override public function update(elapsed:Float) {
-//        super.update(elapsed);
-//        this.x = Player.AimerPOSx;
-//        this.y = Player.AimerPOSy;
-//        #if !mobile
-//        AimAtCusor();
-//        #else
-//        //TODO: DO THIS
-//        #end
-//        curAngle = this.angle;
-//    }
-//    #if !mobile
-//    public function AimAtCusor()
-//        {
-//            //angle is a float, singular number between 360, and -360. somehow, i need to get a value like that from the mouse coords. how the fuck does that work???
-//            //answer: triga-fucking-nomitry.
-//            angle = Functions.getSpriteAngleFromMousePos();
-//                    //flip the player based on what angle is current
-//            if(Aimer.curAngle < -90 || Aimer.curAngle > 90)
-//                this.flipY = true;
-//            else
-//                this.flipY = false;
-//        }
-//    #else
-//    //TODO: IMPLEMENT MOBILE SUPPORT FOR THE AIMER
-//    #end
-//}
+#if !mobile
+class Aimer extends FlxSprite {
+    static public var curAngle:Float;
+    public function new() {
+        super();
+		loadGraphic(Assets.image('Player_upper'), true, 32, 32, true);
+    }
+    override public function update(elapsed:Float) {
+        super.update(elapsed);
+        this.x = Player.AimerPOSx;
+        this.y = Player.AimerPOSy;
+        #if !mobile
+        AimAtCusor();
+        #else
+        //TODO: DO THIS
+        #end
+        curAngle = this.angle;
+    }
+    #if !mobile
+    public function AimAtCusor()
+        {
+            //angle is a float, singular number between 360, and -360. somehow, i need to get a value like that from the mouse coords. how the fuck does that work???
+            //answer: triga-fucking-nomitry.
+            angle = Functions.getSpriteAngleFromMousePos();
+                    //flip the player based on what angle is current
+            if(Aimer.curAngle < -90 || Aimer.curAngle > 90)
+                this.flipY = true;
+            else
+                this.flipY = false;
+        }
+    #else
+    //TODO: IMPLEMENT MOBILE SUPPORT FOR THE AIMER
+    #end
+}
+#else
+//TODO: android aim system, joystick maybe?
+#end

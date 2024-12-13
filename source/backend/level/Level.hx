@@ -1,5 +1,6 @@
 package backend.level;
 
+import objects.Player;
 import flixel.math.FlxRect;
 import backend.level.LevelLoader.LevelHeader;
 import backend.level.LevelExceptions.LevelNullException;
@@ -43,9 +44,15 @@ class Level extends FlxGroup
         for (object in levelData.objects){
             var obj = cast(new LevelSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG)), LevelSprite);
             obj.scale.set(object.ScaleX, object.ScaleY);
+
+            if(object.ScaleX > 1 || object.ScaleX < 1 || (object.ScaleY > 1 || object.ScaleY < 1)) //stupid `On static platforms, null can't be useds as basic type Float` error.
+                    obj.updateHitbox(); //since we're doing collision stuff, hitboxes actually need to update now
+
             obj.scrollFactor.set(object.SFX, object.SFY);
-            if (object.CollidesWithPlayer != null) 
+            if (object.CollidesWithPlayer != null) {
                 obj.isCollider = object.CollidesWithPlayer;
+                obj.isForeGroundSprite = object.RenderOverPlayer; //so we can have fg sprites NOT collide at all and possibly cause crashes
+            }
 
             if(object.RenderOverPlayer)
                 obj.cameras = [Playstate.instance.FGCAM];
@@ -77,4 +84,19 @@ class Level extends FlxGroup
 class LevelSprite extends FlxSprite
 {
     public var isCollider:Bool = false;
+    public var isForeGroundSprite:Bool = false;
+
+    public var PlayerIsCollidingWithThis:Bool = false;
+
+    override public function update(elapsed:Float) { //WORKING COLLISION?!?!?!
+        if(this.isCollider) {
+            PlayerIsCollidingWithThis = Playstate.instance.Player.CheckCollision(this); //only detects...
+            this.moves = false;
+            this.solid = true;
+            this.immovable = true; //why did the box even move????
+        }
+        if(this.isForeGroundSprite) {
+            this.solid = false; //override the last one hopefully
+        }
+    }
 }
