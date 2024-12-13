@@ -54,6 +54,9 @@ class Level extends FlxGroup
                 obj.isForeGroundSprite = object.RenderOverPlayer; //so we can have fg sprites NOT collide at all and possibly cause crashes
             }
 
+            if(!object.VIS)
+                obj.alpha = 0.00000001; //so that the collision can still be done
+
             if(object.RenderOverPlayer)
                 obj.cameras = [Playstate.instance.FGCAM];
 

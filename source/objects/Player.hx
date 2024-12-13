@@ -1,5 +1,8 @@
 package objects;
 
+import flixel.addons.effects.FlxTrail;
+import flixel.effects.particles.FlxParticle;
+import flixel.addons.effects.chainable.FlxTrailEffect;
 import backend.Functions;
 import flixel.math.FlxMath;
 import backend.Assets;
@@ -75,16 +78,26 @@ class Player extends FlxSprite {
     public function CheckCollision(obj:FlxSprite):Bool {
         if(this.overlaps(obj)) {
             trace('player is colliding!');
-            FlxG.collide(this, obj, null);
+            FlxG.collide(this, obj, null); //somehow make the collision smooth???
             return true;
         } else {
             return false;
         }
     }
 
+    function resetPauseMenu() {
+        if(PauseMenuSubState.PauseJustClosed) {
+            var tmr:FlxTimer = new FlxTimer();
+            tmr.start(1, function(tmr:FlxTimer) {
+                PauseMenuSubState.PauseJustClosed = false;
+                Functions.traceOnce('pause menu detection has been reset');
+            });
+        }
+    }
+
 	function checkForPauseMenu() {
         #if !mobile
-		if (FlxG.keys.anyPressed([ESCAPE]))
+		if (FlxG.keys.anyPressed([ESCAPE]) && !PauseMenuSubState.PauseJustClosed) //so the pause menu can be closed with the escape key and not instantly reopen
 			FlxG.state.openSubState(new substates.PauseMenuSubState());
         #else
         if (HUD.virtualPad.buttonC.pressed)
@@ -191,6 +204,7 @@ class Player extends FlxSprite {
 		super.update(elapsed);
 		movement();
 		checkForPauseMenu();
+        resetPauseMenu();
         #if !mobile
         AimerPOSx = this.x;
         AimerPOSy = this.y;
@@ -213,6 +227,7 @@ class Aimer extends FlxSprite {
         super.update(elapsed);
         this.x = Player.AimerPOSx;
         this.y = Player.AimerPOSy;
+        this.updateHitbox(); //since angle stuff changes, we want this to update. right?
         #if !mobile
         AimAtCusor();
         #else

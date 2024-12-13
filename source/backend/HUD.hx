@@ -1,5 +1,7 @@
 package backend;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.math.FlxPoint;
 using flixel.util.FlxSpriteUtil;
 
@@ -24,6 +26,13 @@ class HUD extends FlxSpriteGroup {
 
     #if mobile
     public static var virtualPad:FlxVirtualPad;
+    #end
+
+    #if debug
+    public var debugControls:FlxText;
+    public static var pressforcontrols:FlxText;
+    public var FPS:FlxText;
+    public var fps:Float = 0;
     #end
 
     public function new(playstate:Playstate) {
@@ -68,13 +77,36 @@ class HUD extends FlxSpriteGroup {
         virtualPad = new FlxVirtualPad(FULL, NONE);
         add(virtualPad);
         #end
+
+        #if debug
+        pressforcontrols = new FlxText(0, 700, 0, "Press HOME For Debug Controls", 12, false);
+        add(pressforcontrols);
+        debugControls = new FlxText(0, 0, 0, "", 24, false);
+        debugControls.text = "Press ONE to toggle hitboxes view";
+        debugControls.screenCenter(XY);
+        debugControls.alpha = 0;
+        add(debugControls);
+        FPS = new FlxText(1220, 0, 0, '', 12, false);
+        add(FPS);
+        #end
     }
 
     override public function update(elapsed:Float) {
+        super.update(elapsed); //we forgot this-
+
         healthBar.setRange(0, playstate.Player.maxHealth);
         stamBar.setRange(0, playstate.Player.maxStamina);
         healthBar.value = playstate.Player.health;
         stamBar.value = playstate.Player.stamina;
+
+        #if debug
+        fps = FlxG.elapsed;
+        FPS.text = '$fps :FPS';
+        if(FlxG.keys.anyJustPressed([HOME])) {
+            debugControls.alpha = 1;
+            FlxTween.tween(debugControls, {"alpha": 0}, 3, { ease: FlxEase.expoIn});
+        }
+        #end
     }
 
 }

@@ -30,6 +30,7 @@ typedef LevelObject =
     var SFX:Float; //X scroll factor
     var SFY:Float; //Y scroll factor
     var IMG:String; //what image do we load
+    var VIS:Bool; //should the sprite be visible?
     var ?CollidesWithPlayer:Bool; //should it collide with player?
     var ?IsBackground:Bool; //automatically scales across entire screen
     var ?RenderOverPlayer:Bool; //should the sprite cover the player?

@@ -61,14 +61,14 @@ class MainMenu extends FlxState {
         add(versiontext);
 
         //buttons handling
-        Button_Play = new Button(600, 360, '', ()->{ Functions.DoButtonShtuff('Play'); }, 1, false);
+        Button_Play = new Button(600, 360, '', ()->{ FlxG.switchState(new Playstate()); }, 1, false);
         Button_Play.loadGraphic(Assets.image('ButtonTEST'));
         Button_Play.screenCenter(XY);
         BP_text = new Txt('Play!', 18, 620, 260);
         add(Button_Play);
         add(BP_text);
 
-        Button_Settings = new Button(Button_Play.x, Button_Play.y + 160, '', ()->{ Functions.DoButtonShtuff('Settings'); }, 1, false);
+        Button_Settings = new Button(Button_Play.x, Button_Play.y + 160, '', ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
         Button_Settings.loadGraphic(Assets.image('ButtonTEST'));
         add(Button_Settings);
 

@@ -1,9 +1,13 @@
 package;
 
-import backend.Assets;
-import objects.Player;
-import backend.HUD;
+import flixel.group.FlxGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.animation.FlxAnimationController;
+import flixel.addons.effects.FlxTrail;
+import backend.*;
 import backend.level.*;
+import objects.Player.Aimer;
+import objects.*;
 
 class Playstate extends FlxState {
     
@@ -19,6 +23,8 @@ class Playstate extends FlxState {
 
     public var FGCAM:FlxCamera;
     public var HUDCAM:FlxCamera;
+
+    public var BulletGroup:FlxGroup;
     
     override public function new() {
         super();
@@ -27,6 +33,8 @@ class Playstate extends FlxState {
 
     override public function create() {
         super.create();
+
+        BulletGroup = new FlxGroup();
         
         #if !mobile
             #if debug
@@ -60,6 +68,7 @@ class Playstate extends FlxState {
         add(Player2);
         #else
         #end
+        add(BulletGroup);
         add(Hud);
 
         trace(Level.levelData);
@@ -70,6 +79,13 @@ class Playstate extends FlxState {
             FlxG.camera.follow(Player, PLATFORMER, 15 * elapsed);
             FGCAM.follow(Player, PLATFORMER, 15 * elapsed);
         }
+        #if !mobile
+        if(FlxG.mouse.justPressed) {
+            var mousePos = FlxG.mouse.getPosition();
+            BulletGroup.add(new Bullet(Player2.x, Player2.y, mousePos, PISTOLROUNDS));
+        }
+        #else
+        #end
         super.update(elapsed);
     }
 }

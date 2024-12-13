@@ -7,6 +7,8 @@ class PauseMenuSubState extends FlxSubState {
     var button_backToGame:FlxButton;
     var button_mainMenu:FlxButton;
 
+    public static var PauseJustClosed:Bool = false;
+
     override function create() {
         pauseCAM = new FlxCamera();
         FlxG.cameras.add(pauseCAM, false);
@@ -26,5 +28,15 @@ class PauseMenuSubState extends FlxSubState {
         button_mainMenu = new FlxButton(0, button_backToGame.y + 20, "Main Menu", () -> {close(); FlxG.switchState(new menu.MainMenu()); pauseCAM.destroy();});
         button_mainMenu.cameras = [pauseCAM];
         add(button_mainMenu);
+    }
+
+    override public function update(elapsed:Float) {
+        super.update(elapsed);
+        #if !mobile
+        if(FlxG.keys.anyJustPressed([ESCAPE])) {
+            close();
+            PauseJustClosed = true;
+        }
+        #end
     }
 }

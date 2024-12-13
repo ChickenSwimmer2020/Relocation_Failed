@@ -9,13 +9,21 @@ package backend;
 **/
 class DEBUGKEYS extends FlxObject{
     #if !mobile
+    public var _ONEPRESSED:Bool = false;
+    public var _TWOPRESSED:Bool = false;
     public function new() {
         super();
     }
     override public function update(elapsed:Float) {
-        //toggle debug drawing.
-        if(FlxG.keys.anyJustPressed([ZERO, NUMPADZERO])) {
-            FlxG.debugger.drawDebug = true;
+        //toggle hitboxes drawing.
+        if(FlxG.keys.anyJustPressed([ONE, NUMPADONE])) {
+            if(!_ONEPRESSED){
+                FlxG.debugger.drawDebug = true;
+                _ONEPRESSED = true;
+            } else {
+                FlxG.debugger.drawDebug = false;
+                _ONEPRESSED = false;
+            }
         }
     }
     #end
