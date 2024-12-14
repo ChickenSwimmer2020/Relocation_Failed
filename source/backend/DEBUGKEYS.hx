@@ -1,5 +1,7 @@
 package backend;
 
+import flixel.input.keyboard.FlxKey;
+
 
 /**
     # allows debug keys for quick and easy debugging!
@@ -7,23 +9,41 @@ package backend;
     ### oh wait i forgot that it wont work if outside of debug mode-
     ###### why am i even typing this????
 **/
-class DEBUGKEYS extends FlxObject{
-    #if !mobile
-    public var _ONEPRESSED:Bool = false;
-    public var _TWOPRESSED:Bool = false;
-    public function new() {
-        super();
-    }
-    override public function update(elapsed:Float) {
+class DEBUGKEYS{
+    #if (!mobile && debug)
+    public var pressed:Array<Bool> = [false, false];
+    public var numberKeys:Array<Array<FlxKey>> = 
+    [
+        [ZERO, NUMPADZERO],
+        [ONE, NUMPADONE],
+        [TWO, NUMPADTWO],
+        [THREE, NUMPADTHREE],
+        [FOUR, NUMPADFOUR],
+        [FIVE, NUMPADFIVE],
+        [SIX, NUMPADSIX],
+        [SEVEN, NUMPADSEVEN],
+        [EIGHT, NUMPADEIGHT],
+        [NINE, NUMPADNINE]
+    ];
+    public var keyResponses:Array<() -> Void> = 
+    [
         //toggle hitboxes drawing.
-        if(FlxG.keys.anyJustPressed([ONE, NUMPADONE])) {
-            if(!_ONEPRESSED){
-                FlxG.debugger.drawDebug = true;
-                _ONEPRESSED = true;
-            } else {
-                FlxG.debugger.drawDebug = false;
-                _ONEPRESSED = false;
-            }
+        () -> { FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug; },
+        () -> {},
+        () -> {},
+        () -> {},
+        () -> {},
+        () -> {},
+        () -> {},
+        () -> {},
+        () -> {},
+        () -> {}
+    ];
+    public function new() return;
+    public function update(elapsed:Float) {
+        for (keyID in 0...numberKeys.length){
+            pressed[keyID] = FlxG.keys.anyJustPressed(numberKeys[keyID]);
+            if (pressed[keyID]) keyResponses[keyID]();
         }
     }
     #end
