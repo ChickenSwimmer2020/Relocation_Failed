@@ -26,6 +26,11 @@ class Playstate extends FlxState {
     public var HUDCAM:FlxCamera;
 
     public var BulletGroup:FlxGroup;
+    #if !mobile
+        #if debug
+            public var DebuggerHelper = new backend.DEBUGKEYS();
+        #end
+    #end
     
     override public function new() {
         super();
@@ -37,11 +42,7 @@ class Playstate extends FlxState {
 
         BulletGroup = new FlxGroup();
         
-        #if !mobile
-            #if debug
-                var DebuggerHelper = new backend.DEBUGKEYS();
-            #end
-        #end
+        
 
         FGCAM = new FlxCamera();
         FlxG.cameras.add(FGCAM, false);
@@ -75,7 +76,7 @@ class Playstate extends FlxState {
     }
 
     override public function update(elapsed:Float) {
-        DebuggerHelper.update();
+        DebuggerHelper.update(elapsed);
         if(!Level.CameraLocked) { //camera locking so we can have static rooms
             FlxG.camera.follow(Player, PLATFORMER, 15 * elapsed);
             FGCAM.follow(Player, PLATFORMER, 15 * elapsed);
