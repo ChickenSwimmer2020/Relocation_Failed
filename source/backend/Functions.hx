@@ -30,7 +30,9 @@ class Functions
       * @since RF_DEV_0.0.4
       */
     static inline public function GetPlatform():String
-        #if modded #if html5 return "Html5 (MODDED)"; #else #if cpp return "Windows (MODDED)"; #else #if hl return "HashLink/Windows (MODDED)"; #else return "Unknown (MODDED)"; #end #end #end #else #if html5 return "Html5"; #else #if cpp return "Windows"; #else #if hl return "HashLink/Windows"; #else return "Unknown"; #end #end #end #end
+        #if modded #if html5 return "Html5 (MODDED)"; #else #if cpp return "Windows (MODDED)"; #else #if hl return "HashLink/Windows (MODDED)";
+        #else return "Unknown (MODDED)"; #end #end #end #else #if html5 return "Html5"; #else #if cpp return "Windows"; #else #if hl return "HashLink/Windows";
+        #else return "Unknown"; #end #end #end #end
     /**
       * # traceOnce();
       * ## *why flood, when you can trace!*
