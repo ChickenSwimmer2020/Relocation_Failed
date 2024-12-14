@@ -28,7 +28,7 @@ class DEBUGKEYS{
     [
         //toggle hitboxes drawing.
         () -> { FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug; },
-        () -> { trace(FlxG.save); },
+        () -> { trace(FlxG.save.data); },
         () -> {},
         () -> {},
         () -> {},
