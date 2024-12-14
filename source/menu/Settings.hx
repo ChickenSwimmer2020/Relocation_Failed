@@ -1,5 +1,7 @@
 package menu;
 
+import flixel.addons.ui.FlxUISlider;
+import flixel.addons.ui.FlxSlider;
 import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUITabMenu;
@@ -7,6 +9,7 @@ import flixel.addons.ui.FlxUITabMenu;
 class Settings extends FlxState{
     var TabGroups:FlxUITabMenu;
     var Back:FlxButton;
+    var volume:Float = 0;
 
     override public function create() {
 		var tabs = [
@@ -16,10 +19,12 @@ class Settings extends FlxState{
 			{name: "tab_4", label: "test4"}
 		];
         TabGroups = new FlxUITabMenu(null, tabs, true);
-        var tabs_radio_1 = new FlxUIRadioGroup(10, 10, ["test1", "test2", "test3", "test4"], ["Test Button 1", "Test Button 2", "Test Button 3", "Test Button 4"]);
-
+        var sliderRate = new FlxUISlider(this, 'volume', 10, 10, 0.5, 3, 150, 15, 5, FlxColor.WHITE, FlxColor.BLACK);
+		sliderRate.nameLabel.text = 'Volume';
 		var tab_group_1 = new FlxUI(null, TabGroups, null);
-		tab_group_1.add(tabs_radio_1);
+        tab_group_1.name = 'tab_1';
+		tab_group_1.add(sliderRate);
+        TabGroups.addGroup(tab_group_1);
 
         Back = new FlxButton(0, 0, "Back", function() {FlxG.switchState(new menu.MainMenu());});
         Back.screenCenter(X);
