@@ -76,7 +76,9 @@ class Playstate extends FlxState {
     }
 
     override public function update(elapsed:Float) {
-        DebuggerHelper.update(elapsed);
+        #if debug
+            DebuggerHelper.update(elapsed);
+        #end
         if(!Level.CameraLocked) { //camera locking so we can have static rooms
             FlxG.camera.follow(Player, PLATFORMER, 15 * elapsed);
             FGCAM.follow(Player, PLATFORMER, 15 * elapsed);
@@ -98,14 +100,6 @@ class Playstate extends FlxState {
         #if !mobile
         if(FlxG.mouse.justPressed) {
             Bullet.shoot();
-        }
-        for(Bullet in BulletGroup) {
-            var DB:FlxSprite = cast Bullet;
-            trace(DB);
-            if(!DB.isOnScreen(FGCAM)) {
-                DB.kill();
-                trace(DB);
-            }
         }
         #else
         #end

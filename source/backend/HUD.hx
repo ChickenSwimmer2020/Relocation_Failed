@@ -34,45 +34,15 @@ class HUD extends FlxSpriteGroup {
     public var FPS:FlxText;
     public var fps:Float = 0;
     #end
-
+    
     public function new(playstate:Playstate) {
         super();
         this.playstate = playstate;
 
         scrollFactor.set(0, 0);
 
-        HUDBG = new FlxSprite(0, 0).makeGraphic(500, 60, FlxColor.TRANSPARENT);
-        HUDBG.drawPolygon([new FlxPoint(0, 0), new FlxPoint(300, 0), new FlxPoint(250, 60), new FlxPoint(0, 60), new FlxPoint(0,0)], FlxColor.BLACK);
-        add(HUDBG);
-
-        ammocounter_LINE = new FlxSprite(210, 42).makeGraphic(32, 1, FlxColor.WHITE);
-        add(ammocounter_LINE);
-
-        ammocounter_AMMOTEXT = new FlxText(210, 30, 0, "AMMO", 8, true);
-        add(ammocounter_AMMOTEXT);
-
-        FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
-        add(FACEBG);
+        createHud(); //i dont wanna clutter the new function, so imma just move all that to a seperate function
         
-        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 200, 25, playstate.Player, 'health');
-        healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
-        add(healthBar);
-
-        HPTXT = new FlxText(52, healthBar.y + 14);
-        HPTXT.scale.set(1.2,1.2);
-        HPTXT.alignment = LEFT;
-        HPTXT.text = "Health";
-        add(HPTXT);
-
-        stamBar = new FlxBar(healthBar.x, healthBar.y + 25, LEFT_TO_RIGHT, 150, 25, playstate.Player, 'stamina');
-        stamBar.createFilledBar(0xFF0083A0, 0xFF00B7FF);
-        add(stamBar);
-
-        SMTXT = new FlxText(HPTXT.x, HPTXT.y + 25);
-        SMTXT.scale.set(1.2,1.2);
-        SMTXT.alignment = LEFT;
-        SMTXT.text = "Stamina";
-        add(SMTXT);
         #if mobile
         virtualPad = new FlxVirtualPad(FULL, NONE);
         add(virtualPad);
@@ -82,7 +52,7 @@ class HUD extends FlxSpriteGroup {
         pressforcontrols = new FlxText(0, 700, 0, "Press HOME For Debug Controls", 12, false);
         add(pressforcontrols);
         debugControls = new FlxText(0, 0, 0, "", 24, false);
-        debugControls.text = "Press ONE to toggle hitboxes view";
+        debugControls.text = "Press ONE to toggle hitboxes view\nPress TWO to dump save file to console";
         debugControls.screenCenter(XY);
         debugControls.alpha = 0;
         add(debugControls);
@@ -107,6 +77,50 @@ class HUD extends FlxSpriteGroup {
             FlxTween.tween(debugControls, {"alpha": 0}, 3, { ease: FlxEase.expoIn});
         }
         #end
+    }
+
+    function createHud():Void {
+        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 200, 25, playstate.Player, 'health');
+        healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
+        
+
+        HPTXT = new FlxText(52, healthBar.y + 14);
+        HPTXT.scale.set(1.2,1.2);
+        HPTXT.alignment = LEFT;
+        HPTXT.text = "Health";
+        
+
+        stamBar = new FlxBar(healthBar.x, healthBar.y + 25, LEFT_TO_RIGHT, 150, 25, playstate.Player, 'stamina');
+        stamBar.createFilledBar(0xFF0083A0, 0xFF00B7FF);
+        
+
+        SMTXT = new FlxText(HPTXT.x, HPTXT.y + 25);
+        SMTXT.scale.set(1.2,1.2);
+        SMTXT.alignment = LEFT;
+        SMTXT.text = "Stamina";
+        
+
+        HUDBG = new FlxSprite(0, 0).makeGraphic(500, 60, FlxColor.TRANSPARENT);
+        HUDBG.drawPolygon([new FlxPoint(0, 0), new FlxPoint(300, 0), new FlxPoint(250, 60), new FlxPoint(0, 60), new FlxPoint(0,0)], FlxColor.BLACK);
+        
+
+        ammocounter_LINE = new FlxSprite(210, 42).makeGraphic(32, 1, FlxColor.WHITE);
+        
+
+        ammocounter_AMMOTEXT = new FlxText(210, 30, 0, "AMMO", 8, true);
+        
+
+        FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
+        
+
+        add(HUDBG);
+        add(healthBar);
+        add(HPTXT);
+        add(stamBar);
+        add(SMTXT);
+        add(FACEBG);
+        add(ammocounter_LINE);
+        add(ammocounter_AMMOTEXT);
     }
 
 }

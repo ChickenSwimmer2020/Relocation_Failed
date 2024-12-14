@@ -92,6 +92,7 @@ class Functions
       *
       * @since RF_DEV_0.0.9
       */
+    @:deprecated("getSpriteAngleFromMousePose is deprecated, use FlxAngle.angleBetweenPoint, instead") // RF_Dev_0.1.1
     static public function getSpriteAngleFromMousePos():Float
         {
             //thanks chatGPT!

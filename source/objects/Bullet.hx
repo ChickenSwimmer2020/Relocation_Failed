@@ -41,14 +41,16 @@ class Bullet extends FlxSprite {
         }
 
         velocity.set(_SPEED, 0);
-        var rand:Float = new FlxRandom().float(-0.5, 0.5);
+        var rand:Float = new FlxRandom().float(-1, 1); //bullet spread!
         velocity.pivotDegrees(FlxPoint.weak(0, 0), FlxAngle.angleBetweenPoint(this, _TARGET, true) + rand);
     }
 
     override public function update(elapsed:Float) {
         super.update(elapsed);
-        if(!this.isOnScreen(Playstate.instance.FGCAM)) {
-            this.kill();
+        //check if our bullet is offscreen, somehow?
+        if(this.isOnScreen(FlxG.camera) != true) {
+            this.destroy();
+            trace('bullet was destroyed!!\n\nTHATS REALLY GOOD!');
         }
     }
 

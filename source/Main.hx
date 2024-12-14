@@ -10,7 +10,14 @@ class Main extends Sprite{
     }
     function start()
         {
-            FlxG.save.bind('RelocationFailedSAVEDATA');
+
+            var connected:Bool = FlxG.save.bind('RelocationFailedSAVEDATA');
+            if(connected) {
+                trace('save was loaded');
+                loadGameSaveData();
+            } else {
+                trace('save wasnt loaded :(((((((((\n\n\n\nWHYYYYYYYYYYY');
+            }
 
             var game:FlxGame = new FlxGame(0, 0, MainMenu, 60, 60, false, false);
             @:privateAccess
@@ -18,6 +25,6 @@ class Main extends Sprite{
             addChild(game);
         }
     function loadGameSaveData() {
-        
+        Preferences.loadSettings();
     }
 }

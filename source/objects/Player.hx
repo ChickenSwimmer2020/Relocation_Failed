@@ -1,5 +1,7 @@
 package objects;
 
+import flixel.math.FlxAngle;
+import flixel.math.FlxPoint;
 import flixel.addons.effects.FlxTrail;
 import flixel.effects.particles.FlxParticle;
 import flixel.addons.effects.chainable.FlxTrailEffect;
@@ -232,10 +234,10 @@ class Aimer extends FlxSprite {
     #if !mobile
     public function AimAtCusor()
         {
-            //angle is a float, singular number between 360, and -360. somehow, i need to get a value like that from the mouse coords. how the fuck does that work???
-            //answer: triga-fucking-nomitry.
-            angle = Functions.getSpriteAngleFromMousePos();
-                    //flip the player based on what angle is current
+            var Mouse:FlxPoint = FlxG.mouse.getPosition();
+            angle = FlxAngle.angleBetweenPoint(this, Mouse, true); // now the aimer will be at teh same angle as the bullets when fired :/
+
+            //flip the player based on what angle is current
             if(Aimer.curAngle < -90 || Aimer.curAngle > 90)
                 this.flipY = true;
             else

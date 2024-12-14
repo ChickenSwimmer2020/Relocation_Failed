@@ -3,7 +3,6 @@ package menu;
 import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUITabMenu;
-import rf_flixel.ui.FlxButton; //import our custom button class instead of the base one so i can change the size of the font
 
 class Settings extends FlxState{
     var TabGroups:FlxUITabMenu;
@@ -22,7 +21,7 @@ class Settings extends FlxState{
 		var tab_group_1 = new FlxUI(null, TabGroups, null);
 		tab_group_1.add(tabs_radio_1);
 
-        Back = new FlxButton(0, 0, "Back", 8, function() {FlxG.switchState(new menu.MainMenu());});
+        Back = new FlxButton(0, 0, "Back", function() {FlxG.switchState(new menu.MainMenu());});
         Back.screenCenter(X);
 
         add(TabGroups);

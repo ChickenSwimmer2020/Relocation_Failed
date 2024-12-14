@@ -14,7 +14,6 @@ class DEBUGKEYS{
     public var pressed:Array<Bool> = [false, false];
     public var numberKeys:Array<Array<FlxKey>> = 
     [
-        [ZERO, NUMPADZERO],
         [ONE, NUMPADONE],
         [TWO, NUMPADTWO],
         [THREE, NUMPADTHREE],
@@ -29,8 +28,7 @@ class DEBUGKEYS{
     [
         //toggle hitboxes drawing.
         () -> { FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug; },
-        () -> {},
-        () -> {},
+        () -> { trace(FlxG.save); },
         () -> {},
         () -> {},
         () -> {},
