@@ -28,7 +28,7 @@ class MainMenu extends FlxState {
             FlxG.sound.playMusic(Assets.sound('MENU.ogg'));
         //openSubState(new Intro());
         //background
-        BG = new FlxBackdrop('', XY, 0, 0);
+        BG = new FlxBackdrop(null, XY, 0, 0);
         BG.loadGraphic(Assets.image('MainMenuBGSKY'));
         BG.velocity.x = -100;
         add(BG);
@@ -61,15 +61,13 @@ class MainMenu extends FlxState {
         add(versiontext);
 
         //buttons handling
-        Button_Play = new Button(600, 360, '', ()->{ FlxG.switchState(new Playstate()); }, 1, false);
-        Button_Play.loadGraphic(Assets.image('ButtonTEST'));
+        Button_Play = new Button(600, 360, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new Playstate()); }, 1, false);
         Button_Play.screenCenter(XY);
         BP_text = new Txt('Play!', 18, 620, 260);
         add(Button_Play);
         add(BP_text);
 
-        Button_Settings = new Button(Button_Play.x, Button_Play.y + 160, '', ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
-        Button_Settings.loadGraphic(Assets.image('ButtonTEST'));
+        Button_Settings = new Button(Button_Play.x, Button_Play.y + 160, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
         add(Button_Settings);
 
     }

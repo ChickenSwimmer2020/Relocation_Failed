@@ -93,12 +93,18 @@ class Playstate extends FlxState {
 
         if(FlxG.camera.zoom < 1) FlxG.camera.zoom > 1;
         if(FGCAM.zoom < 1) FGCAM.zoom = 1;
-        
+
         #if !mobile
         if(FlxG.mouse.justPressed) {
-            var mousePos = FlxG.mouse.getPosition();
-            var randY:Int = FlxRandom.float(-0.5, 0.5);
-            BulletGroup.add(new Bullet(Player2.getGraphicMidpoint().x, Player2.getGraphicMidpoint().y, mousePos, PISTOLROUNDS));
+            Bullet.shoot();
+        }
+        for(Bullet in BulletGroup) {
+            var DB:FlxSprite = cast Bullet;
+            trace(DB);
+            if(!DB.isOnScreen(FGCAM)) {
+                DB.kill();
+                trace(DB);
+            }
         }
         #else
         #end

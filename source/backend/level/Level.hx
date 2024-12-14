@@ -89,11 +89,9 @@ class LevelSprite extends FlxSprite
     public var isCollider:Bool = false;
     public var isForeGroundSprite:Bool = false;
 
-    public var PlayerIsCollidingWithThis:Bool = false;
-
     override public function update(elapsed:Float) { //WORKING COLLISION?!?!?!
         if(this.isCollider) {
-            PlayerIsCollidingWithThis = Playstate.instance.Player.CheckCollision(this); //only detects...
+            Playstate.instance.Player.CheckCollision(this); //only detects...
             this.moves = false; //how can the player even fucking move the damn sprite????
             this.solid = true; //make object have collision
             this.immovable = true; //why did the box even move????

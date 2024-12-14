@@ -75,14 +75,8 @@ class Player extends FlxSprite {
 		animation.play('idle');
 	}
 
-    public function CheckCollision(obj:FlxSprite):Bool {
-        if(this.overlaps(obj)) {
-            trace('player is colliding!');
-            FlxG.collide(this, obj, null); //somehow make the collision smooth???
-            return true;
-        } else {
-            return false;
-        }
+    public function CheckCollision(obj:FlxSprite) {
+        FlxG.collide(this, obj, null);
     }
 
     function resetPauseMenu() {

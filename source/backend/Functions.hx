@@ -10,6 +10,12 @@ import flixel.input.touch.FlxTouch;
 class Functions
 {
     /**
+      * variable for detecting if the function
+      * has been already executed
+      * @since RF_DEV_0.1.0
+      */
+    public static var Traced:Bool = false;
+    /**
       * # GetPlatform();
       * ## *wait, which platform was safe again?*
       * simple function to return the current platform, pretty easy to work with actually,
@@ -42,7 +48,6 @@ class Functions
       */
     static public function traceOnce(text:String) 
         {
-            var Traced:Bool = false;
             if(!Traced) {
                 trace(text);
                 Traced = true;

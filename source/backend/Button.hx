@@ -17,7 +17,7 @@ class Button extends FlxSprite
      * @param SCL scale of everything
      * @param BGANIM OPTIONAL. allows for addition of animation to the static graphic
      */
-    public function new(X:Float, Y:Float, BG:String, PRS:Void->Void, SCL:Float, ?BGANIM:Bool)
+    public function new(X:Float, Y:Float, BG:FlxGraphic, PRS:Void->Void, SCL:Float, ?BGANIM:Bool)
         {
             super(X, Y, BG);
             Pressed = PRS;

@@ -85,8 +85,8 @@ class SoundTray extends FlxSoundTray {
 			#if FLX_SAVE
 			// Save sound preferences
 			if (FlxG.save.isBound) {
-				FlxG.save.data.mute = FlxG.sound.muted;
-				FlxG.save.data.volume = FlxG.sound.volume;
+				FlxG.save.data.VolumeIsMuted = FlxG.sound.muted;
+				FlxG.save.data.CurVolumeLevel = FlxG.sound.volume;
 				FlxG.save.flush();
 			}
 			#end
