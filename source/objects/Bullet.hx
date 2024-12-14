@@ -56,7 +56,7 @@ class Bullet extends FlxSprite {
 
     public static function shoot() {
         var mousePos = FlxG.mouse.getPosition();
-        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, PISTOLROUNDS));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice));
     }
 
     public function getType():BulletType

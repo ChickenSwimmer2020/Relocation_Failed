@@ -1,13 +1,17 @@
 package backend;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.touch.FlxTouchManager;
 import flixel.input.touch.FlxTouch;
 
-class Button extends FlxSprite
+class Button extends FlxTypedGroup<FlxObject>
 {
     private var StaticBG:FlxSprite = new FlxSprite(0, 0);
     private var Pressed:Void->Void;
     public var Hover:Bool = false;
+    public var DaButton:FlxSprite;
+    public var DaText:Txt;
+
     /**
      * # Button
      * ## why would you press this on me?!
@@ -22,15 +26,29 @@ class Button extends FlxSprite
      * @param BGANIM Bool
      * @since RF_DEV_0.0.2
      */
-    public function new(X:Float, Y:Float, BG:FlxGraphic, PRS:Void->Void, SCL:Float, ?BGANIM:Bool)
+    public function new(TEXT:String, X:Float, Y:Float, BG:FlxGraphic, PRS:Void->Void, SCL:Float, ?BGANIM:Bool)
         {
-            super(X, Y, BG);
+            super();
+            createButton(X, Y, BG, PRS, SCL);
+            DaText = new Txt(TEXT, 24, X, Y, CENTER);
+            updateTextPosition();
+            add(DaText);
+        }
+
+    public function createButton(X:Float, Y:Float, BG:FlxGraphic, PRS:Void->Void, SCL:Float, ?BGANIM:Bool)
+        {
+            DaButton = new FlxSprite(X, Y, BG);
             Pressed = PRS;
             StaticBG.loadGraphic(BG, BGANIM);
             StaticBG.setPosition(X,Y);
             StaticBG.scale.set(SCL, SCL);
             StaticBG.updateHitbox();
+            add(DaButton);
         }
+
+    public function updateTextPosition():Void {
+        DaText.setPosition(DaButton.getGraphicMidpoint().x - DaText.width / 2, DaButton.getGraphicMidpoint().y - DaText.height / 2);
+    }
 
     override public function update(elapsed:Float) {
         super.update(elapsed);
@@ -49,16 +67,16 @@ class Button extends FlxSprite
     function CheckHover()
         {
             if(Hover)
-                this.color = 0xff159cea;
+                DaButton.color = 0xff159cea;
             else
-                this.color = 0xffffffff;
+                DaButton.color = 0xffffffff;
         }
 }
 
 class Txt extends FlxText{
 
     public function new(TXT:String, FNTSIZE:Int, X:Float, Y:Float, ?ALIGN:FlxTextAlign = CENTER) {
-        super(X, Y, 0, TXT, FNTSIZE, false);
+        super(0, 0, 0, TXT, FNTSIZE, false);
         this.alignment = ALIGN;
         this.updateHitbox();
         this.text = TXT;

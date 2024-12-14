@@ -41,6 +41,8 @@ class Player extends FlxSprite {
     public var curPhysProperties:PhysicProperties;
     public var curMovementDir:MovementDirection;
 
+    public var CurWeaponChoice:Bullet.BulletType;
+
 	public var isMoving:Bool = false;
     public var stamina:Int = 100;
     #if (flixel >= "6.0.0")
@@ -100,6 +102,24 @@ class Player extends FlxSprite {
             FlxG.state.openSubState(new substates.PauseMenuSubState()); //support for mobile pausing
         #end
 	}
+
+    function switchWeaponType() {
+        if(CurWeaponChoice == null)
+            CurWeaponChoice = PISTOLROUNDS;
+        
+        if(FlxG.keys.anyJustPressed([J])) {
+            CurWeaponChoice = SHOTGUNSHELL;
+            trace('Current Weapon Type: SHOTGUN');
+        }
+        if(FlxG.keys.anyJustPressed([K])) {
+            CurWeaponChoice = PISTOLROUNDS;
+            trace('Current Weapon Type: PISTOL');
+        }
+        if(FlxG.keys.anyJustPressed([L])) {
+            CurWeaponChoice = RIFLEROUNDS;
+            trace('Current Weapon Type: RIFLE');
+        }
+    }
 
 	function movement() {
         #if !mobile
@@ -201,6 +221,7 @@ class Player extends FlxSprite {
 		movement();
 		checkForPauseMenu();
         resetPauseMenu();
+        switchWeaponType();
         #if !mobile
         AimerPOSx = this.getGraphicMidpoint().x - 15;
         AimerPOSy = this.getGraphicMidpoint().y - 15;

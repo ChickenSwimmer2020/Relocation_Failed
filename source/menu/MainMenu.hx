@@ -61,13 +61,12 @@ class MainMenu extends FlxState {
         add(versiontext);
 
         //buttons handling
-        Button_Play = new Button(600, 360, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new Playstate()); }, 1, false);
-        Button_Play.screenCenter(XY);
-        BP_text = new Txt('Play!', 18, 620, 350);
+        Button_Play = new Button('Play!', 600, 360, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new Playstate()); }, 1, false);
+        Button_Play.DaButton.screenCenter(XY);
+        Button_Play.updateTextPosition();
         add(Button_Play);
-        add(BP_text);
 
-        Button_Settings = new Button(Button_Play.x, Button_Play.y + 160, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
+        Button_Settings = new Button('Settings', Button_Play.DaButton.x, Button_Play.DaButton.y + 160, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
         add(Button_Settings);
 
     }
@@ -78,34 +77,34 @@ class MainMenu extends FlxState {
             #if !mobile
             if(FlxG.mouse.overlaps(Button_Play))
                 {
-                    FlxTween.cancelTweensOf(Button_Play);
+                    FlxTween.cancelTweensOf(Button_Play.DaButton);
                     Button_Play.Hover = true;
-                    FlxTween.tween(Button_Play, {"scale.x": 1.2, "scale.y": 1.2}, 0.5, {
+                    FlxTween.tween(Button_Play.DaButton, {"scale.x": 1.2, "scale.y": 1.2}, 0.5, {
                         ease: FlxEase.circOut
                     });
                 }
             else
                 {
-                    FlxTween.cancelTweensOf(Button_Play);
+                    FlxTween.cancelTweensOf(Button_Play.DaButton);
                     Button_Play.Hover = false;
-                    FlxTween.tween(Button_Play, {"scale.x": 1, "scale.y": 1}, 0.5, {
+                    FlxTween.tween(Button_Play.DaButton, {"scale.x": 1, "scale.y": 1}, 0.5, {
                         ease: FlxEase.circOut
                     });
                 }
 
             if(FlxG.mouse.overlaps(Button_Settings))
                 {
-                    FlxTween.cancelTweensOf(Button_Settings);
+                    FlxTween.cancelTweensOf(Button_Settings.DaButton);
                     Button_Settings.Hover = true;
-                    FlxTween.tween(Button_Settings, {"scale.x": 1.2, "scale.y": 1.2}, 0.5, {
+                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 1.2, "scale.y": 1.2}, 0.5, {
                         ease: FlxEase.circOut
                     });
                 }
             else
                 {
-                    FlxTween.cancelTweensOf(Button_Settings);
+                    FlxTween.cancelTweensOf(Button_Settings.DaButton);
                     Button_Settings.Hover = false;
-                    FlxTween.tween(Button_Settings, {"scale.x": 1, "scale.y": 1}, 0.5, {
+                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 1, "scale.y": 1}, 0.5, {
                         ease: FlxEase.circOut
                     });
                 }
