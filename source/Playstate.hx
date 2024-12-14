@@ -40,7 +40,6 @@ class Playstate extends FlxState {
         #if !mobile
             #if debug
                 var DebuggerHelper = new backend.DEBUGKEYS();
-                add(DebuggerHelper);
             #end
         #end
 
@@ -76,6 +75,7 @@ class Playstate extends FlxState {
     }
 
     override public function update(elapsed:Float) {
+        DebuggerHelper.update();
         if(!Level.CameraLocked) { //camera locking so we can have static rooms
             FlxG.camera.follow(Player, PLATFORMER, 15 * elapsed);
             FGCAM.follow(Player, PLATFORMER, 15 * elapsed);
