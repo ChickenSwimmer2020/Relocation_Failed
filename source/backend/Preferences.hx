@@ -8,11 +8,13 @@ class Preferences {
     public static var data:SaveVariables = {};
 
 	/**
-      * ## Fun Fact: Before this feature came, My ears died every time the game build cause' the volume always started at max.
-	  * Saves the audio settings to your games save.
-	  * @param flush Does it save to AppData, or save it in runtime to be saved later?
-      * @since RF_DEV_0.1.0
-	 */
+	  * # Fun Fact:
+	  * ## Before this feature came My ears died every time the game built
+	  * ### cause the volume always started at max
+	  * Saves the audio settings to your games save
+	  * @param flush Does it save to AppData or save it in runtime to be saved later
+	  * @since RF_DEV_0.1.0
+	  */
 	public static function saveAudioSettings(?flush:Bool = false) { //im tired of this sonic weapon on startup
 		FlxG.save.data.VolumeIsMuted = FlxG.sound.muted;
 		FlxG.save.data.CurVolumeLevel = FlxG.sound.volume; //we uhm, kinda want these?

@@ -63,7 +63,7 @@ class MainMenu extends FlxState {
         //buttons handling
         Button_Play = new Button(600, 360, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new Playstate()); }, 1, false);
         Button_Play.screenCenter(XY);
-        BP_text = new Txt('Play!', 18, 620, 300);
+        BP_text = new Txt('Play!', 18, 620, 350);
         add(Button_Play);
         add(BP_text);
 

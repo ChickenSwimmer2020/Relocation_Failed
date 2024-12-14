@@ -9,13 +9,18 @@ class Button extends FlxSprite
     private var Pressed:Void->Void;
     public var Hover:Bool = false;
     /**
-     * [Custom Button Creation Function, quickly allows for scaling and stuff. now customizable!]
-     * @param X X position
-     * @param Y Y position
-     * @param BG static graphic
-     * @param PRS what to do when pressed FORMAT: [ () -> {Your Code;} ]
-     * @param SCL scale of everything
-     * @param BGANIM OPTIONAL. allows for addition of animation to the static graphic
+     * # Button
+     * ## why would you press this on me?!
+     * #### why am i putting these comments?!
+     * ---
+     * its'a button! thats, literally it. it sa button, and it does stuff when pressed.
+     * @param X Float
+     * @param Y Float
+     * @param BG FlxGraphic
+     * @param PRS Void->Void
+     * @param SCL Float
+     * @param BGANIM Bool
+     * @since RF_DEV_0.0.2
      */
     public function new(X:Float, Y:Float, BG:FlxGraphic, PRS:Void->Void, SCL:Float, ?BGANIM:Bool)
         {
