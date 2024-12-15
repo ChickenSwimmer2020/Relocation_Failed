@@ -19,7 +19,12 @@ class Preferences {
 		FlxG.save.data.CurVolumeLevel = FlxG.sound.volume; //we uhm, kinda want these?
 
         if (flush) FlxG.save.flush();
-		trace('Audio Settings Saved!\nCur Volume: ${FlxG.sound.volume}\nSave Volume: ${FlxG.save.data.CurVolumeLevel}\nMuted Status: ${FlxG.sound.muted}\nSave Muted Status: ${FlxG.save.data.VolumeIsMuted}');
+		#if debug
+		FlxG.watch.addQuick('Current Volume:', FlxG.sound.volume);
+		FlxG.watch.addQuick('Save Volume:', FlxG.save.data.CurVolumeLevel);
+		FlxG.watch.addQuick('Muted State:', FlxG.sound.muted);
+		FlxG.watch.addQuick('Save Muted State:', FlxG.save.data.VolumeIsMuted);
+		#end
 	}
 
     public static function saveSettings() {
@@ -44,7 +49,15 @@ class Preferences {
             }
         }
 		
-        FlxG.sound.volume = CurVolumeLevel;
-		FlxG.sound.muted = VolumeIsMuted;
+		//you cant save the vars in the prefs, they need to be loaded from the save file :man_facepalming:
+		if(FlxG.save.data.CurVolumeLevel != null)
+        	FlxG.sound.volume = FlxG.save.data.CurVolumeLevel;
+		else
+			FlxG.sound.volume = 0.5;
+
+		if(FlxG.save.data.VolumeIsMuted != null)
+			FlxG.sound.muted = FlxG.save.data.VolumeIsMuted;
+		else
+			FlxG.sound.muted = false;
     }
 }

@@ -20,6 +20,9 @@ class Level extends FlxGroup
     public var MapBounds:FlxRect;
     public var CameraLocked:Bool = false;
 
+    public var CameraLerp:Float;
+    public var CameraFollowStyle:String;
+
     override public function new(levelData:LevelData) {
         super();
         this.levelData = levelData;
@@ -40,6 +43,9 @@ class Level extends FlxGroup
         ChapterID = levelHeader.Chapter;
         CameraLocked = levelHeader.CameraLocked;
         MapBounds = new FlxRect(0,0,levelHeader.Boundries[0],levelHeader.Boundries[1]);
+
+        CameraLerp = levelHeader.CameraFollowLerp;
+        CameraFollowStyle = levelHeader.CameraFollowStyle;
 
         for (object in levelData.objects){
             var obj = cast(new LevelSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG)), LevelSprite);

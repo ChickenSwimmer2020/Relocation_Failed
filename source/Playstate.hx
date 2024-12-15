@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.math.FlxRandom;
 import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -24,6 +25,8 @@ class Playstate extends FlxState {
 
     public var FGCAM:FlxCamera;
     public var HUDCAM:FlxCamera;
+
+    public var followStyle:FlxCameraFollowStyle;
 
     public var BulletGroup:FlxGroup;
     #if !mobile
@@ -79,9 +82,25 @@ class Playstate extends FlxState {
         #if debug
             DebuggerHelper.update(elapsed);
         #end
+        switch(Level.CameraFollowStyle) {
+            case 'LOCKON':
+                followStyle = LOCKON;
+            case 'PLATFORMER':
+                followStyle = PLATFORMER;
+            case 'TOPDOWN':
+                followStyle = TOPDOWN;
+            case 'TOPDOWN_TIGHT':
+                followStyle = TOPDOWN_TIGHT;
+            case 'SCREEN_BY_SCREEN':
+                followStyle = SCREEN_BY_SCREEN;
+            case 'NO_DEAD_ZONE':
+                followStyle = NO_DEAD_ZONE;
+            default:
+                followStyle = null;
+        }
         if(!Level.CameraLocked) { //camera locking so we can have static rooms
-            FlxG.camera.follow(Player, PLATFORMER, 15 * elapsed);
-            FGCAM.follow(Player, PLATFORMER, 15 * elapsed);
+            FlxG.camera.follow(Player, followStyle, Level.CameraLerp * elapsed);
+            FGCAM.follow(Player, followStyle, Level.CameraLerp * elapsed);
         }
         if(FlxG.keys.anyPressed([PAGEUP]) && FlxG.camera.zoom < 2) {
             FlxG.camera.zoom += 0.05;
@@ -96,13 +115,6 @@ class Playstate extends FlxState {
 
         if(FlxG.camera.zoom < 1) FlxG.camera.zoom > 1;
         if(FGCAM.zoom < 1) FGCAM.zoom = 1;
-
-        #if !mobile
-        if(FlxG.mouse.justPressed) {
-            Bullet.shoot();
-        }
-        #else
-        #end
         super.update(elapsed);
     }
 }

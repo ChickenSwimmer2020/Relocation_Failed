@@ -8,6 +8,9 @@ typedef LevelHeader =
     var Chapter:Int; //what chapter it takes place in
     var Boundries:Array<Float>; //the boundries of the level, how far can the player move before being stopped?
     var CameraLocked:Bool; //should the camera be allowed to move?
+    //camera shit.
+    var CameraFollowStyle:String;
+    var CameraFollowLerp:Float;
 }
 
 typedef AnimData = {

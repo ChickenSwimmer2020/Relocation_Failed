@@ -66,7 +66,7 @@ class SoundTray extends FlxSoundTray {
 		x = lerpFunc(x, lerpXPos, 0.1);
 		alpha = lerpFunc(alpha, alphaTarget, 0.25);
 
-		var shouldHide = (FlxG.sound.muted == false);
+		var shouldHide = true; //why was it set to not hide if it was muted?
 
 		// Animate sound tray thing
 		if (_timer > 0) {
@@ -76,13 +76,13 @@ class SoundTray extends FlxSoundTray {
 		} else if (x >= -width) {
 			lerpXPos = 1280;
 			alphaTarget = 0;
+			Preferences.saveAudioSettings(true);
 		}
 
 		if (x <= -width) {
 			visible = false;
 			active = false;
 		}
-        Preferences.saveAudioSettings(true);
 	}
 
     function lerpFunc(base:Float, target:Float, ratio:Float):Float

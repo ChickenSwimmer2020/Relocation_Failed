@@ -22,6 +22,12 @@ class HUD extends FlxSpriteGroup {
 
     public var ammocounter_AMMOTEXT:FlxText;
     public var ammocounter_LINE:FlxSprite;
+    public var CurAmmoName:String;
+    public var CurAmmoCap:Int;
+    public var CurAmmoNum:Int;
+    public var ammocounter_AMMONUMONE:FlxText; //current ammo ammount
+    public var ammocounter_AMMOSLASH:FlxText; //the middle slash
+    public var ammocounter_AMMONUMTWO:FlxText; //max ammo ammount
     //public var ammocounter_AMMOSPR:FlxSprite;
 
     #if mobile
@@ -69,6 +75,29 @@ class HUD extends FlxSpriteGroup {
         healthBar.value = playstate.Player.health;
         stamBar.value = playstate.Player.stamina;
 
+        switch(Playstate.instance.Player.CurWeaponChoice) {
+            case SHOTGUNSHELL:
+                CurAmmoName = 'BuckShot';
+                CurAmmoCap = Playstate.instance.Player.ShotgunAmmoCap;
+                CurAmmoNum = Playstate.instance.Player.ShotgunAmmoRemaining;
+            case PISTOLROUNDS:
+                CurAmmoName = '9MM';
+                CurAmmoCap = Playstate.instance.Player.PistolAmmoCap;
+                CurAmmoNum = Playstate.instance.Player.PistolAmmoRemaining;
+            case RIFLEROUNDS:
+                CurAmmoName = '7.62x51MM NATO';
+                CurAmmoCap = Playstate.instance.Player.RifleAmmoCap;
+                CurAmmoNum = Playstate.instance.Player.RifleAmmoRemaining;
+            default:
+                CurAmmoName = 'FIX ME!';
+                CurAmmoCap = 0;
+                CurAmmoNum = 0;
+        };
+
+        ammocounter_AMMOTEXT.text = CurAmmoName;
+        ammocounter_AMMONUMONE.text = '' + CurAmmoNum;
+        ammocounter_AMMONUMTWO.text = '' + CurAmmoCap;
+
         #if debug
         fps = FlxG.elapsed;
         FPS.text = '$fps :FPS';
@@ -105,9 +134,12 @@ class HUD extends FlxSpriteGroup {
         
 
         ammocounter_LINE = new FlxSprite(210, 42).makeGraphic(32, 1, FlxColor.WHITE);
-        
+        ammocounter_AMMOTEXT = new FlxText(210, 30, 0, '', 8, true);
 
-        ammocounter_AMMOTEXT = new FlxText(210, 30, 0, "AMMO", 8, true);
+
+        ammocounter_AMMONUMONE = new FlxText(225, 45, '', 8, true);
+        ammocounter_AMMOSLASH = new FlxText(230, 45, 0, '/', 8, true);
+        ammocounter_AMMONUMTWO = new FlxText(235, 45, 0, '', 8, true);
         
 
         FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
@@ -121,6 +153,9 @@ class HUD extends FlxSpriteGroup {
         add(FACEBG);
         add(ammocounter_LINE);
         add(ammocounter_AMMOTEXT);
+        add(ammocounter_AMMONUMONE);
+        add(ammocounter_AMMOSLASH);
+        add(ammocounter_AMMONUMTWO);
     }
 
 }

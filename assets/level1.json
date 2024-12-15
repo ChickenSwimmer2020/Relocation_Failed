@@ -1,10 +1,13 @@
 {
     "header":
         {
+            "NOTE": "DO NOT FUCK WITH OUR LEVELS. unless your modding",
             "LevelID": "TestMap01",
             "Chapter": 0,
             "Boundries": [1280, 720],
-            "CameraLocked": false
+            "CameraLocked": false,
+            "CameraFollowStyle": "SCREEN_BY_SCREEN",
+            "CameraFollowLerp": 15
         },
     "objects":[
         {

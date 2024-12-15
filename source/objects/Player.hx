@@ -43,6 +43,14 @@ class Player extends FlxSprite {
 
     public var CurWeaponChoice:Bullet.BulletType;
 
+    public var PistolAmmoRemaining:Int = 500;
+    public var RifleAmmoRemaining:Int = 700;
+    public var ShotgunAmmoRemaining:Int = 400;
+
+    public var PistolAmmoCap:Int = 500; //what are general ammo caps in games?
+    public var RifleAmmoCap:Int = 700;
+    public var ShotgunAmmoCap:Int = 400;
+
 	public var isMoving:Bool = false;
     public var stamina:Int = 100;
     #if (flixel >= "6.0.0")
@@ -106,7 +114,7 @@ class Player extends FlxSprite {
     function switchWeaponType() {
         if(CurWeaponChoice == null)
             CurWeaponChoice = PISTOLROUNDS;
-        
+
         if(FlxG.keys.anyJustPressed([J])) {
             CurWeaponChoice = SHOTGUNSHELL;
             trace('Current Weapon Type: SHOTGUN');
@@ -251,6 +259,36 @@ class Aimer extends FlxSprite {
         //TODO: DO THIS
         #end
         curAngle = this.angle;
+
+        #if !mobile //we need to calculate the shooting from the player so we can check ammo numbers.
+        if(FlxG.mouse.justPressed) {
+            if(checkAmmo == true)
+                Bullet.shoot();
+            else
+                trace('selected ammo type is empty!')
+                //play empty ammo noise
+        }
+        #else
+        #end
+    }
+    function checkAmmo():Bool {
+        switch(Playstate.instance.Player.CurWeaponChoice) {
+            case PISTOLROUNDS:
+                if(Playstate.instance.Player.PistolAmmoRemaining > 0)
+                    return true;
+                else
+                    return false;
+            case SHOTGUNSHELL:
+                if(Playstate.instance.Player.ShotgunAmmoRemaining > 0)
+                    return true;
+                else
+                    return false;
+            case RIFLEROUNDS:
+                if(Playstate.instance.Player.RifleAmmoRemaining > 0)
+                    return true;
+                else
+                    return false;
+        }
     }
     #if !mobile
     public function AimAtCusor()
