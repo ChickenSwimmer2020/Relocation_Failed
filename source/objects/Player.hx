@@ -262,10 +262,10 @@ class Aimer extends FlxSprite {
 
         #if !mobile //we need to calculate the shooting from the player so we can check ammo numbers.
         if(FlxG.mouse.justPressed) {
-            if(checkAmmo == true)
+            if(checkAmmo() == true)
                 Bullet.shoot();
             else
-                trace('selected ammo type is empty!')
+                trace('selected ammo type is empty!');
                 //play empty ammo noise
         }
         #else
