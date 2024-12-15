@@ -8,23 +8,20 @@ class Main extends Sprite{
         super();
         start();
     }
+    
     function start()
-        {
+    {
+        var game:FlxGame = new FlxGame(0, 0, MainMenu, 60, 60, false, false);
+        @:privateAccess
+            game._customSoundTray = backend.SoundTray;
+        addChild(game);
+        loadGameSaveData();
+    }
 
-            var connected:Bool = FlxG.save.bind('RelocationFailedSAVEDATA');
-            if(connected) {
-                trace('save was loaded');
-                loadGameSaveData();
-            } else {
-                trace('save wasnt loaded :(((((((((\n\n\n\nWHYYYYYYYYYYY');
-            }
-
-            var game:FlxGame = new FlxGame(0, 0, MainMenu, 60, 60, false, false);
-            @:privateAccess
-                game._customSoundTray = backend.SoundTray;
-            addChild(game);
-        }
-    function loadGameSaveData() {
-        Preferences.loadSettings();
+    function loadGameSaveData()
+    {
+        if(FlxG.save.bind('RelocationFailedSAVEDATA'))
+            Preferences.loadSettings();
+        else Application.current.window.alert('Failed to load player save!');
     }
 }

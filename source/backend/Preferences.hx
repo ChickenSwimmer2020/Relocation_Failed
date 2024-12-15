@@ -5,17 +5,16 @@ package backend;
 }
 
 class Preferences {
-    public static var data:SaveVariables = {};
+    public static var save:SaveVariables = {};
 
 	/**
 	  * # Fun Fact:
-	  * ## Before this feature came My ears died every time the game built
-	  * ### cause the volume always started at max
+	  * ## Before this feature came My ears died every time the game built cause the volume always started at max
 	  * Saves the audio settings to your games save
 	  * @param flush Does it save to AppData or save it in runtime to be saved later
 	  * @since RF_DEV_0.1.0
 	  */
-	public static function saveAudioSettings(?flush:Bool = false) { //im tired of this sonic weapon on startup
+      public static function saveAudioSettings(?flush:Bool = false) { //im tired of this sonic weapon on startup
 		FlxG.save.data.VolumeIsMuted = FlxG.sound.muted;
 		FlxG.save.data.CurVolumeLevel = FlxG.sound.volume; //we uhm, kinda want these?
 
@@ -24,20 +23,28 @@ class Preferences {
 	}
 
     public static function saveSettings() {
-		for (key in Reflect.fields(data))
-			Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
+        // Saves all variables in the save via Reflection
+		for (saveVar in Reflect.fields(save))
+			Reflect.setField(FlxG.save.data, saveVar, Reflect.field(save, saveVar));
+		saveAudioSettings(); // Saves muted and volume values
 
-		saveAudioSettings();
-
-		FlxG.save.flush();
+		FlxG.save.flush(); // Flushes data to AppData
 		FlxG.log.add("Settings saved!");
 	}
-
+    
+    static var CurVolumeLevel:Float = 1;
+    static var VolumeIsMuted:Bool = false;
     public static function loadSettings() {
-        FlxG.save.bind('RelocationFailedSAVEDATA');
-        if(FlxG.save.data.CurVolumeLevel != null) //should work?
-			FlxG.sound.volume = FlxG.save.data.CurVolumeLevel;
-		if (FlxG.save.data.VolumeIsMuted != null)
-			FlxG.sound.muted = FlxG.save.data.VolumeIsMuted;
+        for (saveVar in Reflect.fields(FlxG.save.data)){
+            if (Reflect.hasField(Preferences, saveVar))
+			    Reflect.setField(Preferences, saveVar, Reflect.field(Preferences, saveVar));
+            else{
+                try { Reflect.setField(save, saveVar, Reflect.field(save, saveVar)); }
+                catch(_){}
+            }
+        }
+		
+        FlxG.sound.volume = CurVolumeLevel;
+		FlxG.sound.muted = VolumeIsMuted;
     }
 }

@@ -81,15 +81,8 @@ class SoundTray extends FlxSoundTray {
 		if (x <= -width) {
 			visible = false;
 			active = false;
-
-			#if FLX_SAVE
-			// Save sound preferences
-				//FlxG.save.data.VolumeIsMuted = FlxG.sound.muted;
-				//FlxG.save.data.CurVolumeLevel = FlxG.sound.volume;
-				//FlxG.save.flush();
-				Preferences.saveAudioSettings(); //not doing anything?
-			#end
 		}
+        Preferences.saveAudioSettings(true);
 	}
 
     function lerpFunc(base:Float, target:Float, ratio:Float):Float
