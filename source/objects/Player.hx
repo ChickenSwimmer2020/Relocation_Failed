@@ -118,13 +118,13 @@ class Player extends FlxSprite {
         //insert the suit/armor stuff here.
 
         if(Playstate.instance.Player.ShotgunAmmoRemaining > Playstate.instance.Player.ShotgunAmmoCap)
-            Playstate.instance.Player.ShotgunAmmoRemaining -= 5;
+            Playstate.instance.Player.ShotgunAmmoRemaining--;
 
         if(Playstate.instance.Player.RifleAmmoRemaining > Playstate.instance.Player.RifleAmmoCap)
-            Playstate.instance.Player.RifleAmmoRemaining -= 5;
+            Playstate.instance.Player.RifleAmmoRemaining--;
 
         if(Playstate.instance.Player.PistolAmmoRemaining > Playstate.instance.Player.PistolAmmoCap)
-            Playstate.instance.Player.PistolAmmoRemaining -= 5;
+            Playstate.instance.Player.PistolAmmoRemaining--;
     }
 
     function switchWeaponType() {

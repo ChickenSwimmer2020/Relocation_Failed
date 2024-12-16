@@ -129,7 +129,7 @@ class HUD extends FlxSpriteGroup {
         SMTXT.text = "Stamina";
         
 
-        HUDBG = new FlxSprite(0, 0).makeGraphic(500, 60, FlxColor.TRANSPARENT);
+        HUDBG = new FlxSprite(0, 0).makeGraphic(300, 60, FlxColor.TRANSPARENT);
         HUDBG.drawPolygon([new FlxPoint(0, 0), new FlxPoint(300, 0), new FlxPoint(250, 60), new FlxPoint(0, 60), new FlxPoint(0,0)], FlxColor.BLACK);
         
 

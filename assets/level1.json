@@ -1,14 +1,13 @@
 {
-    "header":
-        {
+    "header":{
             "NOTE": "DO NOT FUCK WITH OUR LEVELS. unless your modding",
             "LevelID": "TestMap01",
             "Chapter": 0,
             "Boundries": [1280, 720],
             "CameraLocked": false,
-            "CameraFollowStyle": "SCREEN_BY_SCREEN",
+            "CameraFollowStyle": "LOCKON",
             "CameraFollowLerp": 15
-        },
+    },
     "objects":[
         {
             "Name": "BG",
@@ -81,9 +80,33 @@
         {
             "Name": "TESTITEM1",
             "behavior": "_BOXOFBUCKSHELL",
-            "texture": "Player_upper",
+            "texture": "boxofbuckshell",
             "SCL": 1,
             "X": 500,
+            "Y": 200
+        },
+        {
+            "Name": "TESTITEM2",
+            "behavior": "_BUCKSHELL",
+            "texture": "buckshells",
+            "SCL": 1,
+            "X": 600,
+            "Y": 200
+        },
+        {
+            "Name": "TESTITEM3",
+            "behavior": "_BOXOF9MM",
+            "texture": "boxof9mm",
+            "SCL": 1,
+            "X": 700,
+            "Y": 200
+        },
+        {
+            "Name": "TESTITEM4",
+            "behavior": "_9MMMAG",
+            "texture": "9mmmag",
+            "SCL": 1,
+            "X": 800,
             "Y": 200
         }
     ]
