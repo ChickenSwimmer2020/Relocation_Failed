@@ -17,6 +17,7 @@ class Bullet extends FlxSprite {
     private var _TARGET:FlxPoint;
     private var _TYPE:BulletType;
     public static var ApplyTracer:Bool = false;
+    public static var tracy:FlxTrail;
 
 
     public function new(X:Float, Y:Float, target:FlxPoint, type:BulletType, ?Tracer:Bool, ?Speed:Float) {
@@ -50,13 +51,28 @@ class Bullet extends FlxSprite {
         //check if our bullet is offscreen, somehow?
         if(this.isOnScreen(FlxG.camera) != true) {
             this.destroy();
+            //if(ApplyTracer) {
+            //    tracy.kill(); //TODO: FIX ME!
+            //}
             trace('bullet was destroyed!!\n\nTHATS REALLY GOOD!');
         }
     }
 
     public static function shoot() {
         var mousePos = FlxG.mouse.getPosition();
-        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice, true));
+        //for (bullet in Playstate.instance.BulletGroup) { //TODO: FIX THIS!!!!!!!!!!
+        //    if (Std.isOfType(bullet, FlxSprite)) { // Ensure 'bullet' is a FlxSprite
+        //        if (ApplyTracer) {
+        //            tracy = new FlxTrail(cast bullet, null, 10, 2, 0.4, 0.05); // Cast 'bullet' to FlxSprite
+        //            try {
+        //                Playstate.instance.BulletGroup.add(tracy);
+        //            } catch(e) {
+        //                trace('tracer isnt alive!');
+        //            }
+        //        }
+        //    }   
+        //}
     }
 
     public function getType():BulletType

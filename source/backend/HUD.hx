@@ -38,7 +38,6 @@ class HUD extends FlxSpriteGroup {
     public var debugControls:FlxText;
     public static var pressforcontrols:FlxText;
     public var FPS:FlxText;
-    public var fps:Float = 0;
     #end
     
     public function new(playstate:Playstate) {
@@ -62,7 +61,7 @@ class HUD extends FlxSpriteGroup {
         debugControls.screenCenter(XY);
         debugControls.alpha = 0;
         add(debugControls);
-        FPS = new FlxText(1220, 0, 0, '', 12, false);
+        FPS = new FlxText(1220, 60, 0, '', 12, false);
         add(FPS);
         #end
     }
@@ -77,18 +76,22 @@ class HUD extends FlxSpriteGroup {
 
         switch(Playstate.instance.Player.CurWeaponChoice) {
             case SHOTGUNSHELL:
-                CurAmmoName = 'BuckShot';
+                CurAmmoName = '12G BuckShell';
+                ammocounter_AMMOTEXT.x = 1050;
                 CurAmmoCap = Playstate.instance.Player.ShotgunAmmoCap;
                 CurAmmoNum = Playstate.instance.Player.ShotgunAmmoRemaining;
             case PISTOLROUNDS:
                 CurAmmoName = '9MM';
+                ammocounter_AMMOTEXT.x = 1125;
                 CurAmmoCap = Playstate.instance.Player.PistolAmmoCap;
                 CurAmmoNum = Playstate.instance.Player.PistolAmmoRemaining;
             case RIFLEROUNDS:
                 CurAmmoName = '7.62x51MM NATO';
+                ammocounter_AMMOTEXT.x = 1030;
                 CurAmmoCap = Playstate.instance.Player.RifleAmmoCap;
                 CurAmmoNum = Playstate.instance.Player.RifleAmmoRemaining;
             default:
+                ammocounter_AMMOTEXT.x = 0;
                 CurAmmoName = 'FIX ME!';
                 CurAmmoCap = 0;
                 CurAmmoNum = 0;
@@ -99,17 +102,17 @@ class HUD extends FlxSpriteGroup {
         ammocounter_AMMONUMTWO.text = '' + CurAmmoCap;
 
         #if debug
-        fps = FlxG.elapsed;
+        var fps:Float = FlxG.elapsed;
         FPS.text = '$fps :FPS';
         if(FlxG.keys.anyJustPressed([HOME])) {
             debugControls.alpha = 1;
-            FlxTween.tween(debugControls, {"alpha": 0}, 3, { ease: FlxEase.expoIn});
+            FlxTween.tween(debugControls, {"alpha": 0}, 2, { ease: FlxEase.expoIn});
         }
         #end
     }
 
     function createHud():Void {
-        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 200, 25, playstate.Player, 'health');
+        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, playstate.Player, 'health');
         healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
         
 
@@ -119,7 +122,7 @@ class HUD extends FlxSpriteGroup {
         HPTXT.text = "Health";
         
 
-        stamBar = new FlxBar(healthBar.x, healthBar.y + 25, LEFT_TO_RIGHT, 150, 25, playstate.Player, 'stamina');
+        stamBar = new FlxBar(healthBar.x, healthBar.y + 25, LEFT_TO_RIGHT, 200, 25, playstate.Player, 'stamina');
         stamBar.createFilledBar(0xFF0083A0, 0xFF00B7FF);
         
 
@@ -129,17 +132,30 @@ class HUD extends FlxSpriteGroup {
         SMTXT.text = "Stamina";
         
 
-        HUDBG = new FlxSprite(0, 0).makeGraphic(300, 60, FlxColor.TRANSPARENT);
-        HUDBG.drawPolygon([new FlxPoint(0, 0), new FlxPoint(300, 0), new FlxPoint(250, 60), new FlxPoint(0, 60), new FlxPoint(0,0)], FlxColor.BLACK);
+        HUDBG = new FlxSprite(0, 0).makeGraphic(FlxG.width, 60, FlxColor.TRANSPARENT);
+        var HUDBGPOINTS:Array<FlxPoint> = 
+        [
+            new FlxPoint(0, 0),
+            new FlxPoint(1280, 0),
+            new FlxPoint(1280, 60),
+            new FlxPoint(1100, 60),
+            new FlxPoint(1000, 10),
+            new FlxPoint(350, 10),
+            new FlxPoint(250, 60),
+            new FlxPoint(0, 60),
+            new FlxPoint(0, 0)
+        ];
+        HUDBG.drawPolygon(HUDBGPOINTS, FlxColor.BLACK);
         
 
-        ammocounter_LINE = new FlxSprite(210, 42).makeGraphic(32, 1, FlxColor.WHITE);
-        ammocounter_AMMOTEXT = new FlxText(210, 30, 0, '', 8, true);
+        ammocounter_LINE = new FlxSprite(1090, 28).makeGraphic(138, 5, FlxColor.WHITE);
+        ammocounter_AMMOTEXT = new FlxText(1050, 0, 0, '', 24, true);
+        ammocounter_AMMOTEXT.alignment = CENTER;
 
 
-        ammocounter_AMMONUMONE = new FlxText(200, 45, '', 8, true);
-        ammocounter_AMMOSLASH = new FlxText(225, 45, 0, '/', 8, true);
-        ammocounter_AMMONUMTWO = new FlxText(230, 45, 0, '', 8, true);
+        ammocounter_AMMONUMONE = new FlxText(1100, 30, '', 24, true);
+        ammocounter_AMMOSLASH = new FlxText(1160, 30, 0, '/', 24, true);
+        ammocounter_AMMONUMTWO = new FlxText(1175, 30, 0, '', 24, true);
         
 
         FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
