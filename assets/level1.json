@@ -76,5 +76,15 @@
             "CollidesWithPlayer": false,
             "RenderOverPlayer": true
         }
+    ],
+    "items":[
+        {
+            "Name": "TESTITEM1",
+            "behavior": "_BOXOFBUCKSHELL",
+            "texture": "Player_upper",
+            "SCL": 1,
+            "X": 500,
+            "Y": 200
+        }
     ]
 }

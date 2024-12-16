@@ -111,6 +111,22 @@ class Player extends FlxSprite {
         #end
 	}
 
+    function forceCaps() {
+        if(Playstate.instance.Player.health > Playstate.instance.Player.maxHealth) //we dont want our health to go above 100, this should work for now until we get a better system in
+            Playstate.instance.Player.health -= 10; //SHUT UP ABOUT BEING REMOVED SOON :sob:
+
+        //insert the suit/armor stuff here.
+
+        if(Playstate.instance.Player.ShotgunAmmoRemaining > Playstate.instance.Player.ShotgunAmmoCap)
+            Playstate.instance.Player.ShotgunAmmoRemaining -= 5;
+
+        if(Playstate.instance.Player.RifleAmmoRemaining > Playstate.instance.Player.RifleAmmoCap)
+            Playstate.instance.Player.RifleAmmoRemaining -= 5;
+
+        if(Playstate.instance.Player.PistolAmmoRemaining > Playstate.instance.Player.PistolAmmoCap)
+            Playstate.instance.Player.PistolAmmoRemaining -= 5;
+    }
+
     function switchWeaponType() {
         if(CurWeaponChoice == null)
             CurWeaponChoice = PISTOLROUNDS;
@@ -230,6 +246,7 @@ class Player extends FlxSprite {
 		checkForPauseMenu();
         resetPauseMenu();
         switchWeaponType();
+        forceCaps(); //so variables such as health and ammo dont go above 100
         #if !mobile
         AimerPOSx = this.getGraphicMidpoint().x - 15;
         AimerPOSy = this.getGraphicMidpoint().y - 15;
@@ -262,8 +279,17 @@ class Aimer extends FlxSprite {
 
         #if !mobile //we need to calculate the shooting from the player so we can check ammo numbers.
         if(FlxG.mouse.justPressed) {
-            if(checkAmmo() == true)
+            if(checkAmmo() == true) {
                 Bullet.shoot();
+                switch(Playstate.instance.Player.CurWeaponChoice) { //remove some ammo when we fire the gun
+                    case PISTOLROUNDS: //howd i forget this?? :man_facepalm:
+                        Playstate.instance.Player.PistolAmmoRemaining--;
+                    case RIFLEROUNDS:
+                        Playstate.instance.Player.RifleAmmoRemaining--;
+                    case SHOTGUNSHELL:
+                        Playstate.instance.Player.ShotgunAmmoRemaining--;
+                }
+            }
             else
                 trace('selected ammo type is empty!');
                 //play empty ammo noise

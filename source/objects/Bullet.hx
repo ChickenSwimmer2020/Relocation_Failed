@@ -41,7 +41,7 @@ class Bullet extends FlxSprite {
         }
 
         velocity.set(_SPEED, 0);
-        var rand:Float = new FlxRandom().float(-1, 1); //bullet spread!
+        var rand:Float = new FlxRandom().float(-5, 5); //bullet spread!
         velocity.pivotDegrees(FlxPoint.weak(0, 0), FlxAngle.angleBetweenPoint(this, _TARGET, true) + rand);
     }
 

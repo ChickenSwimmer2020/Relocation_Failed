@@ -137,9 +137,9 @@ class HUD extends FlxSpriteGroup {
         ammocounter_AMMOTEXT = new FlxText(210, 30, 0, '', 8, true);
 
 
-        ammocounter_AMMONUMONE = new FlxText(225, 45, '', 8, true);
-        ammocounter_AMMOSLASH = new FlxText(230, 45, 0, '/', 8, true);
-        ammocounter_AMMONUMTWO = new FlxText(235, 45, 0, '', 8, true);
+        ammocounter_AMMONUMONE = new FlxText(200, 45, '', 8, true);
+        ammocounter_AMMOSLASH = new FlxText(225, 45, 0, '/', 8, true);
+        ammocounter_AMMONUMTWO = new FlxText(230, 45, 0, '', 8, true);
         
 
         FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);

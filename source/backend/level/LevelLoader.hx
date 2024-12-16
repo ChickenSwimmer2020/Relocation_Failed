@@ -42,8 +42,19 @@ typedef LevelObject =
     var ?Anims:Array<AnimData>; // animation data if needed
 }
 
+typedef LevelItem = //should allow us to put items into the level directly
+{
+    var Name:String; //internal name
+    var behavior:String; //what to do when picked up
+    var texture:String; //texture to use
+    var X:Float; //X positional value
+    var Y:Float; //Y positional value
+    var SCL:Float; //scale
+}
+
 typedef LevelData = 
 {
+    var items:Array<LevelItem>;
     var objects:Array<LevelObject>;
     var header:LevelHeader;
 }

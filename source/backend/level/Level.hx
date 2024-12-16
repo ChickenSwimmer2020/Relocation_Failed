@@ -1,5 +1,7 @@
 package backend.level;
 
+import objects.Item;
+import objects.Item.ItemType;
 import objects.Player;
 import flixel.math.FlxRect;
 import backend.level.LevelLoader.LevelHeader;
@@ -13,6 +15,7 @@ class Level extends FlxGroup
     public var levelData:LevelData;
     public var levelHeader:LevelHeader;
     public var objects:Map<String, LevelSprite> = new Map();
+    public var items:Map<String, FlxGroup> = new Map();
     public var colliders:Array<LevelSprite>;
 
     public var LevelID:String;
@@ -86,6 +89,33 @@ class Level extends FlxGroup
 
             objects.set(object.Name, obj);
             add(obj);
+        }
+        for (item in levelData.items){
+            var BEHAVIOR:ItemType;
+            switch(item.behavior) {
+                case '_HEALTHPACK':
+                    BEHAVIOR = _HEALTHPACK;
+                case '_STIMPACK':
+                    BEHAVIOR = _STIMPACK;
+                //ammo pickups
+                case '_BOXOFBUCKSHELL':
+                    BEHAVIOR = _BOXOFBUCKSHELL;
+                case '_BUCKSHELL':
+                    BEHAVIOR = _BUCKSHELL;
+                case '_BOXOF9MM':
+                    BEHAVIOR = _BOXOF9MM;
+                case '_9MMMAG':
+                    BEHAVIOR = _9MMMAG;
+                case '_RIFLEROUNDSBOX':
+                    BEHAVIOR = _RIFLEROUNDSBOX;
+                case '_RIFLEROUNDSMAG':
+                    BEHAVIOR = _RIFLEROUNDSMAG;
+                default:
+                    BEHAVIOR = null;
+            }
+            var itm = cast(new Item(item.X, item.Y, Assets.image(item.texture), BEHAVIOR));
+            items.set(item.Name, itm); //should work?
+            add(itm);
         }
     }
 }
