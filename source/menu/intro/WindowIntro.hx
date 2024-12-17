@@ -25,11 +25,11 @@ class WindowIntro extends FlxState
         window.borderless = true;
         window.x = 0;
         window.y = 0;
-        window.width = Std.int(window.display.bounds.width);
-        window.height = Std.int(window.display.bounds.height);
+        window.width = Std.int(window.display.bounds.width - 1); //apparently my push from the other pc didnt work?
+        window.height = Std.int(window.display.bounds.height - 1);
         FlxG.autoPause = false;
         FlxG.mouse.visible = false;
-        wait(5, () -> {
+        wait(2, () -> {
             fadingIn = true;
         });
         #end
@@ -44,7 +44,7 @@ class WindowIntro extends FlxState
     {
         window.focus();
         if (fadingIn){
-            if (alpha < 255) alpha += 1;
+            if (alpha < 255) alpha += 5;
             else FlxG.switchState(new IntroState());
             setWindowAlpha(alpha);
         }
