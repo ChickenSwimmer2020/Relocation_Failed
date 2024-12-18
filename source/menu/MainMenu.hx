@@ -9,6 +9,7 @@ import backend.Button;
 
 class MainMenu extends FlxState {
     var Title:FlxText;
+    var Title2:FlxText;
     var Suffix:FlxText;
 
     var versiontext:FlxText;
@@ -45,9 +46,18 @@ class MainMenu extends FlxState {
         add(ship);
 
         //menu title stuff.
+        Title2 = new FlxText(0, 170, 0, "", 8, true);
+        Title2.setFormat(null, 48, FlxColor.RED, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        Title2.text = "FAILED";
+        Title2.screenCenter(X);
+        Title2.x = Title2.x + 35;
+        Title2.camera = shipCam;
+        Title2.antialiasing = false;
+        add(Title2);
+        
         Title = new FlxText(0, 150, 0, "", 8, true);
         Title.setFormat(null, 48, FlxColor.BLUE, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
-        Title.text = "RELOCATION FAILED";
+        Title.text = "RELOCATION";
         Title.screenCenter(X);
         Title.x = Title.x + 35;
         Title.camera = shipCam;
