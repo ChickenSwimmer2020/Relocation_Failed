@@ -18,6 +18,7 @@ class Bullet extends FlxSprite {
     private var _TYPE:BulletType;
     public static var ApplyTracer:Bool = false;
     public static var tracy:FlxTrail;
+    public static var rand:Float = 0; //bullet spread!
 
 
     public function new(X:Float, Y:Float, target:FlxPoint, type:BulletType, ?Tracer:Bool, ?Speed:Float) {
@@ -42,7 +43,6 @@ class Bullet extends FlxSprite {
         }
 
         velocity.set(_SPEED, 0);
-        var rand:Float = new FlxRandom().float(-5, 5); //bullet spread!
         velocity.pivotDegrees(FlxPoint.weak(0, 0), FlxAngle.angleBetweenPoint(this, _TARGET, true) + rand);
     }
 
@@ -59,6 +59,7 @@ class Bullet extends FlxSprite {
     }
 
     public static function shoot() {
+        rand = new FlxRandom().float(-5, 5);
         var mousePos = FlxG.mouse.getPosition();
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice, true));
         //for (bullet in Playstate.instance.BulletGroup) { //TODO: FIX THIS!!!!!!!!!!
@@ -73,6 +74,40 @@ class Bullet extends FlxSprite {
         //        }
         //    }   
         //}
+    }
+
+    public static function shotgunShoot() {
+        var Spread:Array<FlxPoint> = getShotgunSpread(FlxG.mouse.getPosition(), Playstate.instance.Player2.angle, 120, 7, 100);
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[0], SHOTGUNSHELL, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[1], SHOTGUNSHELL, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[2], SHOTGUNSHELL, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[3], SHOTGUNSHELL, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[4], SHOTGUNSHELL, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[5], SHOTGUNSHELL, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[6], SHOTGUNSHELL, true));
+    }
+
+    public static function getShotgunSpread(center:FlxPoint, facingAngle:Float, fov:Float, numBullets:Int, range:Float):Array<FlxPoint> {
+        var spread:Array<FlxPoint> = [];
+        var halfFov = fov / 2;
+    
+        for (i in 0...numBullets) {
+            // Randomize or evenly distribute angles within the FOV
+            var angle = facingAngle - halfFov + FlxG.random.float(0, fov);
+    
+            // Convert angle to radians
+            var rad = Math.PI * angle / 180;
+    
+            // Calculate x and y offsets based on the angle and range
+            var offsetX = Math.cos(rad) * range;
+            var offsetY = Math.sin(rad) * range;
+    
+            // Add the offset to the center point
+            var bulletPoint = new FlxPoint(center.x + offsetX, center.y + offsetY);
+            spread.push(bulletPoint);
+        }
+    
+        return spread;
     }
 
     public function getType():BulletType

@@ -43,21 +43,24 @@ class Player extends FlxSprite {
 
     public var CurWeaponChoice:Bullet.BulletType;
 
-    public var PistolAmmoRemaining:Int = 500;
-    public var RifleAmmoRemaining:Int = 700;
-    public var ShotgunAmmoRemaining:Int = 400;
+    public var PistolAmmoRemaining:Int = 200;
+    public var RifleAmmoRemaining:Int = 500;
+    public var ShotgunAmmoRemaining:Int = 75;
 
-    public var PistolAmmoCap:Int = 500; //what are general ammo caps in games?
-    public var RifleAmmoCap:Int = 700;
-    public var ShotgunAmmoCap:Int = 400;
+    public var PistolAmmoCap:Int = 200; //what are general ammo caps in games?
+    public var RifleAmmoCap:Int = 500;
+    public var ShotgunAmmoCap:Int = 75;
 
 	public var isMoving:Bool = false;
     public var stamina:Int = 100;
     #if (flixel >= "6.0.0")
-    public var health:Int = 100;
+        public var health:Int = 100;
     #end
+    public var oxygen:Int = 200;
+
     public var maxStamina:Int = 100;
     public var maxHealth:Int = 100;
+    public var maxOxygen:Int = 200;
 
 	public var playstate:Playstate;
 
@@ -261,12 +264,17 @@ class Player extends FlxSprite {
 #if !mobile
 class Aimer extends FlxSprite {
     static public var curAngle:Float;
+    var shotgunPumping:Bool = false; //so we can make sure that you cant fire while the shotgun is pumping
+
+    var RIFLEfireRate:Float = 0.1; // Time between shots in seconds
+    var RIFLEfireTimer:Float = 0; // Tracks time since the last shot
     public function new() {
         super();
 		loadGraphic(Assets.image('Player_upper'), true, 32, 32, true);
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);
+        RIFLEfireTimer += elapsed;
         this.x = Player.AimerPOSx;
         this.y = Player.AimerPOSy;
         this.updateHitbox(); //since angle stuff changes, we want this to update. right?
@@ -277,17 +285,41 @@ class Aimer extends FlxSprite {
         #end
         curAngle = this.angle;
 
-        #if !mobile //we need to calculate the shooting from the player so we can check ammo numbers.
-        if(FlxG.mouse.justPressed) {
+        #if !mobile //we need to calculate the shooting from the player so we can check ammo numberss
+        if(FlxG.mouse.pressed && !shotgunPumping) {
             if(checkAmmo() == true) {
-                Bullet.shoot();
                 switch(Playstate.instance.Player.CurWeaponChoice) { //remove some ammo when we fire the gun
                     case PISTOLROUNDS: //howd i forget this?? :man_facepalm:
-                        Playstate.instance.Player.PistolAmmoRemaining--;
+                        if(FlxG.mouse.justPressed) {
+                            Playstate.instance.Player.PistolAmmoRemaining--;
+                            trace('Pistol Bullet Shot!');
+                            Bullet.shoot();
+                            Playstate.instance.FGCAM.shake(0.001, 0.1);
+                            Playstate.instance.HUDCAM.shake(0.001, 0.1);
+                            Playstate.instance.camera.shake(0.001, 0.1);
+                        }
                     case RIFLEROUNDS:
-                        Playstate.instance.Player.RifleAmmoRemaining--;
+                        if (RIFLEfireTimer >= RIFLEfireRate) {
+                            Playstate.instance.Player.RifleAmmoRemaining--;
+                            trace('Rifle Bullet Shot!');
+                            Bullet.shoot();
+                            RIFLEfireTimer = 0; // Reset the timer after firing
+                            Playstate.instance.FGCAM.shake(0.002, 0.1);
+                            Playstate.instance.HUDCAM.shake(0.002, 0.1);
+                            Playstate.instance.camera.shake(0.002, 0.1);
+                        }
                     case SHOTGUNSHELL:
-                        Playstate.instance.Player.ShotgunAmmoRemaining--;
+                        if(FlxG.mouse.justPressed) {
+                            Playstate.instance.Player.ShotgunAmmoRemaining--;
+                            trace('Shotgun Fired!');
+                            Bullet.shotgunShoot();
+                            shotgunPumping = true;
+                            wait(0.2, ()->{ trace('shotgun pumping...'); });
+                            wait(0.5, ()->{ shotgunPumping = false; trace('shotgun pumped!'); }); //shotgun pumping!
+                            Playstate.instance.FGCAM.shake(0.005, 0.1);
+                            Playstate.instance.HUDCAM.shake(0.005, 0.1);
+                            Playstate.instance.camera.shake(0.005, 0.1);
+                        }
                 }
             }
             else

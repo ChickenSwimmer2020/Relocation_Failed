@@ -14,6 +14,8 @@ class Main extends Sprite{
         var game:FlxGame = new FlxGame(0, 0, WindowIntro, 60, 60, false, false);
         @:privateAccess
             game._customSoundTray = backend.SoundTray;
+        @:privateAccess
+            game._skipSplash = true; //since we can add a custom one
         addChild(game);
         loadGameSaveData();
     }
