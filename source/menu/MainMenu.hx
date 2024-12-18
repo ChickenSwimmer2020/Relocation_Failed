@@ -17,7 +17,7 @@ class MainMenu extends FlxState {
     var curPlatform:String;
 
     var Button_Play:Button;
-    var BP_text:Txt;
+    var Button_Load:Button;
     var Button_Settings:Button;
 
     var stars:Array<Star> = [];
@@ -47,16 +47,16 @@ class MainMenu extends FlxState {
 
         //menu title stuff.
         Title2 = new FlxText(0, 170, 0, "", 8, true);
-        Title2.setFormat(null, 48, FlxColor.RED, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        Title2.setFormat(null, 48, FlxColor.RED, CENTER, NONE, FlxColor.BLACK, true);
         Title2.text = "FAILED";
         Title2.screenCenter(X);
         Title2.x = Title2.x + 35;
         Title2.camera = shipCam;
         Title2.antialiasing = false;
         add(Title2);
-        
+
         Title = new FlxText(0, 150, 0, "", 8, true);
-        Title.setFormat(null, 48, FlxColor.BLUE, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        Title.setFormat(null, 48, FlxColor.BLUE, CENTER, NONE, FlxColor.BLACK, true);
         Title.text = "RELOCATION";
         Title.screenCenter(X);
         Title.x = Title.x + 35;
@@ -65,7 +65,7 @@ class MainMenu extends FlxState {
         add(Title);
 
         Suffix = new FlxText(0, 0, 0, "", 8, true);
-        Suffix.setFormat(null, 24, FlxColor.YELLOW, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        Suffix.setFormat(null, 24, FlxColor.YELLOW, CENTER, NONE, FlxColor.TRANSPARENT, true);
         Suffix.text = "TESTING VERSION";
         Suffix.camera = shipCam;
         Suffix.setPosition(Title.x + 250, Title.y - 10);
@@ -73,13 +73,19 @@ class MainMenu extends FlxState {
         add(Suffix);
 
         //button handling
-        Button_Play = new Button('Play!', 560, 280, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new Playstate()); }, 1, false);
+        Button_Play = new Button('New\nGame', 560, 280, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new Playstate()); }, 1, false);
         Button_Play.DaButton.updateHitbox();
         Button_Play.updateTextPosition();
         Button_Play.camera = shipCam;
         add(Button_Play);
 
-        Button_Settings = new Button('Settings', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), 
+        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ trace('implement save loading and saving.'); }, 1, false);
+        Button_Load.DaButton.updateHitbox();
+        Button_Load.updateTextPosition();
+        Button_Load.camera = shipCam;
+        add(Button_Load);
+
+        Button_Settings = new Button('Settings', Button_Play.DaButton.x + 100, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), 
         ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
         Button_Settings.DaButton.updateHitbox();
         Button_Settings.updateTextPosition();
@@ -99,14 +105,14 @@ class MainMenu extends FlxState {
         add(vingette);
 
         platformText = new FlxText(0, 690, 0, "", 8, true);
-        platformText.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        platformText.setFormat(null, 24, FlxColor.WHITE, LEFT, NONE, FlxColor.TRANSPARENT, true);
         platformText.text = Functions.GetPlatform();
         platformText.camera = shipCam;
         platformText.antialiasing = false;
         add(platformText);
 
         versiontext = new FlxText(0, 665, 0, "", 8, true);
-        versiontext.setFormat(null, 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        versiontext.setFormat(null, 24, FlxColor.WHITE, LEFT, NONE, FlxColor.TRANSPARENT, true);
         versiontext.text = "V " + Application.current.meta.get('version');
         versiontext.antialiasing = false;
         versiontext.camera = shipCam;
@@ -146,6 +152,35 @@ class MainMenu extends FlxState {
                         ease: FlxEase.circOut
                     });
                     FlxTween.tween(Button_Play.DaText, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
+                        ease: FlxEase.circOut
+                    });
+                }
+
+            if(FlxG.mouse.overlaps(Button_Load))
+                {
+                    FlxTween.cancelTweensOf(Button_Load.DaButton);
+                    FlxTween.cancelTweensOf(Button_Load.DaText);
+                    Button_Load.Hover = true;
+                    Button_Load.DaButton.updateHitbox();
+                    Button_Load.updateTextPosition();
+                    FlxTween.tween(Button_Load.DaButton, {"scale.x": 0.8, "scale.y": 0.8, x: FlxG.width/2 - Button_Load.DaButton.width / 2 + 20}, 0.5, {
+                        ease: FlxEase.circOut
+                    });
+                    FlxTween.tween(Button_Load.DaText, {"scale.x": 0.8, "scale.y": 0.8}, 0.5, {
+                        ease: FlxEase.circOut
+                    });
+                }
+            else
+                {
+                    FlxTween.cancelTweensOf(Button_Load.DaButton);
+                    FlxTween.cancelTweensOf(Button_Load.DaText);
+                    Button_Load.Hover = false;
+                    Button_Load.DaButton.updateHitbox();
+                    Button_Load.updateTextPosition();
+                    FlxTween.tween(Button_Load.DaButton, {"scale.x": 0.6, "scale.y": 0.6, x: FlxG.width/2 - Button_Load.DaButton.width / 2 + 20}, 0.5, {
+                        ease: FlxEase.circOut
+                    });
+                    FlxTween.tween(Button_Load.DaText, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
                         ease: FlxEase.circOut
                     });
                 }
