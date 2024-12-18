@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.math.FlxRandom;
 import flixel.group.FlxGroup;
@@ -11,7 +12,7 @@ import backend.level.*;
 import objects.Player.Aimer;
 import objects.*;
 
-class Playstate extends FlxState {
+class Playstate extends FlxTransitionableState {
     
     public static var instance:Playstate;
     //we have to create the player in a stupid way thanks to my ideas.

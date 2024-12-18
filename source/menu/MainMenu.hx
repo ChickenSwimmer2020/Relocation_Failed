@@ -1,5 +1,6 @@
 package menu;
 
+import flixel.addons.transition.FlxTransitionableState;
 import menu.intro.Star;
 import backend.Assets;
 import flixel.tweens.FlxEase;
@@ -27,6 +28,8 @@ class MainMenu extends FlxState {
     var shipGlow:FlxSprite;
 
     override public function create() {
+        //Functions.changeFlixelTransition([0.4, 0.4], [FlxColor.BLACK, FlxColor.BLACK], ['left', 'left'], ['tiles', 'tiles'], 'diamond');
+
         starCam = new FlxCamera(0, 0, 1280, 720, 1);
         starCam.bgColor = 0x00000000;
         FlxG.cameras.add(starCam, false);

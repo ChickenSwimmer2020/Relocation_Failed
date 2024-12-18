@@ -3,6 +3,7 @@ package menu.intro;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import lime.ui.Window;
 
 class WaterMarks extends FlxState
 {
@@ -11,9 +12,17 @@ class WaterMarks extends FlxState
     var moveScreen:Bool = true;
     var tX:Float = 0;
     var tY:Float = 0;
+
+    var window:Window;
+
     override public function create()
     {
         super.create();
+
+        window = Application.current.window; //kept crashing, forgot to add this :man_facepalming:
+        @:privateAccess
+            window.__attributes.alwaysOnTop = false; //since we forced this during the fade intro, we want to disable it. no reason to keep it on
+
         FlxG.camera.flash();
 
         SPM = new FlxSprite(0, 0, 'assets/SP-Mascot.png');

@@ -19,6 +19,8 @@ class WindowIntro extends FlxState
         HLNativeWindow.setWindowDarkMode(true); // It just looks cleaner
         window = Application.current.window;
         window.focus();
+        @:privateAccess
+            window.__attributes.alwaysOnTop = true; //keep the window on top so you cant accidently click off during the fade and break the illusion
         setWindowAlpha(0);
         oldWindowDimensions = new Vector2(window.width, window.height);
         oldWindowPosition = new Vector2(window.x, window.y);
