@@ -96,6 +96,11 @@ class HUD extends FlxSpriteGroup {
                 ammocounter_AMMOTEXT.x = 980;
                 CurAmmoCap = Playstate.instance.Player.RifleAmmoCap;
                 CurAmmoNum = Playstate.instance.Player.RifleAmmoRemaining;
+            case SMGROUNDS:
+                CurAmmoName = '10MM AUTO';
+                ammocounter_AMMOTEXT.x = 980;
+                CurAmmoCap = Playstate.instance.Player.SMGAmmoCap;
+                CurAmmoNum = Playstate.instance.Player.SMGAmmoRemaining;
             default:
                 ammocounter_AMMOTEXT.x = 0;
                 CurAmmoName = 'FIX ME!';

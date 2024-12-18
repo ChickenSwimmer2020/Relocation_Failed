@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.effects.FlxFlicker;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.addons.effects.FlxTrail;
@@ -46,10 +47,12 @@ class Player extends FlxSprite {
     public var PistolAmmoRemaining:Int = 200;
     public var RifleAmmoRemaining:Int = 500;
     public var ShotgunAmmoRemaining:Int = 75;
+    public var SMGAmmoRemaining:Int = 900;
 
     public var PistolAmmoCap:Int = 200; //what are general ammo caps in games?
     public var RifleAmmoCap:Int = 500;
     public var ShotgunAmmoCap:Int = 75;
+    public var SMGAmmoCap:Int = 900;
 
 	public var isMoving:Bool = false;
     public var stamina:Int = 100;
@@ -145,6 +148,10 @@ class Player extends FlxSprite {
         if(FlxG.keys.anyJustPressed([L])) {
             CurWeaponChoice = RIFLEROUNDS;
             trace('Current Weapon Type: RIFLE');
+        }
+        if(FlxG.keys.anyJustPressed([I])) {
+            CurWeaponChoice = SMGROUNDS;
+            trace('Current Weapon Type: SMG');
         }
     }
 
@@ -320,11 +327,22 @@ class Aimer extends FlxSprite {
                             Playstate.instance.HUDCAM.shake(0.005, 0.1);
                             Playstate.instance.camera.shake(0.005, 0.1);
                         }
+                    case SMGROUNDS:
+                        Playstate.instance.Player.SMGAmmoRemaining--;
+                        trace('SMG Bullet Shot!');
+                        Bullet.shoot();
+                        Playstate.instance.FGCAM.shake(0.001, 0.1);
+                        Playstate.instance.HUDCAM.shake(0.001, 0.1);
+                        Playstate.instance.camera.shake(0.001, 0.1);
                 }
             }
-            else
+            else {
+                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMONE, 2, 0.1, true, false);
+                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMOSLASH, 2, 0.1, true, false);
+                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMTWO, 2, 0.1, true, false);
                 trace('selected ammo type is empty!');
                 //play empty ammo noise
+            }
         }
         #else
         #end
@@ -343,6 +361,11 @@ class Aimer extends FlxSprite {
                     return false;
             case RIFLEROUNDS:
                 if(Playstate.instance.Player.RifleAmmoRemaining > 0)
+                    return true;
+                else
+                    return false;
+            case SMGROUNDS:
+                if(Playstate.instance.Player.SMGAmmoRemaining > 0)
                     return true;
                 else
                     return false;

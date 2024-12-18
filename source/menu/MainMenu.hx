@@ -84,7 +84,7 @@ class MainMenu extends FlxState {
         add(shipGlow);
 
         var vingette = new FlxSprite(0, 0, 'assets/Vingette.png');
-        vingette.alpha = 0.7;
+        vingette.alpha = 0.4;
         vingette.camera = shipCam;
         add(vingette);
 

@@ -10,6 +10,7 @@ enum BulletType
     SHOTGUNSHELL; //display name: 12 Gauge Buckshot
     PISTOLROUNDS; //display name: 9 MilliMeter
     RIFLEROUNDS; //display name: 7.62x51mm NATO
+    SMGROUNDS; //display name: 10MM
 }
 
 class Bullet extends FlxSprite {
@@ -40,6 +41,8 @@ class Bullet extends FlxSprite {
                 makeGraphic(5, 5, FlxColor.YELLOW);
             case RIFLEROUNDS:
                 makeGraphic(5, 5, FlxColor.WHITE);
+            case SMGROUNDS:
+                makeGraphic(5, 5, FlxColor.CYAN);
         }
 
         velocity.set(_SPEED, 0);
