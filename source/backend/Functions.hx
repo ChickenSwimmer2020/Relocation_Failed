@@ -1,5 +1,13 @@
 package backend;
 
+import flixel.addons.transition.TransitionData;
+import flixel.math.FlxPoint;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileCircle;
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileSquare;
+import flixel.FlxG;
+
 #if mobile
 import flixel.input.touch.FlxTouch;
 #end
@@ -79,6 +87,121 @@ class Functions
       */
     inline static public function wait(Time:Float, onComplete:() -> Void):FlxTimer
         return new FlxTimer().start(Time, (_) ->{ onComplete(); });
+    ///** //TODO: make work
+    //  * # ever thought that the default flixel fade transition is stupid?
+    //  * ## well look no further!
+    //  * with this handy little function, you can easily change the fadeout/fadein to be
+    //  * nearly anything!
+    //  * ---
+    //  *
+    //  * Types Options: [tiles, fade, none]
+    //  *
+    //  * graphic Options: [circle, diamond, square]
+    //  *
+    //  * ---
+    //  * ###### hehe, i stole this from the flixel transition demo >:)
+    //  * @param Durations Array the first number of the array is the in duration, second is out duration.
+    //  * @param Colors Array first FlxColor is transin, second is transout
+    //  * @param Direction Array of Strings. options above. the first is transin second is transout
+    //  * @param Types Array of Strings. item one is transin, item two is transout.
+    //  * @param Graphic String. unless you set type to tiles, this doesnt do anything. options above
+    //  * @since RF_DEV_0.1.6
+    //  */
+    //public static function changeFlixelTransition(Durations:Array<Float>, Colors:Array<FlxColor>, Directions:Array<String>, Types:Array<String>, Graphic:String) {
+    //    var trainIn = FlxTransitionableState.defaultTransIn;
+    //    var trainOut = FlxTransitionableState.defaultTransOut;
+    //    var p:FlxPoint = new FlxPoint();
+    //    var p2:FlxPoint = new FlxPoint();
+    //    var switchtype:flixel.addons.transition.TransitionData.TransitionType;
+    //    var switchtype2:flixel.addons.transition.TransitionData.TransitionType;
+    //    function getTileDataAsset(Graphic):FlxGraphic{
+    //            var graphicClass:Class<Dynamic> = switch (Graphic)
+    //            {
+    //                case "circle": GraphicTransTileCircle;
+    //                case "square": GraphicTransTileSquare;
+    //                case "diamond", _: GraphicTransTileDiamond;
+    //            }
+    //            
+    //            var graphic = FlxGraphic.fromClass(cast graphicClass);
+    //            graphic.persist = true;
+    //            graphic.destroyOnNoUse = false;
+    //            return graphic;
+    //    }
+    //    switch(Types[0]) {
+    //        case 'tiles':
+    //            switchtype = TILES;
+    //        case 'fade':
+    //            switchtype = FADE;
+    //        case 'none':
+    //            switchtype = NONE;
+    //        default:
+    //            switchtype = null;
+    //    }
+    //    switch(Types[1]) {
+    //        case 'tiles':
+    //            switchtype2 = TILES;
+    //        case 'fade':
+    //            switchtype2 = FADE;
+    //        case 'none':
+    //            switchtype2 = NONE;
+    //        default:
+    //            switchtype2 = null;
+    //    }
+    //    switch(Directions[0]) {
+    //        case "up":
+    //            p.set(0, -1);
+    //        case "down":
+    //            p.set(0, 1);
+    //        case "left":
+    //            p.set(-1, 0);
+    //        case "right":
+    //            p.set(1, 0);
+    //        case "upleft":
+    //            p.set(-1, -1);
+    //        case "upright":
+    //            p.set(1, -1);
+    //        case "downleft":
+    //            p.set(-1, 1);
+    //        case "downright":
+    //            p.set(1, 1);
+    //        default:
+    //            p.set(0, 0);
+    //    }
+    //    switch(Directions[1]) {
+    //        case "up":
+    //            p2.set(0, -1);
+    //        case "down":
+    //            p2.set(0, 1);
+    //        case "left":
+    //            p2.set(-1, 0);
+    //        case "right":
+    //            p2.set(1, 0);
+    //        case "upleft":
+    //            p2.set(-1, -1);
+    //        case "upright":
+    //            p2.set(1, -1);
+    //        case "downleft":
+    //            p2.set(-1, 1);
+    //        case "downright":
+    //            p2.set(1, 1);
+    //        default:
+    //            p2.set(0, 0);
+    //    }
+    //    trainIn.duration = Durations[0];
+    //    trainOut.duration = Durations[1];
+    //    trainIn.color = Colors[0];
+    //    trainOut.color = Colors[1];
+    //    trainIn.direction = p;
+    //    trainOut.direction = p2;
+    //    trainIn.type = switchtype;
+    //    trainOut.type = switchtype2;
+    //    if(Types[0] == 'tiles') {
+    //        trainIn.tileData.asset = getTileDataAsset(Graphic);
+    //    }
+    //    if(Types[1] == 'tiles') {
+    //        trainIn.tileData.asset = getTileDataAsset(Graphic);
+    //    }
+    //}
     #if !mobile
     /**
       * # getSpriteAngleFromMousePos();
@@ -118,60 +241,6 @@ class Functions
             FlxG.watch.addQuick('relativeY', relativeY);
             #end
             return angle;
-        }
-    #end
-    #if desktop //window transparency stuff
-        #if windows
-        /**
-          * # setWindowTransparencyColor();
-          * ## *Just be transparent if you really love them*
-          * allows for changing of the color that a window will automatically set as transparent
-          * ---
-          * @param red Interager (0-255)
-          * @param green Interager (0-255)
-          * @param blue Interager (0-255)
-          * @param alpha Interager (0-255)
-          * @since RF_DEV_0.1.0
-          */
-        @:functionCode('
-            HWND window = GetActiveWindow();
-
-            if (transparencyEnabled) {
-                SetWindowLong(window, GWL_EXSTYLE, GetWindowLong(window, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-                SetLayeredWindowAttributes(window, RGB(0, 0, 0), 255, LWA_COLORKEY | LWA_ALPHA);
-            }
-            // make window layered
-            int result = SetWindowLong(window, GWL_EXSTYLE, GetWindowLong(window, GWL_EXSTYLE) | WS_EX_LAYERED);
-            if (alpha > 255) alpha = 255;
-            if (alpha < 0) alpha = 0;
-            SetLayeredWindowAttributes(window, RGB(red, green, blue), alpha, LWA_COLORKEY | LWA_ALPHA);
-            alpha = result;
-            transparencyEnabled = true;
-        ')
-        #end
-        public static function setWindowTransparencyColor(red:Int, green:Int, blue:Int, alpha:Int = 255) {
-            return alpha;
-        }
-        #if windows
-        /**
-          * # disableWindowTransparency();
-          * ## *The first friend who doesnt look through you, should be a friend you stay with*
-          * allows for toggling window transparency
-          * ---
-          * @param result Bool
-          * @since RF_DEV_0.1.0
-          */
-        @:functionCode('
-            if (!transparencyEnabled) return false;
-            
-            HWND window = GetActiveWindow();
-            SetWindowLong(window, GWL_EXSTYLE, GetWindowLong(window, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-            SetLayeredWindowAttributes(window, RGB(0, 0, 0), 255, LWA_COLORKEY | LWA_ALPHA);
-            transparencyEnabled = false;
-        ')
-        #end
-        public static function disableWindowTransparency(result:Bool = true) {
-            return result;
         }
     #end
 }
