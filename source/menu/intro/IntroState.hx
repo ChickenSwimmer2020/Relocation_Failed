@@ -7,6 +7,7 @@ import flixel.tweens.FlxTween;
 class IntroState extends FlxState
 {
     var stars:Array<Star> = [];
+    var starCam:FlxCamera;
     var shipCam:FlxCamera;
     var ship:FlxSprite;
     var overlay:FlxSprite;
@@ -16,6 +17,9 @@ class IntroState extends FlxState
     override public function create()
     {
         super.create();
+        starCam = new FlxCamera(0, 0, 1280, 720, 0);
+        starCam.bgColor = 0x00000000;
+        FlxG.cameras.add(starCam, false);
         shipCam = new FlxCamera(0, 0, 1280, 720, 1.2);
         shipCam.bgColor = 0x00000000;
         FlxG.cameras.add(shipCam, false);
@@ -109,7 +113,11 @@ class IntroState extends FlxState
             window.height = Std.int(FlxMath.lerp(window.height, WindowIntro.oldWindowDimensions.y, 0.2));
         }
         var star:Star = cast new Star(Std.int(FlxG.width/2), Std.int(FlxG.height/2) - 30, null, trail, dur).makeGraphic(10, 10);
-        if (trail) add(star.trail);
+        if (trail) {
+            add(star.trail);
+            star.trail.camera = starCam;
+        }
+        star.camera = starCam;
         stars.push(star);
         add(star);
     }

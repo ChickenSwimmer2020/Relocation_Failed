@@ -17,7 +17,7 @@ class Star extends FlxSprite
         var yPos:Int = 0;
         if (hasTrail)
         {
-            trail = new FlxTrail(this, makeGraphic(10, 10).graphic, 7, 0, 0.4, 0.05);
+            trail = new FlxTrail(this, makeGraphic(10, 10).graphic, 10, 0, 1, 0.1);
         }
         if (r.bool())
         {

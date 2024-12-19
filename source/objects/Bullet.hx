@@ -57,7 +57,6 @@ class Bullet extends FlxSprite {
             //if(ApplyTracer) {
             //    tracy.kill(); //TODO: FIX ME!
             //}
-            trace('bullet was destroyed!!\n\nTHATS REALLY GOOD!');
         }
     }
 
@@ -80,7 +79,7 @@ class Bullet extends FlxSprite {
     }
 
     public static function shotgunShoot() {
-        var Spread:Array<FlxPoint> = getShotgunSpread(FlxG.mouse.getPosition(), Playstate.instance.Player2.angle, 120, 7, 100);
+        var Spread:Array<FlxPoint> = getShotgunSpread(FlxG.mouse.getPosition(), Playstate.instance.Player2.angle, 240, 9, 100);
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[0], SHOTGUNSHELL, true));
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[1], SHOTGUNSHELL, true));
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[2], SHOTGUNSHELL, true));
@@ -88,6 +87,8 @@ class Bullet extends FlxSprite {
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[4], SHOTGUNSHELL, true));
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[5], SHOTGUNSHELL, true));
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[6], SHOTGUNSHELL, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[7], SHOTGUNSHELL, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[8], SHOTGUNSHELL, true));
     }
 
     public static function getShotgunSpread(center:FlxPoint, facingAngle:Float, fov:Float, numBullets:Int, range:Float):Array<FlxPoint> {

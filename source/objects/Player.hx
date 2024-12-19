@@ -1,5 +1,6 @@
 package objects;
 
+import openfl.events.MouseEvent;
 import flixel.effects.FlxFlicker;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
@@ -43,6 +44,8 @@ class Player extends FlxSprite {
     public var curMovementDir:MovementDirection;
 
     public var CurWeaponChoice:Bullet.BulletType;
+    public var currentWeaponIndex:Int = 0;
+    public var weapons:Array<String> = ["Pistol", "Shotgun", "Rifle", "Smg"];
 
     public var PistolAmmoRemaining:Int = 200;
     public var RifleAmmoRemaining:Int = 500;
@@ -91,6 +94,8 @@ class Player extends FlxSprite {
         animation.add("DIAGNOAL_downleft", [8], 30, false, false, false);
 
 		animation.play('idle');
+        FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+        CurWeaponChoice = PISTOLROUNDS; //prevent a crash from the hud trying to read the curweaponchoice as null
 	}
 
     public function CheckCollision(obj:FlxSprite) {
@@ -133,25 +138,30 @@ class Player extends FlxSprite {
             Playstate.instance.Player.PistolAmmoRemaining--;
     }
 
-    function switchWeaponType() {
-        if(CurWeaponChoice == null)
-            CurWeaponChoice = PISTOLROUNDS;
+    private function onMouseWheel(event:MouseEvent):Void {
+        if (event.delta > 0) {
+            // Scroll up
+            currentWeaponIndex = (currentWeaponIndex - 1 + weapons.length) % weapons.length;
+        } else if (event.delta < 0) {
+            // Scroll down
+            currentWeaponIndex = (currentWeaponIndex + 1) % weapons.length;
+        }
 
-        if(FlxG.keys.anyJustPressed([J])) {
-            CurWeaponChoice = SHOTGUNSHELL;
-            trace('Current Weapon Type: SHOTGUN');
-        }
-        if(FlxG.keys.anyJustPressed([K])) {
-            CurWeaponChoice = PISTOLROUNDS;
-            trace('Current Weapon Type: PISTOL');
-        }
-        if(FlxG.keys.anyJustPressed([L])) {
-            CurWeaponChoice = RIFLEROUNDS;
-            trace('Current Weapon Type: RIFLE');
-        }
-        if(FlxG.keys.anyJustPressed([I])) {
-            CurWeaponChoice = SMGROUNDS;
-            trace('Current Weapon Type: SMG');
+        updateWeapon();
+    }
+
+    // Update the weapon
+    private function updateWeapon():Void {
+        trace("Selected weapon: " + weapons[currentWeaponIndex]);
+        switch(weapons[currentWeaponIndex]) {
+            case 'Pistol':
+                CurWeaponChoice = PISTOLROUNDS;
+            case 'Shotgun':
+                CurWeaponChoice = SHOTGUNSHELL;
+            case 'Rifle':
+                CurWeaponChoice = RIFLEROUNDS;
+            case 'Smg':
+                CurWeaponChoice = SMGROUNDS;
         }
     }
 
@@ -255,7 +265,6 @@ class Player extends FlxSprite {
 		movement();
 		checkForPauseMenu();
         resetPauseMenu();
-        switchWeaponType();
         forceCaps(); //so variables such as health and ammo dont go above 100
         #if !mobile
         AimerPOSx = this.getGraphicMidpoint().x - 15;

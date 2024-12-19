@@ -87,121 +87,126 @@ class Functions
       */
     inline static public function wait(Time:Float, onComplete:() -> Void):FlxTimer
         return new FlxTimer().start(Time, (_) ->{ onComplete(); });
-    ///** //TODO: make work
-    //  * # ever thought that the default flixel fade transition is stupid?
-    //  * ## well look no further!
-    //  * with this handy little function, you can easily change the fadeout/fadein to be
-    //  * nearly anything!
-    //  * ---
-    //  *
-    //  * Types Options: [tiles, fade, none]
-    //  *
-    //  * graphic Options: [circle, diamond, square]
-    //  *
-    //  * ---
-    //  * ###### hehe, i stole this from the flixel transition demo >:)
-    //  * @param Durations Array the first number of the array is the in duration, second is out duration.
-    //  * @param Colors Array first FlxColor is transin, second is transout
-    //  * @param Direction Array of Strings. options above. the first is transin second is transout
-    //  * @param Types Array of Strings. item one is transin, item two is transout.
-    //  * @param Graphic String. unless you set type to tiles, this doesnt do anything. options above
-    //  * @since RF_DEV_0.1.6
-    //  */
-    //public static function changeFlixelTransition(Durations:Array<Float>, Colors:Array<FlxColor>, Directions:Array<String>, Types:Array<String>, Graphic:String) {
-    //    var trainIn = FlxTransitionableState.defaultTransIn;
-    //    var trainOut = FlxTransitionableState.defaultTransOut;
-    //    var p:FlxPoint = new FlxPoint();
-    //    var p2:FlxPoint = new FlxPoint();
-    //    var switchtype:flixel.addons.transition.TransitionData.TransitionType;
-    //    var switchtype2:flixel.addons.transition.TransitionData.TransitionType;
-    //    function getTileDataAsset(Graphic):FlxGraphic{
-    //            var graphicClass:Class<Dynamic> = switch (Graphic)
-    //            {
-    //                case "circle": GraphicTransTileCircle;
-    //                case "square": GraphicTransTileSquare;
-    //                case "diamond", _: GraphicTransTileDiamond;
-    //            }
-    //            
-    //            var graphic = FlxGraphic.fromClass(cast graphicClass);
-    //            graphic.persist = true;
-    //            graphic.destroyOnNoUse = false;
-    //            return graphic;
-    //    }
-    //    switch(Types[0]) {
-    //        case 'tiles':
-    //            switchtype = TILES;
-    //        case 'fade':
-    //            switchtype = FADE;
-    //        case 'none':
-    //            switchtype = NONE;
-    //        default:
-    //            switchtype = null;
-    //    }
-    //    switch(Types[1]) {
-    //        case 'tiles':
-    //            switchtype2 = TILES;
-    //        case 'fade':
-    //            switchtype2 = FADE;
-    //        case 'none':
-    //            switchtype2 = NONE;
-    //        default:
-    //            switchtype2 = null;
-    //    }
-    //    switch(Directions[0]) {
-    //        case "up":
-    //            p.set(0, -1);
-    //        case "down":
-    //            p.set(0, 1);
-    //        case "left":
-    //            p.set(-1, 0);
-    //        case "right":
-    //            p.set(1, 0);
-    //        case "upleft":
-    //            p.set(-1, -1);
-    //        case "upright":
-    //            p.set(1, -1);
-    //        case "downleft":
-    //            p.set(-1, 1);
-    //        case "downright":
-    //            p.set(1, 1);
-    //        default:
-    //            p.set(0, 0);
-    //    }
-    //    switch(Directions[1]) {
-    //        case "up":
-    //            p2.set(0, -1);
-    //        case "down":
-    //            p2.set(0, 1);
-    //        case "left":
-    //            p2.set(-1, 0);
-    //        case "right":
-    //            p2.set(1, 0);
-    //        case "upleft":
-    //            p2.set(-1, -1);
-    //        case "upright":
-    //            p2.set(1, -1);
-    //        case "downleft":
-    //            p2.set(-1, 1);
-    //        case "downright":
-    //            p2.set(1, 1);
-    //        default:
-    //            p2.set(0, 0);
-    //    }
-    //    trainIn.duration = Durations[0];
-    //    trainOut.duration = Durations[1];
-    //    trainIn.color = Colors[0];
-    //    trainOut.color = Colors[1];
-    //    trainIn.direction = p;
-    //    trainOut.direction = p2;
-    //    trainIn.type = switchtype;
-    //    trainOut.type = switchtype2;
-    //    if(Types[0] == 'tiles') {
-    //        trainIn.tileData.asset = getTileDataAsset(Graphic);
-    //    }
-    //    if(Types[1] == 'tiles') {
-    //        trainIn.tileData.asset = getTileDataAsset(Graphic);
-    //    }
-    //}
+    /**
+      * # ever thought that the default flixel fade transition is stupid?
+      * ## well look no further!
+      * with this handy little function, you can easily change the fadeout/fadein to be
+      * nearly anything!
+      * ---
+      *
+      * Types Options: [tiles, fade, none]
+      *
+      * graphic Options: [circle, diamond, square]
+      *
+      * ---
+      * ###### hehe, i stole this from the flixel transition demo >:)
+      * @param Durations Array the first number of the array is the in duration, second is out duration.
+      * @param Colors Array first FlxColor is transin, second is transout
+      * @param Direction Array of Strings. options above. the first is transin second is transout
+      * @param Types Array of Strings. item one is transin, item two is transout.
+      * @param Graphic String. unless you set type to tiles, this doesnt do anything. options above
+      * @since RF_DEV_0.1.6
+      */
+    public static function changeFlixelTransition(Durations:Array<Float>, Colors:Array<FlxColor>, Directions:Array<String>, Types:Array<String>, Graphic:String) {
+        var trainIn = FlxTransitionableState.defaultTransIn;
+        var trainOut = FlxTransitionableState.defaultTransOut;
+        var p:FlxPoint = new FlxPoint();
+        var p2:FlxPoint = new FlxPoint();
+        var switchtype:flixel.addons.transition.TransitionData.TransitionType;
+        var switchtype2:flixel.addons.transition.TransitionData.TransitionType;
+        function getTileDataAsset(Graphic):FlxGraphic{
+                var graphicClass:Class<Dynamic> = switch (Graphic)
+                {
+                    case "circle": GraphicTransTileCircle;
+                    case "square": GraphicTransTileSquare;
+                    case "diamond", _: GraphicTransTileDiamond;
+                }
+                
+                var graphic = FlxGraphic.fromClass(cast graphicClass);
+                graphic.persist = true;
+                graphic.destroyOnNoUse = false;
+                return graphic;
+        }
+        switch(Types[0]) {
+            case 'tiles':
+                switchtype = TILES;
+            case 'fade':
+                switchtype = FADE;
+            case 'none':
+                switchtype = NONE;
+            default:
+                switchtype = null;
+        }
+        switch(Types[1]) {
+            case 'tiles':
+                switchtype2 = TILES;
+            case 'fade':
+                switchtype2 = FADE;
+            case 'none':
+                switchtype2 = NONE;
+            default:
+                switchtype2 = null;
+        }
+        switch(Directions[0]) {
+            case "up":
+                p.set(0, -1);
+            case "down":
+                p.set(0, 1);
+            case "left":
+                p.set(-1, 0);
+            case "right":
+                p.set(1, 0);
+            case "upleft":
+                p.set(-1, -1);
+            case "upright":
+                p.set(1, -1);
+            case "downleft":
+                p.set(-1, 1);
+            case "downright":
+                p.set(1, 1);
+            default:
+                p.set(0, 0);
+        }
+        switch(Directions[1]) {
+            case "up":
+                p2.set(0, -1);
+            case "down":
+                p2.set(0, 1);
+            case "left":
+                p2.set(-1, 0);
+            case "right":
+                p2.set(1, 0);
+            case "upleft":
+                p2.set(-1, -1);
+            case "upright":
+                p2.set(1, -1);
+            case "downleft":
+                p2.set(-1, 1);
+            case "downright":
+                p2.set(1, 1);
+            default:
+                p2.set(0, 0);
+        }
+        if(trainIn != null) {
+          trainIn.duration = Durations[0];
+          trainIn.color = Colors[0];
+          trainIn.direction = p;
+          trainIn.type = switchtype;
+          if(Types[0] == 'tiles') {
+            trainIn.tileData.asset = getTileDataAsset(Graphic);
+          }
+        }
+          
+        if(trainOut != null) {
+          trainOut.duration = Durations[1];
+          trainOut.color = Colors[1];
+          trainOut.direction = p2;
+          trainOut.type = switchtype2;
+          if(Types[1] == 'tiles') {
+            trainIn.tileData.asset = getTileDataAsset(Graphic);
+          }
+        }
+    }
     #if !mobile
     /**
       * # getSpriteAngleFromMousePos();

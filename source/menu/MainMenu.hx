@@ -8,7 +8,7 @@ import flixel.tweens.FlxTween;
 import backend.Functions;
 import backend.Button;
 
-class MainMenu extends FlxState {
+class MainMenu extends FlxTransitionableState {
     var Title:FlxText;
     var Title2:FlxText;
     var Suffix:FlxText;
@@ -26,9 +26,10 @@ class MainMenu extends FlxState {
     var starCam:FlxCamera;
     var ship:FlxSprite;
     var shipGlow:FlxSprite;
+    var shipGlow2:FlxSprite;
 
     override public function create() {
-        //Functions.changeFlixelTransition([0.4, 0.4], [FlxColor.BLACK, FlxColor.BLACK], ['left', 'left'], ['tiles', 'tiles'], 'diamond');
+        Functions.changeFlixelTransition([0.4, 0.4], [FlxColor.BLACK, FlxColor.BLACK], ['left', 'left'], ['tiles', 'tiles'], 'diamond');
 
         starCam = new FlxCamera(0, 0, 1280, 720, 1);
         starCam.bgColor = 0x00000000;
@@ -76,7 +77,7 @@ class MainMenu extends FlxState {
         add(Suffix);
 
         //button handling
-        Button_Play = new Button('New\nGame', 560, 280, Assets.image('ButtonTEST'), ()->{ FlxG.switchState(new Playstate()); }, 1, false);
+        Button_Play = new Button('New\nGame', 560, 280, Assets.image('ButtonTEST'), ()->{ FlxG.state.openSubState(new substates.ChapterSelectSubState(this)); }, 1, false);
         Button_Play.DaButton.updateHitbox();
         Button_Play.updateTextPosition();
         Button_Play.camera = shipCam;
@@ -102,6 +103,13 @@ class MainMenu extends FlxState {
         shipGlow.camera = shipCam;
         add(shipGlow);
 
+        shipGlow2 = new FlxSprite(0, 0, 'assets/ship-glow-front.png');
+        shipGlow2.setGraphicSize(1280, 720);
+        shipGlow2.updateHitbox();
+        shipGlow2.antialiasing = false;
+        shipGlow2.camera = shipCam;
+        add(shipGlow2);
+
         var vingette = new FlxSprite(0, 0, 'assets/Vingette.png');
         vingette.alpha = 0.4;
         vingette.camera = shipCam;
@@ -125,7 +133,7 @@ class MainMenu extends FlxState {
     override public function update(elapsed:Float) {
             super.update(elapsed);
             shipCam.shake(0.001, 1);
-            var star:Star = cast new Star(Std.int(FlxG.width/2), Std.int(FlxG.height/2) - 30, null, false, 0.5).makeGraphic(10, 10);
+            var star:Star = cast new Star(Std.int(FlxG.width/2), Std.int(FlxG.height/2) - 30, null, false, 1.5).makeGraphic(10, 10);
             star.cameras = [starCam];
             stars.push(star);
             add(star);

@@ -29,6 +29,8 @@ class Playstate extends FlxTransitionableState {
 
     public var followStyle:FlxCameraFollowStyle;
 
+    public var _LEVEL:String;
+
     public var BulletGroup:FlxGroup;
     #if !mobile
         #if debug
@@ -36,9 +38,10 @@ class Playstate extends FlxTransitionableState {
         #end
     #end
     
-    override public function new() {
+    override public function new(levelToLoad:String) {
         super();
         instance = this;
+        _LEVEL = levelToLoad;
     }
 
     override public function create() {
@@ -64,7 +67,9 @@ class Playstate extends FlxTransitionableState {
         Player2 = new Aimer();
         #else
         #end
-        Level = new Level(LevelLoader.ParseLevelData(Assets.asset('level1.json')));
+        if(_LEVEL == '')
+            _LEVEL = 'level1';
+        Level = new Level(LevelLoader.ParseLevelData(Assets.asset('$_LEVEL.json')));
         Level.loadLevel();
 
         add(Level);
@@ -75,8 +80,6 @@ class Playstate extends FlxTransitionableState {
         #end
         add(BulletGroup);
         add(Hud);
-
-        trace(Level.levelData);
     }
 
     override public function update(elapsed:Float) {
@@ -114,7 +117,7 @@ class Playstate extends FlxTransitionableState {
         if(FlxG.camera.zoom > 2) FlxG.camera.zoom = 2;
         if(FGCAM.zoom > 2) FGCAM.zoom = 2;
 
-        if(FlxG.camera.zoom < 1) FlxG.camera.zoom > 1;
+        if(FlxG.camera.zoom < 1) FlxG.camera.zoom = 1;
         if(FGCAM.zoom < 1) FGCAM.zoom = 1;
         super.update(elapsed);
     }
