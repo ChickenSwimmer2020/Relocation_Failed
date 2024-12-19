@@ -1,5 +1,6 @@
 package substates;
 
+import objects.ChapterWrapper.ChapterSelecterGroup;
 import menu.MainMenu;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
@@ -44,11 +45,6 @@ class ChapterSelectSubState extends FlxSubState {
 		BG2.scale.set(0, 0);
 		Group.add(BG2);
 
-		xbutt = new FlxSquareButton(BG.x, BG.y, "X", () -> {
-			close();
-		});
-		add(xbutt);
-
 		windowtitle = new FlxText(BG.x + 5, BG.y + 5, 400, "New Game -- Chapter Select", 8, true);
 		Group.add(windowtitle);
 
@@ -56,10 +52,15 @@ class ChapterSelectSubState extends FlxSubState {
 
         chapterselectCamera.flashSprite.scrollRect = clipSquare;
 
-		var Chapter:ChapterBox = new ChapterBox(FlxG.width/2 - 180 + 15, FlxG.height/2 - BG.height/2 + 25, Assets.image('ship'), 'test chapter 01', ()->{ FlxG.switchState(new Playstate('level1')); }, false);
-		add(Chapter);
-		Chapter.alpha = 0;
-		wait(1, ()->{ FlxTween.tween(Chapter, {alpha: 1}, 0.5, { ease: FlxEase.expoOut }); });
+		var Chapters:ChapterSelecterGroup = new ChapterSelecterGroup();
+		add(Chapters);
+		Chapters.alpha = 0;
+		wait(1, ()->{ FlxTween.tween(Chapters, {alpha: 1}, 0.5, { ease: FlxEase.expoOut }); });
+		xbutt = new FlxSquareButton(BG.x, BG.y, "X", () -> {
+			close();
+			Chapters.destroy();
+		});
+		add(xbutt);
 		doCoolTweenin();
 	}
 

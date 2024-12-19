@@ -55,7 +55,7 @@ class ChapterBox extends FlxSpriteGroup {
         if(isLocked) {
             Button.status = FlxButtonState.DISABLED;
             dalock = new FlxSprite(0, 0, Assets.image('ChapterLock'));
-            dalock.setPosition(Lock.getGraphicMidpoint().x - dalock.width/2, Lock.getGraphicMidpoint().y - dalock.height/2);
+            dalock.setPosition(0, Lock.getGraphicMidpoint().y - dalock.height/2);
             if(!created) {
                 add(dalock);
                 created = true;
