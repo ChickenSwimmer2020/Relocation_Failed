@@ -1,6 +1,5 @@
 package backend;
 
-import flixel.ui.FlxBar.FlxBarFillDirection;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxPoint;
