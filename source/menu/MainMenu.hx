@@ -28,6 +28,13 @@ class MainMenu extends FlxTransitionableState {
     var shipGlow:FlxSprite;
     var shipGlow2:FlxSprite;
 
+    public static var instance:MainMenu; //because of variable instancing needing to be done for button disabling when in the chapter substate
+
+    public function new() {
+        super();
+        instance = this;
+    }
+
     override public function create() {
         Functions.changeFlixelTransition([0.4, 0.4], [FlxColor.BLACK, FlxColor.BLACK], ['left', 'left'], ['tiles', 'tiles'], 'diamond');
 

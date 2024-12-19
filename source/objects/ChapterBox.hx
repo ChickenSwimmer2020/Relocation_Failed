@@ -1,9 +1,12 @@
 package objects;
 
+import flixel.math.FlxPoint;
+import flixel.ui.FlxButton.FlxButtonState;
 import flixel.addons.ui.FlxUIAssets;
 import openfl.geom.Rectangle;
 import flixel.addons.ui.FlxUI9SliceSprite;
-import flixel.group.FlxGroup;
+
+using flixel.util.FlxSpriteUtil;
 
 class ChapterBox extends FlxSpriteGroup {
 
@@ -14,10 +17,17 @@ class ChapterBox extends FlxSpriteGroup {
     var Button:FlxButton;
 
     var weHasImage:Bool = false;
+    var Lock:FlxUI9SliceSprite;
+    var dalock:FlxSprite;
+    var isLocked:Bool;
+    var created:Bool = false;
 
-    public function new(X:Float, Y:Float, IMG:FlxGraphic, Name:String, onClick:Void->Void) {
+    public function new(X:Float, Y:Float, IMG:FlxGraphic, Name:String, onClick:Void->Void, locked:Bool) {
         super();
         whenClicked = onClick;
+        isLocked = locked;
+
+        Lock = new FlxUI9SliceSprite(X, Y, FlxUIAssets.IMG_CHROME_LIGHT, new Rectangle(0, 0, 100, 140));
 
         BG = new FlxUI9SliceSprite(X, Y, FlxUIAssets.IMG_CHROME_FLAT, new Rectangle(0, 0, 100, 140));
         BGInner = new FlxUI9SliceSprite(X, Y + 15, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(0, 0, 100, 90));
@@ -31,9 +41,25 @@ class ChapterBox extends FlxSpriteGroup {
         if(IMG != null) {
             weHasImage = true;
             var ChapterIMG:FlxSprite = new FlxSprite(X, Y + 15, IMG);
-            ChapterIMG.setGraphicSize(100, 90);
+            ChapterIMG.setGraphicSize(100, 90); //well, i wish i knew this function existed. much better than setscale because i can define exact dimensions.
             ChapterIMG.updateHitbox();
             add(ChapterIMG);
+        }
+        if(locked) {
+            add(Lock);
+            wait(1.2, ()->{ Lock.alpha = 0.8; });
+        }
+    }
+    override public function update(elapsed:Float) {
+        super.update(elapsed);
+        if(isLocked) {
+            Button.status = FlxButtonState.DISABLED;
+            dalock = new FlxSprite(0, 0, Assets.image('ChapterLock'));
+            dalock.setPosition(Lock.getGraphicMidpoint().x - dalock.width/2, Lock.getGraphicMidpoint().y - dalock.height/2);
+            if(!created) {
+                add(dalock);
+                created = true;
+            }
         }
     }
 }
