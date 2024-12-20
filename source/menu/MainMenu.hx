@@ -24,7 +24,9 @@ class MainMenu extends FlxTransitionableState {
     var stars:Array<Star> = [];
     var shipCam:FlxCamera;
     var starCam:FlxCamera;
+    var planetCam:FlxCamera;
     var ship:FlxSprite;
+    var planet:FlxSprite;
     var shipGlow:FlxSprite;
     var shipGlow2:FlxSprite;
 
@@ -41,6 +43,9 @@ class MainMenu extends FlxTransitionableState {
         starCam = new FlxCamera(0, 0, 1280, 720, 1);
         starCam.bgColor = 0x00000000;
         FlxG.cameras.add(starCam, false);
+        planetCam = new FlxCamera(0, 0, 1280, 720, 1);
+        planetCam.bgColor = 0x00000000;
+        FlxG.cameras.add(planetCam, false);
         shipCam = new FlxCamera(0, 0, 1280, 720, 1);
         shipCam.bgColor = 0x00000000;
         FlxG.cameras.add(shipCam);
@@ -49,6 +54,13 @@ class MainMenu extends FlxTransitionableState {
         if (!FlxG.sound.music.playing)
             FlxG.sound.playMusic(Assets.sound('MENU.ogg'));
         //background
+        planet = new FlxSprite(0, 200, 'assets/planet.png');
+        planet.camera = planetCam;
+        planet.scale.set(4, 4);
+        planet.color = 0xC7C7C7;
+        planet.x = (FlxG.width - planet.width/2)-100;
+        add(planet);
+
         ship = new FlxSprite(0, 0, 'assets/ship.png');
         ship.setGraphicSize(1280, 720);
         ship.updateHitbox();
@@ -137,13 +149,25 @@ class MainMenu extends FlxTransitionableState {
         add(versiontext);
     }
 
+    override public function destroy()
+    {
+        super.destroy();
+        FlxG.cameras.remove(starCam);
+        FlxG.cameras.remove(shipCam);
+        FlxG.cameras.remove(planetCam);
+    }
+
+    var _:Int = 0;
     override public function update(elapsed:Float) {
             super.update(elapsed);
+            _++; _ %= 2;
+            if (_ == 0){
+                var star:Star = cast new Star(Std.int(FlxG.width/2), Std.int(FlxG.height/2) - 30, null, false, 2).makeGraphic(10, 10);
+                star.cameras = [starCam];
+                stars.push(star);
+                add(star);
+            }
             shipCam.shake(0.001, 1);
-            var star:Star = cast new Star(Std.int(FlxG.width/2), Std.int(FlxG.height/2) - 30, null, false, 1.5).makeGraphic(10, 10);
-            star.cameras = [starCam];
-            stars.push(star);
-            add(star);
             #if !mobile
             if(FlxG.mouse.overlaps(Button_Play))
                 {

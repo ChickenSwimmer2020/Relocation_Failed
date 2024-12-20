@@ -21,9 +21,12 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
     private var maxOffset:Float;
     private var lastOffset:Float = -1; // To track changes in `currentOffset`
 
-    override public function new():Void {
-        super();
 
+    public var chapterCamera:FlxCamera;
+
+    override public function new(?camera:FlxCamera = null):Void {
+        super();
+        chapterCamera = camera;
         // Precompute maximum offset
         maxOffset = computeMaxOffset();
 
@@ -45,6 +48,7 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
         for (i in 0...chapterNames.length) {
             var chapter = createChapterBox(i);
             chapterBoxes.push(chapter);
+            if (chapterCamera != null) chapter.camera = chapterCamera;
             add(chapter);
         }
     }

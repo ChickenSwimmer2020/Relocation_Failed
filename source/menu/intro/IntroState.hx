@@ -14,6 +14,8 @@ class IntroState extends FlxState
     var dur:Float = 0.8;
     var trail:Bool = false;
     var lerpWindow:Bool = false;
+    var planet:FlxSprite;
+    var pIndex:Int = 0;
     override public function create()
     {
         super.create();
@@ -26,7 +28,7 @@ class IntroState extends FlxState
         var overlayCam = new FlxCamera(0, 0, 1280, 720, 0);
         overlayCam.bgColor = 0x00000000;
         FlxG.cameras.add(overlayCam, false);
-        ship = new FlxSprite(-120, -30, 'assets/ship.png');
+        ship = new FlxSprite(-120, -30, 'assets/ship-off.png');
         ship.setGraphicSize(1280, 720);
         ship.updateHitbox();
         ship.antialiasing = false;
@@ -48,6 +50,10 @@ class IntroState extends FlxState
         skipTxt.alpha = 0.4;
         skipTxt.camera = overlayCam;
         add(skipTxt);
+        planet = new FlxSprite(0, 0, 'assets/planet.png');
+        planet.alpha = 0;
+        add(planet);
+        pIndex = members.indexOf(planet);
         FlxG.camera.zoom = 1.2;
         FlxG.sound.playMusic('assets/sound/intro/1.wav', 1, false);
         FlxTween.tween(overlay, {alpha: 0}, 2, {ease: FlxEase.circIn, onComplete: (_) -> {
@@ -61,6 +67,9 @@ class IntroState extends FlxState
                     overlay.alpha = 0;
                     shipCam.shake(0.001, 2);
                     FlxG.camera.shake(0.001, 2);
+                    planet.scale.set(0.2, 0.2);
+                    planet.alpha = 0.4;
+                    FlxTween.tween(planet, {'scale.x': 0.75, 'scale.y': 0.75, alpha: 0.7}, 2, {ease: FlxEase.circIn});
                     wait(2, () -> {
                         FlxG.sound.music.stop();
                         overlay.alpha = 1;
@@ -71,6 +80,9 @@ class IntroState extends FlxState
                             overlay.alpha = 0;
                             shipCam.shake(0.005, 2);
                             FlxG.camera.shake(0.005, 2);
+                            planet.scale.set(1, 1);
+                            planet.alpha = 1;
+                            FlxTween.tween(planet, {'scale.x': 5, 'scale.y': 5}, 2, {ease: FlxEase.circIn});
                             wait(1, () -> {FlxTween.tween(overlayWhite, {alpha: 1});});
                             wait(2, () -> {
                                 Application.current.window.borderless = false;
@@ -87,6 +99,13 @@ class IntroState extends FlxState
                 });
             });
         }});
+    }
+
+    override public function destroy()
+    {
+        super.destroy();
+        FlxG.cameras.remove(starCam);
+        FlxG.cameras.remove(shipCam);
     }
 
     override public function update(elapsed:Float) {
@@ -119,6 +138,8 @@ class IntroState extends FlxState
         }
         star.camera = starCam;
         stars.push(star);
-        add(star);
+        insert(pIndex - 1, star);
+        planet.updateHitbox();
+        planet.screenCenter();
     }
 }
