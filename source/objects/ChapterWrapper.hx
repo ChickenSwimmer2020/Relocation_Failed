@@ -1,5 +1,6 @@
 package objects;
 
+import substates.ChapterSelectSubState;
 import rf_flixel.math.RFMath;
 import flixel.math.FlxMath;
 import flixel.FlxState;
@@ -16,8 +17,8 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
     private var chapterBoxes:Array<ChapterBox> = [];
     private var currentOffset:Float = 0;
     private var scrollSpeed:Float = 15;
-    private var startX:Float = 100;
-    private var spacing:Float = 150;
+    private var startX:Float = 240;
+    private var spacing:Float = 52;
 
     private var minOffset:Float = 0;
     private var maxOffset:Float;
@@ -50,7 +51,9 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
         for (i in 0...chapterNames.length) {
             var chapter = createChapterBox(i);
             chapterBoxes.push(chapter);
-            if (chapterCamera != null) chapter.camera = chapterCamera;
+            if (chapterCamera != null){
+                chapter.camera = chapterCamera;
+            }
             add(chapter);
         }
     }
@@ -63,7 +66,7 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
     private function createChapterBox(index:Int):ChapterBox {
         return new ChapterBox(
             startX + index * spacing,
-            100, // Fixed Y position
+            285, // Fixed Y position
             chapterImages[index],
             chapterNames[index],
             onChapterClick(index),

@@ -1,5 +1,6 @@
 package substates;
 
+import flixel.math.FlxRect;
 import objects.ChapterWrapper.ChapterSelecterGroup;
 import menu.MainMenu;
 import flixel.tweens.FlxEase;
@@ -11,18 +12,25 @@ import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import rf_flixel.ui.FlxSquareButton;
 
+using flixel.util.FlxSpriteUtil;
+
 class ChapterSelectSubState extends FlxSubState {
 	var BG:FlxUI9SliceSprite;
 	var BG2:FlxUI9SliceSprite;
 	var windowtitle:FlxText;
 	var xbutt:FlxSquareButton;
-	var clipSquare:Rectangle;
+	var FlxSprite:Rectangle;
+	static var clipSquare:FlxRect;
 
 	private var parstate:FlxState;
 	private var SubStateCam:FlxCamera = new FlxCamera();
 	var chapterselectCamera:FlxCamera = new FlxCamera();
 
+	var instance:ChapterSelectSubState;
+
 	var done:Bool = false;
+
+	var Chapters:ChapterSelecterGroup = new ChapterSelecterGroup();
 
 	override public function new(parentState:FlxState) {
 		super();
@@ -32,6 +40,8 @@ class ChapterSelectSubState extends FlxSubState {
         chapterselectCamera.bgColor = 0x00000000;
 		SubStateCam.bgColor.alpha = 0;
 		this.parstate = parentState;
+
+		this.instance = this;
 
 		var Group = new FlxSpriteGroup();
 		add(Group);
@@ -51,9 +61,9 @@ class ChapterSelectSubState extends FlxSubState {
 		windowtitle = new FlxText(BG.x + 5, BG.y + 5, 400, "New Game -- Chapter Select", 8, true);
 		Group.add(windowtitle);
 
-        clipSquare = new Rectangle(BG.x + 10, BG.y + 20, 380, 150);
+        clipSquare = new FlxRect(BG.x + 10, BG.y + 20, 380, 150);
+		
 
-		var Chapters:ChapterSelecterGroup = new ChapterSelecterGroup();
         Chapters.chapterCamera = chapterselectCamera;
 		add(Chapters);
 		Chapters.alpha = 0;
@@ -85,6 +95,13 @@ class ChapterSelectSubState extends FlxSubState {
 		BG.updateHitbox();
 		BG2.updateHitbox();
 		windowtitle.updateHitbox();
+		Chapters.clipRect = clipSquare;
+		for(i in Chapters.members) {
+			if(Std.isOfType(i, FlxButton)) {
+				var Butt = cast i;
+				Butt.label.cliprect = clipSquare;
+			}
+		}
 		@:privateAccess {
 			if(!done) {
 				wait(0.9, ()->{

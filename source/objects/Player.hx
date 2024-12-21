@@ -43,6 +43,8 @@ class Player extends FlxSprite {
     public var curPhysProperties:PhysicProperties;
     public var curMovementDir:MovementDirection;
 
+    public static var flickering:Bool = false;
+
     public var CurWeaponChoice:Bullet.BulletType;
     public var currentWeaponIndex:Int = 0;
     public var weapons:Array<String> = ["Pistol", "Shotgun", "Rifle", "Smg"];
@@ -129,13 +131,13 @@ class Player extends FlxSprite {
         //insert the suit/armor stuff here.
 
         if(Playstate.instance.Player.ShotgunAmmoRemaining > Playstate.instance.Player.ShotgunAmmoCap)
-            Playstate.instance.Player.ShotgunAmmoRemaining--;
+            Playstate.instance.Player.ShotgunAmmoRemaining = Playstate.instance.Player.ShotgunAmmoCap;
 
         if(Playstate.instance.Player.RifleAmmoRemaining > Playstate.instance.Player.RifleAmmoCap)
-            Playstate.instance.Player.RifleAmmoRemaining--;
+            Playstate.instance.Player.RifleAmmoRemaining = Playstate.instance.Player.RifleAmmoCap;
 
         if(Playstate.instance.Player.PistolAmmoRemaining > Playstate.instance.Player.PistolAmmoCap)
-            Playstate.instance.Player.PistolAmmoRemaining--;
+            Playstate.instance.Player.PistolAmmoRemaining = Playstate.instance.Player.PistolAmmoCap;
     }
 
     private function onMouseWheel(event:MouseEvent):Void {
@@ -153,6 +155,10 @@ class Player extends FlxSprite {
     // Update the weapon
     private function updateWeapon():Void {
         trace("Selected weapon: " + weapons[currentWeaponIndex]);
+        flickering = false;
+        FlxFlicker.stopFlickering(Playstate.instance.Hud.ammocounter_AMMONUMONE);
+        FlxFlicker.stopFlickering(Playstate.instance.Hud.ammocounter_AMMOSLASH);
+        FlxFlicker.stopFlickering(Playstate.instance.Hud.ammocounter_AMMONUMTWO);
         switch(weapons[currentWeaponIndex]) {
             case 'Pistol':
                 CurWeaponChoice = PISTOLROUNDS;
@@ -280,6 +286,7 @@ class Player extends FlxSprite {
 #if !mobile
 class Aimer extends FlxSprite {
     static public var curAngle:Float;
+    var flickering:Bool = Player.flickering;
     var shotgunPumping:Bool = false; //so we can make sure that you cant fire while the shotgun is pumping
 
     var RIFLEfireRate:Float = 0.1; // Time between shots in seconds
@@ -346,9 +353,12 @@ class Aimer extends FlxSprite {
                 }
             }
             else {
-                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMONE, 2, 0.1, true, false);
-                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMOSLASH, 2, 0.1, true, false);
-                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMTWO, 2, 0.1, true, false);
+                flickering = true;
+                if(flickering) {
+                    FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMONE, 2, 0.1, true, false);
+                    FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMOSLASH, 2, 0.1, true, false);
+                    FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMTWO, 2, 0.1, true, false);
+                }
                 trace('selected ammo type is empty!');
                 //play empty ammo noise
             }
