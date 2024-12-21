@@ -30,7 +30,9 @@ class Star extends FlxSprite
 
         scale.set(0, 0);
         tween = FlxTween.tween(this, {x: xPos, y: yPos, 'scale.x': 2, 'scale.y': 2}, dur, {ease: FlxEase.circIn, onComplete: (_) -> {
-            kill();
+            destroy();
+            if (trail != null)
+                trail.destroy();
         }});
         tween.start();
     }

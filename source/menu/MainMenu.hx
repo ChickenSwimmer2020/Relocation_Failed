@@ -137,7 +137,6 @@ class MainMenu extends FlxTransitionableState {
         platformText = new FlxText(0, 690, 0, "", 8, true);
         platformText.setFormat(null, 24, FlxColor.WHITE, LEFT, NONE, FlxColor.TRANSPARENT, true);
         platformText.text = Functions.GetPlatform();
-        platformText.camera = shipCam;
         platformText.antialiasing = false;
         add(platformText);
 
@@ -145,7 +144,6 @@ class MainMenu extends FlxTransitionableState {
         versiontext.setFormat(null, 24, FlxColor.WHITE, LEFT, NONE, FlxColor.TRANSPARENT, true);
         versiontext.text = "V " + Application.current.meta.get('version');
         versiontext.antialiasing = false;
-        versiontext.camera = shipCam;
         add(versiontext);
     }
 
