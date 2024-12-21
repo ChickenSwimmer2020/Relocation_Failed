@@ -27,6 +27,7 @@
     <assets path="assets/fonts" />
 
 	<haxelib name="flixel" />
+    <haxelib name="away3d" />
     <haxelib name="hlwnative" if="hl" />
 	<haxelib name="flixel-ui" />
 	<haxelib name="flixel-addons" />

@@ -1,5 +1,7 @@
 package objects;
 
+import rf_flixel.math.RFMath;
+import flixel.math.FlxMath;
 import flixel.FlxState;
 import flixel.FlxG;
 import openfl.events.MouseEvent;
@@ -53,6 +55,11 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
         }
     }
 
+    override public function destroy() {
+        super.destroy();
+        FlxG.stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+    }
+
     private function createChapterBox(index:Int):ChapterBox {
         return new ChapterBox(
             startX + index * spacing,
@@ -66,17 +73,14 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
 
     private function updateChapterPositions():Void {
         // Update positions only if the offset has changed
-        if (currentOffset != lastOffset) {
-            for (i in 0...chapterBoxes.length) {
-                chapterBoxes[i].x = startX + i * spacing - currentOffset;
-            }
-            lastOffset = currentOffset;
+        for (i in 0...chapterBoxes.length) {
+            chapterBoxes[i].x = FlxMath.lerp(chapterBoxes[i].x, startX + i * spacing - currentOffset, 0.3);
         }
     }
 
     private function onMouseWheel(event:MouseEvent):Void {
         // Adjust offset based on scroll direction
-        currentOffset = clamp(
+        currentOffset = RFMath.clamp(
             currentOffset + (if (event.delta < 0) scrollSpeed else -scrollSpeed),
             minOffset,
             maxOffset
@@ -84,10 +88,6 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
 
         // Update chapter positions
         updateChapterPositions();
-    }
-
-    private function clamp(value:Float, min:Float, max:Float):Float {
-        return Math.max(min, Math.min(max, value));
     }
 
     private function onChapterClick(index:Int):Void -> Void {
@@ -112,6 +112,5 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
         super.update(elapsed);
         // Update chapter positions in case of dynamic changes (optional safeguard)
         updateChapterPositions();
-   
     }
 }

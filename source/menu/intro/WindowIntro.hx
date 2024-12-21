@@ -19,7 +19,7 @@ class WindowIntro extends FlxState
         HLNativeWindow.setWindowDarkMode(true); // It just looks cleaner
         window = Application.current.window;
         window.focus();
-        @:privateAccess
+        @:privateAccess // I found out that this caused the glitch where it appeared below my taskbar. I was wondering why that was happening.
             window.__attributes.alwaysOnTop = true; //keep the window on top so you cant accidently click off during the fade and break the illusion
         setWindowAlpha(0);
         oldWindowDimensions = new Vector2(window.width, window.height);
