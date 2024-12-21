@@ -67,6 +67,7 @@ class ChapterSelectSubState extends FlxSubState {
 	}
 
 	function doCoolTweenin() {
+		xbutt.status = FlxButtonState.DISABLED;
 		FlxTween.tween(BG, {"scale.x": 1}, 0.5, { ease: FlxEase.expoOut }); //main bg X
 		wait(0.5, ()->{ FlxTween.tween(BG, {"scale.y": 1}, 0.5, { ease: FlxEase.expoOut }); }); //main bg Y
 
@@ -75,6 +76,7 @@ class ChapterSelectSubState extends FlxSubState {
 
 		FlxTween.tween(xbutt, {x: BG.x + 380}, 0.5, { ease: FlxEase.expoOut }); 
 		FlxTween.tween(xbutt.label, {x: BG.x + 380}, 0.5, { ease: FlxEase.expoOut });
+		wait(1, ()->{ xbutt.status = FlxButtonState.NORMAL; });
 	}
 
 	override public function update(elapsed:Float) {

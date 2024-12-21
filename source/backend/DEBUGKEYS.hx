@@ -1,6 +1,8 @@
 package backend;
 
 import flixel.input.keyboard.FlxKey;
+import sys.thread.Thread;
+import hlwnative.HLApplicationStatus;
 
 
 /**
