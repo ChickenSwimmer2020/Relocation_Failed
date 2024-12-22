@@ -18,9 +18,8 @@ import lime.ui.Window;
 
 class WaterMarks extends FlxState
 {
-    var SP:FlxSprite;
-    var SNF:FlxSvgSprite;
-    var SPM:FlxSprite;
+    var SNF:FlxSprite;
+    var SNFM:FlxSprite;
     var modelView:ModelView;
     var CS2020M:MeshData;
     var moveScreen:Bool = true;
@@ -46,29 +45,30 @@ class WaterMarks extends FlxState
 
         FlxG.camera.flash();
 
-        SPM = new FlxSprite(0, 0, 'assets/SP-Mascot.png');
-        SPM.scale.set(0.8, 0.8);
-        SPM.updateHitbox();
-        SPM.screenCenter();
-        SPM.alpha = 0;
-        add(SPM);
-        FlxTween.tween(SPM, {alpha: 0.3, "scale.x": 1, "scale.y": 1}, 1, {ease: FlxEase.circOut});
+        SNFM = new FlxSprite(0, 0, 'assets/StudioLogo.png');
+        SNFM.setGraphicSize(320, 320);
+        SNFM.updateHitbox();
+        SNFM.screenCenter();
+        SNFM.alpha = 0;
+        add(SNFM);
+        FlxTween.tween(SNFM, {alpha: 0.3, "scale.x": 0.05, "scale.y": 0.05}, 1, {ease: FlxEase.circOut});
 
-        SP = new FlxSprite(0, 1350, 'assets/SP.png');
-        add(SP);
-        SP.screenCenter(X);
-        SP.alpha = 0;
-        SP.angle = -5;    
+        SNF = new FlxSprite(0, 1350, 'assets/studiotext.png');
+        add(SNF);
+        SNF.setGraphicSize(841, 619);
+        SNF.screenCenter(X);
+        SNF.alpha = 0;
+        SNF.angle = -5;    
         
-        FlxTween.tween(SP, {alpha: 1, y: FlxG.height/2 - SP.height/2}, 1, {ease: FlxEase.circOut});
+        FlxTween.tween(SNF, {alpha: 1, y: FlxG.height/2 - SNF.height/2}, 1, {ease: FlxEase.circOut});
 
         overlayWhite.alpha = 0;
         add(overlayWhite);
 
         FlxG.sound.playMusic('assets/sound/intro/SPWatermark.wav', 1, false);
         wait(4, () -> {
-            FlxTween.tween(SP, {alpha: 0, y: 1350}, 1, {ease: FlxEase.circIn});
-            FlxTween.tween(SPM, {alpha: 0, "scale.x": 0.8, "scale.y": 0.8}, 1, {ease: FlxEase.circIn});
+            FlxTween.tween(SNF, {alpha: 0, y: 1350}, 1, {ease: FlxEase.circIn});
+            FlxTween.tween(SNFM, {alpha: 0, "scale.x": 0, "scale.y": 0}, 1, {ease: FlxEase.circIn});
             FlxTween.tween(overlayWhite, {alpha: 1}, 1, {ease: FlxEase.circIn});
             wait(3, () -> {
                 moveScreen = false;
@@ -88,15 +88,6 @@ class WaterMarks extends FlxState
         //SPM.alpha = 0;
         //add(SPM);
         //FlxTween.tween(SPM, {alpha: 0.3, "scale.x": 1, "scale.y": 1}, 1, {ease: FlxEase.circOut});
-
-        //SNF = new FlxSprite(0, 1350, 'assets/SP.png');
-        SNF = new FlxSvgSprite(Assets.getText("assets/StudioLogo.svg"), 0, 0);
-        //add(SNF);
-        //SNF.scale.set(0.5, 0.5);
-        SNF.screenCenter(X);
-        SNF.alpha = 1;
-        SNF.angle = -5;    
-        //FlxTween.tween(SNF, {alpha: 1, y: FlxG.height/2 - SNF.height/2}, 1, {ease: FlxEase.circOut});
 
         // The model data
         CS2020M = new MeshData();
@@ -133,7 +124,6 @@ class WaterMarks extends FlxState
 
         wait(4, () -> {
             //FlxTween.tween(SP, {alpha: 0, y: 1350}, 1, {ease: FlxEase.circIn});
-            FlxTween.tween(SPM, {alpha: 0, "scale.x": 0.8, "scale.y": 0.8}, 1, {ease: FlxEase.circIn});
             FlxTween.tween(overlayWhite, {alpha: 1}, 3, {ease: FlxEase.circIn});
             wait(3, () -> {
                 FlxG.sound.music.stop();
@@ -160,12 +150,12 @@ class WaterMarks extends FlxState
     
     override public function update(elapsed:Float) {
         super.update(elapsed);
-        SPM.updateHitbox();
-        SPM.screenCenter();
+        SNFM.updateHitbox();
+        SNFM.screenCenter();
         wait(0.01, () ->
         {
-            if (SP.angle == -5) FlxTween.angle(SP, SP.angle, 5, 1, {ease: FlxEase.smootherStepInOut});
-            if (SP.angle == 5) FlxTween.angle(SP, SP.angle, -5, 1, {ease: FlxEase.smootherStepInOut});
+            if (SNF.angle == -5) FlxTween.angle(SNF, SNF.angle, 5, 1, {ease: FlxEase.smootherStepInOut});
+            if (SNF.angle == 5) FlxTween.angle(SNF, SNF.angle, -5, 1, {ease: FlxEase.smootherStepInOut});
         });
         if(modelactive){
             for (mesh in modelView.meshs)
