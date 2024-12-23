@@ -2,16 +2,10 @@ package objects.game.controllables;
 
 import openfl.events.MouseEvent;
 import flixel.effects.FlxFlicker;
-import flixel.math.FlxAngle;
-import flixel.math.FlxPoint;
-import flixel.addons.effects.FlxTrail;
-import flixel.effects.particles.FlxParticle;
-import flixel.addons.effects.chainable.FlxTrailEffect;
 import backend.Functions;
-import flixel.math.FlxMath;
 import backend.Assets;
 import substates.PauseMenuSubState;
-import objects.game.HUD;
+import objects.game.controllables.Gun;
 
 typedef PhysicProperties = {
     var speed:Float;
@@ -98,6 +92,7 @@ class Player extends FlxSprite {
 		animation.play('idle');
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
         CurWeaponChoice = PISTOLROUNDS; //prevent a crash from the hud trying to read the curweaponchoice as null
+        Gun.changeTexture(15, 15, 'W_pistol', false, false); //do this so the texture automatically loads.
 	}
 
     public function CheckCollision(obj:FlxSprite) {
@@ -162,6 +157,7 @@ class Player extends FlxSprite {
         switch(weapons[currentWeaponIndex]) {
             case 'Pistol':
                 CurWeaponChoice = PISTOLROUNDS;
+                Gun.changeTexture(15, 15, 'W_pistol', false, false);
             case 'Shotgun':
                 CurWeaponChoice = SHOTGUNSHELL;
             case 'Rifle':

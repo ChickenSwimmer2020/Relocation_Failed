@@ -1,5 +1,7 @@
 package;
 
+import flixel.math.FlxMath;
+import flixel.math.FlxAngle;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.math.FlxRandom;
@@ -19,7 +21,8 @@ class Playstate extends FlxTransitionableState {
     public var Player:Player;
     #if !mobile
     public var Player2:Aimer;
-    #else
+    public var AimerGroup:FlxSpriteGroup = new FlxSpriteGroup();
+    #else 
     #end
     public var Hud:HUD;
     public var Level:Level;
@@ -76,6 +79,7 @@ class Playstate extends FlxTransitionableState {
         add(Player);
         #if !mobile
         add(Player2);
+        add(AimerGroup);
         #else
         #end
         add(BulletGroup);
@@ -119,6 +123,12 @@ class Playstate extends FlxTransitionableState {
 
         if(FlxG.camera.zoom < 1) FlxG.camera.zoom = 1;
         if(FGCAM.zoom < 1) FGCAM.zoom = 1;
+
+        #if !mobile
+        AimerGroup.setPosition(Player2.x, Player2.y);
+        Playstate.instance.AimerGroup.angle = Player2.angle + 1;
+        #else
+        #end
         super.update(elapsed);
     }
 }

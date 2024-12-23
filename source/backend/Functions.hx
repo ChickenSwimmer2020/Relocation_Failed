@@ -24,6 +24,17 @@ class Functions
       */
     public static var Traced:Bool = false;
     /**
+     * varible for the IIf function
+     * @since RF_DEV_0.3.0
+     */
+    static var True:Void->Void;
+    /**
+     * varible for the IIf function
+     * @since RF_DEV_0.3.0
+     */
+    static var False:Void->Void;
+
+    /**
       * # GetPlatform();
       * ## *wait, which platform was safe again?*
       * simple function to return the current platform, pretty easy to work with actually,
@@ -205,6 +216,24 @@ class Functions
           if(Types[1] == 'tiles') {
             trainIn.tileData.asset = getTileDataAsset(Graphic);
           }
+        }
+    }
+    /**
+     * an if statement, but its MUCH quicker, the concept is taken from C++'s iif(Instant if), and thats basically exactly what this does.
+     * @param boolToCheck the bool to check
+     * @param ifTrue what to do if true
+     * @param ifFalse what to do if false
+     * @return Bool usefull if you need to use an iif within something else, good for chaining.
+     * @since RF_DEV_0.3.0
+     */
+    public static function iIf(boolToCheck:Bool, ifTrue:Void->Void, ifFalse:Void->Void):Bool {
+        switch(boolToCheck) {
+            case true:
+                True();
+                return true;
+            case false:
+                False();
+                return false;
         }
     }
     #if !mobile
