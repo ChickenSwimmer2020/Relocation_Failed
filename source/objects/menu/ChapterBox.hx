@@ -1,4 +1,4 @@
-package objects;
+package objects.menu;
 
 import flixel.math.FlxPoint;
 import flixel.ui.FlxButton.FlxButtonState;

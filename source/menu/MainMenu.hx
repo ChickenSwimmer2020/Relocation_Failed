@@ -6,7 +6,7 @@ import backend.Assets;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import backend.Functions;
-import backend.Button;
+import objects.menu.Button;
 
 class MainMenu extends FlxTransitionableState {
     var Title:FlxText;

@@ -1,4 +1,4 @@
-package objects;
+package objects.game.interactables;
 
 import backend.Assets;
 import flixel.math.FlxPoint;

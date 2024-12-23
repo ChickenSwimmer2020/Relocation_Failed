@@ -1,4 +1,4 @@
-package objects;
+package objects.game.interactables;
 
 import flixel.group.FlxGroup;
 

@@ -9,8 +9,8 @@ import flixel.animation.FlxAnimationController;
 import flixel.addons.effects.FlxTrail;
 import backend.*;
 import backend.level.*;
-import objects.Player.Aimer;
-import objects.*;
+import objects.game.controllables.*;
+import objects.game.HUD;
 
 class Playstate extends FlxTransitionableState {
     

@@ -1,4 +1,4 @@
-package objects;
+package objects.menu;
 
 import substates.ChapterSelectSubState;
 import rf_flixel.math.RFMath;
@@ -7,7 +7,6 @@ import flixel.FlxState;
 import flixel.FlxG;
 import openfl.events.MouseEvent;
 import flixel.group.FlxSpriteGroup;
-import objects.ChapterBox;
 
 class ChapterSelecterGroup extends FlxSpriteGroup {
     private var chapterNames:Array<String> = ["test", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5"];

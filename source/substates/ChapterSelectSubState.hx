@@ -1,12 +1,11 @@
 package substates;
 
 import flixel.math.FlxRect;
-import objects.ChapterWrapper.ChapterSelecterGroup;
+import objects.menu.ChapterWrapper.ChapterSelecterGroup;
 import menu.MainMenu;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
-import flixel.tweens.FlxTween;
-import objects.ChapterBox;
+import objects.menu.ChapterBox;
 import openfl.geom.Rectangle;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUI9SliceSprite;
@@ -77,7 +76,6 @@ class ChapterSelectSubState extends FlxSubState {
 	}
 
 	function doCoolTweenin() {
-		xbutt.status = FlxButtonState.DISABLED;
 		FlxTween.tween(BG, {"scale.x": 1}, 0.5, { ease: FlxEase.expoOut }); //main bg X
 		wait(0.5, ()->{ FlxTween.tween(BG, {"scale.y": 1}, 0.5, { ease: FlxEase.expoOut }); }); //main bg Y
 
@@ -86,7 +84,6 @@ class ChapterSelectSubState extends FlxSubState {
 
 		FlxTween.tween(xbutt, {x: BG.x + 380}, 0.5, { ease: FlxEase.expoOut }); 
 		FlxTween.tween(xbutt.label, {x: BG.x + 380}, 0.5, { ease: FlxEase.expoOut });
-		wait(1, ()->{ xbutt.status = FlxButtonState.NORMAL; });
 	}
 
 	override public function update(elapsed:Float) {
@@ -105,9 +102,11 @@ class ChapterSelectSubState extends FlxSubState {
 		@:privateAccess {
 			if(!done) {
 				wait(0.9, ()->{
-					MainMenu.instance.Button_Play.kill();
-					MainMenu.instance.Button_Settings.kill();
-					MainMenu.instance.Button_Load.kill();
+                    if (!done){
+					    MainMenu.instance.Button_Play.visible = false;
+					    MainMenu.instance.Button_Settings.visible = false;
+					    MainMenu.instance.Button_Load.visible = false;
+                    }
 				});
 				done = true;
 			}
@@ -119,9 +118,10 @@ class ChapterSelectSubState extends FlxSubState {
 		super.destroy();
         FlxG.cameras.remove(chapterselectCamera);
 		@:privateAccess {
-			MainMenu.instance.Button_Play.revive();
-			MainMenu.instance.Button_Settings.revive();
-			MainMenu.instance.Button_Load.revive();
+            done = true;
+            MainMenu.instance.Button_Play.visible = true;
+            MainMenu.instance.Button_Settings.visible = true;
+            MainMenu.instance.Button_Load.visible = true;
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package backend;
+package objects.menu;
 
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.touch.FlxTouchManager;

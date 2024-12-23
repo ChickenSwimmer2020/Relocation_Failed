@@ -1,6 +1,8 @@
 package rf_flixel.math;
 
-class RFMath
+import flixel.math.FlxMath;
+
+class RFMath extends FlxMath
 {
     public static function clamp(value:Float, min:Float, max:Float):Float
         return Math.max(min, Math.min(max, value));

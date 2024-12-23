@@ -1,8 +1,8 @@
 package backend.level;
 
-import objects.Item;
-import objects.Item.ItemType;
-import objects.Player;
+import objects.game.interactables.Item;
+import objects.game.interactables.Item.ItemType;
+import objects.game.controllables.Player;
 import flixel.math.FlxRect;
 import backend.level.LevelLoader.LevelHeader;
 import backend.level.LevelExceptions.LevelNullException;

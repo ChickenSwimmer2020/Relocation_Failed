@@ -1,4 +1,4 @@
-package backend;
+package objects.game;
 
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;

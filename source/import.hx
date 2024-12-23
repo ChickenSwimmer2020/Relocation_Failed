@@ -6,6 +6,7 @@ import flixel.system.*;
 import flixel.graphics.*;
 import flixel.ui.*;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxAssets.FlxSoundAsset;
 
