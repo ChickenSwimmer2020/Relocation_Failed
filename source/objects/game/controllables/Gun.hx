@@ -3,32 +3,34 @@ package objects.game.controllables;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
+import backend.Functions;
 
-class Gun extends FlxObject{ //extends object now because i needed access to update, hope this doesnt break anything else!
+class Gun{
     public function new() {
-        super();
         return;
     }
     /**
      * the gun texture varible for changing the fun sprites.
      * @since RF_DEV_0.3.0
      */
-    static var theGunTexture:FlxSprite = new FlxSprite(0, 0);
+    var theGunTexture:FlxSprite = new FlxSprite(0, 0);
     /**
      * the gun textures X position before lerping.
      * @since RF_DEV_0.3.0
      */
-    static var realGunXPOS:Float;
+    var realGunXPOS:Float;
     /**
      * the gun textures Y position before lerping.
      * @since RF_DEV_0.3.0
      */
-     static var realGunYPOS:Float;
+    var realGunYPOS:Float;
     /**
      * the gun textures ANGLE before lerping
      * @since RF_DEV_0.3.0
      */
-     static var realGunANGLE:Float;
+    var realGunANGLE:Float;
+
+    var justShot:Bool = false;
     /**
      * Change the Texture of the gun in playstate.
      * ---
@@ -46,7 +48,7 @@ class Gun extends FlxObject{ //extends object now because i needed access to upd
      * @param FrameHeight how tall is each frame, int. defaults to 32
      * @since RF_DEV_0.3.0
      */
-    public static function changeTexture(X:Float, Y:Float, Texture:String, isShotgun:Bool = false, ?hasAnims:Bool = false, ?idleAnim:Array<Int>, ?shootAnim:Array<Int>, ?reloadAnim:Array<Int>, ?pumpAnim:Array<Int>, FPS:Int = 24, FrameWidth:Int = 32, FrameHeight:Int = 32) {
+    public function changeTexture(X:Float, Y:Float, Texture:String, isShotgun:Bool = false, ?hasAnims:Bool = false, ?idleAnim:Array<Int>, ?shootAnim:Array<Int>, ?reloadAnim:Array<Int>, ?pumpAnim:Array<Int>, FPS:Int = 24, FrameWidth:Int = 32, FrameHeight:Int = 32) {
         theGunTexture.loadGraphic(Assets.image(Texture), hasAnims, FrameWidth, FrameHeight);
         theGunTexture.setPosition(X, Y);
         realGunXPOS = X;
@@ -65,6 +67,11 @@ class Gun extends FlxObject{ //extends object now because i needed access to upd
         }
         Playstate.instance.AimerGroup.add(theGunTexture);
     } //i mean, if we're having different guns. we need textures!
+
+    public function updateTexturePosition(X:Float, Y:Float) {
+        realGunXPOS = X; 
+        realGunYPOS = Y;
+    }
 
     public function shoot() {
         var mousePos = FlxG.mouse.getPosition();
@@ -101,9 +108,9 @@ class Gun extends FlxObject{ //extends object now because i needed access to upd
     
         return spread;
     }
-    override public function update(elapsed:Float) {
-        super.update(elapsed);
+
+    public function update(elapsed:Float) {
         theGunTexture.x = FlxMath.lerp(realGunXPOS, theGunTexture.x,  1 - (elapsed * 12));
-        theGunTexture.angle = FlxMath.lerp(0, theGunTexture.angle, 1 - (elapsed * 12));
+        theGunTexture.angle = FlxMath.lerp(Playstate.instance.Player2.angle, theGunTexture.angle, 1 - (elapsed * 12));
     }
 }

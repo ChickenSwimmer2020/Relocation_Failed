@@ -39,6 +39,8 @@ class Player extends FlxSprite {
 
     public static var flickering:Bool = false;
 
+    public var gun:Gun = new Gun();
+
     public var CurWeaponChoice:Bullet.BulletType;
     public var currentWeaponIndex:Int = 0;
     public var weapons:Array<String> = ["Pistol", "Shotgun", "Rifle", "Smg"];
@@ -92,7 +94,7 @@ class Player extends FlxSprite {
 		animation.play('idle');
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
         CurWeaponChoice = PISTOLROUNDS; //prevent a crash from the hud trying to read the curweaponchoice as null
-        Gun.changeTexture(15, 15, 'W_pistol', false, false); //do this so the texture automatically loads.
+        gun.changeTexture(15, 15, 'W_pistol', false, false); //do this so the texture automatically loads.
 	}
 
     public function CheckCollision(obj:FlxSprite) {
@@ -157,7 +159,7 @@ class Player extends FlxSprite {
         switch(weapons[currentWeaponIndex]) {
             case 'Pistol':
                 CurWeaponChoice = PISTOLROUNDS;
-                Gun.changeTexture(15, 15, 'W_pistol', false, false);
+                gun.changeTexture(15, 15, 'W_pistol', false, false);
             case 'Shotgun':
                 CurWeaponChoice = SHOTGUNSHELL;
             case 'Rifle':
@@ -271,6 +273,8 @@ class Player extends FlxSprite {
         #if !mobile
         AimerPOSx = this.getGraphicMidpoint().x - 15;
         AimerPOSy = this.getGraphicMidpoint().y - 15;
+        gun.update(elapsed);
+        gun.updateTexturePosition(AimerPOSx, AimerPOSy);
         #else
         #end
 		#if debug

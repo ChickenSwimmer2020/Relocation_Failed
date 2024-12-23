@@ -227,6 +227,8 @@ class Functions
      * @since RF_DEV_0.3.0
      */
     public static function iIf(boolToCheck:Bool, ifTrue:Void->Void, ifFalse:Void->Void):Bool {
+        False = ifFalse;
+        True = ifTrue;
         switch(boolToCheck) {
             case true:
                 True();

@@ -64,12 +64,12 @@ class Playstate extends FlxTransitionableState {
 
         Hud = new HUD(this);
         Hud.cameras = [HUDCAM];
-        Player = new Player(0, 0, this);
-        Player.solid = true; //collisions
         #if !mobile
         Player2 = new Aimer();
         #else
         #end
+        Player = new Player(0, 0, this);
+        Player.solid = true; //collisions
         if(_LEVEL == '')
             _LEVEL = 'level1';
         Level = new Level(LevelLoader.ParseLevelData(Assets.asset('$_LEVEL.json')));
