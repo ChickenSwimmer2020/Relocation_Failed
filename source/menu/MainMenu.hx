@@ -38,8 +38,6 @@ class MainMenu extends FlxTransitionableState {
     }
 
     override public function create() {
-        Functions.changeFlixelTransition([0.4, 0.4], [FlxColor.BLACK, FlxColor.BLACK], ['left', 'left'], ['tiles', 'tiles'], 'diamond');
-
         starCam = new FlxCamera(0, 0, 1280, 720, 1);
         starCam.bgColor = 0x00000000;
         FlxG.cameras.add(starCam, false);

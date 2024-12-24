@@ -1,6 +1,6 @@
 package menu.intro;
 
-import rf_flixel.math.RFInterp;
+import math.RFInterp;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;

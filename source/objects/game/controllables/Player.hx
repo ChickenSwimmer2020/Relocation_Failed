@@ -1,6 +1,5 @@
 package objects.game.controllables;
 
-import rf_flixel.math.RFMath;
 import openfl.events.MouseEvent;
 import flixel.effects.FlxFlicker;
 import backend.Functions;
@@ -117,7 +116,6 @@ class Player extends FlxSprite {
             var tmr:FlxTimer = new FlxTimer();
             tmr.start(1, function(tmr:FlxTimer) {
                 PauseMenuSubState.PauseJustClosed = false;
-                Functions.traceOnce('pause menu detection has been reset');
             });
         }
     }

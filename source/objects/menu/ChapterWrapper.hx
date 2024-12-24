@@ -1,7 +1,7 @@
 package objects.menu;
 
 import substates.ChapterSelectSubState;
-import rf_flixel.math.RFMath;
+import math.RFMath;
 import flixel.math.FlxMath;
 import flixel.FlxState;
 import flixel.FlxG;
