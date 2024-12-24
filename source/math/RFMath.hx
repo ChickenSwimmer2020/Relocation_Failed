@@ -1,4 +1,4 @@
-package rf_flixel.math;
+package math;
 
 /**
  * A class for math functions not included in Math/FlxMath.

@@ -1,4 +1,4 @@
-package rf_flixel.math;
+package math;
 
 using StringTools;
 

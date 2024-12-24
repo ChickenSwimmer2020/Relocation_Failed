@@ -1,4 +1,4 @@
-package rf_flixel.math;
+package math;
 
 /**
  * A simple vector class.
@@ -45,12 +45,12 @@ class RFVector {
 	}
 	
     /**
-     * Substracts a vector from this vector.
+     * Subtracts a vector from this vector.
      * @param v RFVector
      * @return RFVector
      * @since RF_DEV_0.3.0
      */
-	public function substract(v:RFVector):RFVector{	
+	public function subtract(v:RFVector):RFVector{	
 		x -= v.x;
 		y -= v.y;
 		return this;

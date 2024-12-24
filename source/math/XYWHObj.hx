@@ -1,4 +1,4 @@
-package rf_flixel.math;
+package math;
 
 /**
  * A simple object for x, y, width, and height.
