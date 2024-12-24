@@ -8,7 +8,16 @@ import flixel.tweens.FlxTween;
 
 class Star extends FlxSprite
 {
+    /**
+     * The tween that moves the star.
+     * @since RF_DEV_0.2.7
+     */
     public var tween:FlxTween;
+    /**
+     * The trail of the star.
+     * WILL BE NULL IF hasTrail IS FALSE.
+     * @since RF_DEV_0.2.7
+     */
     public var trail:FlxTrail;
     override public function new(x:Int, y:Int, graphic:FlxGraphicAsset, hasTrail:Bool = false, dur:Float) {
         super(x, y, graphic);

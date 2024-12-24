@@ -5,24 +5,61 @@ import flixel.graphics.frames.FlxAtlasFrames;
 class Assets
 {
     #if html5
-    static public function image(Key:String):String
+    /**
+     * Returns the path to an image asset.
+     * @param Key The key of the image.
+     * @return The path to the image.
+     * @since RF_DEV_0.0.9
+     */
+    public static function image(Key:String):String
         return 'assets/$Key.png';
     #else
-    static public function image(Key:String):FlxGraphic
+    /**
+     * Returns the image asset.
+     * @param Key The key of the image.
+     * @return The image asset.
+     * @since RF_DEV_0.0.9
+     */
+    public static function image(Key:String):FlxGraphic
         return FlxGraphic.fromBitmapData(BitmapData.fromFile('assets/$Key.png'));
     #end
 
     #if html5
-    static public function sound(Key:String):String
+    /**
+     * Returns the path to a sound asset.
+     * @param Key The key of the sound.
+     * @return The path to the sound.
+     * @since RF_DEV_0.0.9
+     */
+    public static function sound(Key:String):String
         return asset(Key);
     #else
-    static public function sound(Key:String):FlxSoundAsset
+    /**
+     * Returns the sound asset.
+     * @param Key The key of the sound.
+     * @return The sound asset.
+     * @since RF_DEV_0.0.9
+     */
+    public static function sound(Key:String):FlxSoundAsset
         return cast Sound.fromFile('assets/$Key');
     #end
 
-    static public function asset(Key:String):String
+    /**
+     * Returns the path to an asset.
+     * @param Key The key of the asset.
+     * @return The path to the asset.
+     * @since RF_DEV_0.0.9
+     */
+    public static function asset(Key:String):String
         return 'assets/$Key';
     
-    inline static public function getSparrowAtlas(key:String):FlxAtlasFrames
+
+    /**
+     * Returns the frames of a sparrow atlas.
+     * @param key 
+     * @return The frames of the sparrow atlas.
+     * @since RF_DEV_0.0.9
+     */
+    inline public static function sparrowAtlas(key:String):FlxAtlasFrames
             return FlxAtlasFrames.fromSparrow(key, 'images/$key' + '.xml');
 }

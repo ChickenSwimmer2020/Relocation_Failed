@@ -2,17 +2,22 @@ package backend.level;
 
 import haxe.Json;
 
+/**
+ * The header of a level.
+ */
 typedef LevelHeader = 
 {
     var LevelID:String; //levels internal name
     var Chapter:Int; //what chapter it takes place in
     var Boundries:Array<Float>; //the boundries of the level, how far can the player move before being stopped?
     var CameraLocked:Bool; //should the camera be allowed to move?
-    //camera shit.
-    var CameraFollowStyle:String;
-    var CameraFollowLerp:Float;
+    var CameraFollowStyle:String; //how should the camera follow the player?
+    var CameraFollowLerp:Float; //what is the ratio of the lerp the camera uses to follow the player?
 }
 
+/**
+ * Animation data of an object in a level.
+ */
 typedef AnimData = {
     var ?AnimFrames:Array<Int>; //anim frames
     var ?AnimName:String; //anim name
@@ -22,6 +27,9 @@ typedef AnimData = {
     var ?AnimFlipY:Bool; //should the anim be flipped on the y axis
 }
 
+/**
+ * An object in a level.
+ */
 typedef LevelObject =
 {
     var Name:String; //internal name
@@ -42,6 +50,9 @@ typedef LevelObject =
     var ?Anims:Array<AnimData>; // animation data if needed
 }
 
+/**
+ * An item in a level.
+ */
 typedef LevelItem = //should allow us to put items into the level directly
 {
     var Name:String; //internal name
@@ -54,17 +65,31 @@ typedef LevelItem = //should allow us to put items into the level directly
 
 typedef LevelData = 
 {
+    /**
+     * The items in the level.
+     */
     var items:Array<LevelItem>;
+    /**
+     * The objects in the level.
+     */
     var objects:Array<LevelObject>;
+    /**
+     * The header of the level.
+     */
     var header:LevelHeader;
 }
 
 class LevelLoader
 {
-    inline static public function ParseLevelData(FILE:String):LevelData
+    /**
+     * Parse the level data from a json file.
+     * @param file The jsopn file to parse.
+     * @return The parsed level data as a LevelData.
+     */
+    inline static public function ParseLevelData(file:String):LevelData
     {
         try{
-            return Json.parse(openfl.Assets.getText(FILE));
+            return Json.parse(openfl.Assets.getText(file));
         }catch(e)
             throw new LevelExceptions.LevelParseErrorException(e.message, e.stack.toString());
     }

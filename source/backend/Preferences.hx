@@ -1,7 +1,7 @@
 package backend;
 
 @:structInit class SaveVariables {
-    public var testVarible:String = 'THIS IS A TEST STRING!!!!\nFUCK YOU!!!!!!';
+    public var testVarible:String = 'bruhh';
 }
 
 class Preferences {

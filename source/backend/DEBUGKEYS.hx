@@ -1,9 +1,6 @@
 package backend;
 
 import flixel.input.keyboard.FlxKey;
-import sys.thread.Thread;
-import hlwnative.HLApplicationStatus;
-
 
 /**
     # allows debug keys for quick and easy debugging!

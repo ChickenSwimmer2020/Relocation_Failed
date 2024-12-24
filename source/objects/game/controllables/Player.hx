@@ -1,5 +1,6 @@
 package objects.game.controllables;
 
+import rf_flixel.math.RFMath;
 import openfl.events.MouseEvent;
 import flixel.effects.FlxFlicker;
 import backend.Functions;
@@ -67,6 +68,8 @@ class Player extends FlxSprite {
     public var maxOxygen:Int = 200;
 
 	public var playstate:Playstate;
+    public var colliders:Array<FlxSprite> = [];
+    public var colliding:Bool = false;
 
     public static var AimerPOSy:Float;
     public static var AimerPOSx:Float;
@@ -97,8 +100,16 @@ class Player extends FlxSprite {
         gun.changeTexture(15, 15, 'W_pistol', false, false); //do this so the texture automatically loads.
 	}
 
-    public function CheckCollision(obj:FlxSprite) {
-        FlxG.collide(this, obj, null);
+    public function collide():Bool {
+        for (obj in colliders){
+            var setToTrue = false;
+            if (colliding)
+                setToTrue = true;
+            colliding = FlxObject.separate(this, obj);
+            if (setToTrue)
+                colliding = true;
+        }
+        return colliding;
     }
 
     function resetPauseMenu() {
@@ -266,7 +277,10 @@ class Player extends FlxSprite {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		movement();
+        if (!collide())
+		    movement();
+        colliding = false;
+
 		checkForPauseMenu();
         resetPauseMenu();
         forceCaps(); //so variables such as health and ammo dont go above 100
@@ -281,5 +295,6 @@ class Player extends FlxSprite {
 		FlxG.watch.addQuick('Stamina', stamina);
 		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
 		#end
+        
 	}
 }

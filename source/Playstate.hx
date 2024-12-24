@@ -4,11 +4,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxCamera.FlxCameraFollowStyle;
-import flixel.math.FlxRandom;
 import flixel.group.FlxGroup;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.animation.FlxAnimationController;
-import flixel.addons.effects.FlxTrail;
 import backend.*;
 import backend.level.*;
 import objects.game.controllables.*;
@@ -26,6 +22,7 @@ class Playstate extends FlxTransitionableState {
     #end
     public var Hud:HUD;
     public var Level:Level;
+    public var colliders:Array<FlxSprite> = [];
 
     public var FGCAM:FlxCamera;
     public var HUDCAM:FlxCamera;
@@ -41,7 +38,7 @@ class Playstate extends FlxTransitionableState {
         #end
     #end
     
-    override public function new(levelToLoad:String) {
+    override public function new(levelToLoad:String = 'level1') {
         super();
         instance = this;
         _LEVEL = levelToLoad;
@@ -68,12 +65,13 @@ class Playstate extends FlxTransitionableState {
         Player2 = new Aimer();
         #else
         #end
-        Player = new Player(0, 0, this);
-        Player.solid = true; //collisions
-        if(_LEVEL == '')
-            _LEVEL = 'level1';
         Level = new Level(LevelLoader.ParseLevelData(Assets.asset('$_LEVEL.json')));
         Level.loadLevel();
+        
+        for (obj in Level.objects)
+            if (obj.isCollider && !obj.isForeGroundSprite)
+                colliders.push(obj);
+        Player.colliders = colliders;
 
         add(Level);
         add(Player);

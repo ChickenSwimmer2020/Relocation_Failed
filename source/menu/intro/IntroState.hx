@@ -1,5 +1,6 @@
 package menu.intro;
 
+import rf_flixel.math.RFInterp;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -108,6 +109,7 @@ class IntroState extends FlxState
         FlxG.cameras.remove(shipCam);
     }
 
+    var val = 0.0;
     override public function update(elapsed:Float) {
         super.update(elapsed);
         if (FlxG.keys.justPressed.SPACE)
@@ -125,11 +127,12 @@ class IntroState extends FlxState
         }
         if (lerpWindow)
         {
+            val += 0.02;
             var window = Application.current.window;
-            window.x = Std.int(FlxMath.lerp(window.x, WindowIntro.oldWindowPosition.x, 0.2));
-            window.y = Std.int(FlxMath.lerp(window.y, WindowIntro.oldWindowPosition.y, 0.2));
-            window.width = Std.int(FlxMath.lerp(window.width, WindowIntro.oldWindowDimensions.x, 0.2));
-            window.height = Std.int(FlxMath.lerp(window.height, WindowIntro.oldWindowDimensions.y, 0.2));
+            window.x = Std.int(RFInterp.easedInterp(window.x, WindowIntro.oldWindowPosition.x, val, 'smootherStepInOut'));
+            window.y = Std.int(RFInterp.easedInterp(window.y, WindowIntro.oldWindowPosition.y, val, 'smootherStepInOut'));
+            window.width = Std.int(RFInterp.easedInterp(window.width, WindowIntro.oldWindowDimensions.x, val, 'smootherStepInOut'));
+            window.height = Std.int(RFInterp.easedInterp(window.height, WindowIntro.oldWindowDimensions.y, val, 'smootherStepInOut'));
         }
         var star:Star = cast new Star(Std.int(FlxG.width/2), Std.int(FlxG.height/2) - 30, null, trail, dur).makeGraphic(10, 10);
         if (trail) {

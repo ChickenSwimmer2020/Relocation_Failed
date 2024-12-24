@@ -17,7 +17,7 @@ import openfl.display.*;
 // Lime //you misspelled this, solar. -ChickenSwimmer2020
 import lime.app.*;
 
-// Custom Shit
+// Custom Stuff
 import backend.Functions.wait;
 import backend.level.*;
 import backend.*;

@@ -13,14 +13,36 @@ import away3d.utils.Cast;
 import flx3D.FlxView3D;
 import openfl.utils.Assets;
 
+/**
+ * A viewport for 3D model rendering.
+ * 
+ * (Oml 3d sucks to implement, thank this resource: https://github.com/lunarcleint/3D-HaxeFlixel)
+ * @since RF_DEV_0.3.0
+ */
 class ModelView extends FlxView3D
 {
 	// Mesh
+    /**
+     * The meshes of this model view.
+     * @since RF_DEV_0.3.0
+     */
 	public var meshs:Array<Mesh> = [];
+    /**
+     * The mesh data applied to the next loaded mesh.
+     * @since RF_DEV_0.3.0
+     */
     public var curMeshData:MeshData;
 
 	// Loading
+    /**
+     * The loader of this model view.
+     * @since RF_DEV_0.3.0
+     */
 	public var modelLoader:Loader3D;
+    /**
+     * The callback for when the most recent asset is loaded.
+     * @since RF_DEV_0.3.0
+     */
     public var assetLoadedCallback:Asset3DEvent->Void;
 
 	public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1, antialiasing:Bool = true)
@@ -31,6 +53,11 @@ class ModelView extends FlxView3D
         view.scene.addChild(modelLoader);
 	}
 
+    /**
+     * Initializes the model loading process.
+     * @param mesh The mesh data to use for loading the model.
+     * @since RF_DEV_0.3.0
+     */
     public function initModelLoad(mesh:MeshData) {
         if (mesh == null) throw 'NULL MESH DATA';
         curMeshData = mesh;
@@ -43,10 +70,15 @@ class ModelView extends FlxView3D
 		        mesh.alc.mapUrlToData('model.mtl', Assets.getBytes('assets/3d/${mesh.modelName}/model.mtl'));
 
             case MD2:
-                trace('No MD2 Support yet, coming soon. (initModelLoad)');
+                trace('No MD2 Support yet, coming soon. (from initModelLoad)');
         }
     }
 
+    /**
+     * Loads a model based on the most recent initialized MeshData.
+     * @see initModelLoad
+     * @since RF_DEV_0.3.0
+     */
     public function loadModel() {
         if (curMeshData == null) throw 'NULL CURRENT MESH DATA\nDID YOU CALL "initModelLoad" FIRST?';
         switch(curMeshData.modelType){
@@ -56,10 +88,15 @@ class ModelView extends FlxView3D
 		        modelLoader.addEventListener(Asset3DEvent.ASSET_COMPLETE, assetLoadedCallback);
 
             case MD2:
-                trace('No MD2 Support yet, coming soon. (loadModel)');
+                trace('No MD2 Support yet, coming soon. (from loadModel)');
         }
     }
 
+	/**
+	 * The fallback callback for when an asset is loaded.
+	 * @param event Asset3DEvent
+     * @since RF_DEV_0.3.0
+	 */
 	public function assetLoaded(event:Asset3DEvent)
 	{
 		if (event.asset.assetType == Asset3DType.MESH)
@@ -77,6 +114,7 @@ class ModelView extends FlxView3D
 	 * Adds a child to the scene's root.
 	 * @param child The child to be added to the scene
 	 * @return A reference to the added child.
+     * @since RF_DEV_0.3.0
 	 */
     public function addChildToScene(child:away3d.containers.ObjectContainer3D):away3d.containers.ObjectContainer3D
         return view.scene.addChild(child);
