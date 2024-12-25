@@ -1,38 +1,45 @@
 package objects.game.controllables;
 
+import math.RFMath;
+import math.RFVector;
+import math.RFInterp;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import backend.Functions;
 
 class Gun{
-    public function new() {
-        return;
-    }
     /**
      * the gun texture varible for changing the fun sprites.
      * @since RF_DEV_0.3.0
      */
-    var theGunTexture:FlxSprite = new FlxSprite(0, 0);
+    public var theGunTexture:FlxSprite = new FlxSprite(0, 0);
     /**
      * the gun textures X position before lerping.
      * @since RF_DEV_0.3.0
      */
-    var realGunXPOS:Float;
+    public var realGunXPOS:Float;
     /**
      * the gun textures Y position before lerping.
      * @since RF_DEV_0.3.0
      */
-    var realGunYPOS:Float;
+    public var realGunYPOS:Float;
     /**
      * the gun textures ANGLE before lerping
      * @since RF_DEV_0.3.0
      */
-    var realGunANGLE:Float;
+    public var realGunANGLE:Float;
 
-    var justShot:Bool = false;
+    public var ratio:Float = 1;
+
+    public var moveCallback:Void->Void;
+
+    public function new() {
+        moveCallback = () -> { ratio = 0; };
+    }
+
     /**
-     * Change the Texture of the gun in playstate.
+     * Change the Texture of the gun.
      * ---
      * @param X the X position of the gun texture, these are seperate so we can have offsets for the guns themselves.
      * @param Y the Y position of the gun texture, these are seperate so we can have offsets for the guns themselves.
@@ -110,7 +117,9 @@ class Gun{
     }
 
     public function update(elapsed:Float) {
-        theGunTexture.x = FlxMath.lerp(realGunXPOS, theGunTexture.x,  1 - (elapsed * 12));
-        theGunTexture.angle = FlxMath.lerp(Playstate.instance.Player2.angle, theGunTexture.angle, 1 - (elapsed * 12));
+        if (ratio < 1)
+            ratio += 0.05;
+        theGunTexture.x = RFInterp.easedInterp(realGunXPOS, theGunTexture.x, ratio, 'smootherStepInOut');
+        theGunTexture.angle = RFInterp.easedInterp(Playstate.instance.Player2.angle, theGunTexture.angle, ratio, 'smootherStepInOut');
     }
 }

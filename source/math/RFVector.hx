@@ -5,6 +5,8 @@ package math;
  * @since RF_DEV_0.3.0
  */
 class RFVector {
+    //////////////////// INSTANCED RFVECTOR ////////////////////
+
     /**
      * The x value of this vector.
      * @since RF_DEV_0.3.0
@@ -33,37 +35,78 @@ class RFVector {
     }
 
     /**
-     * Adds a vector to this vector.
-     * @param v RFVector
+     * Copies this vector and returns it.
      * @return RFVector
      * @since RF_DEV_0.3.0
      */
-    public function add(v:RFVector):RFVector{
-		x += v.x;
-		y += v.y;
-		return this;
+    public function copy():RFVector
+        return new RFVector(x, y);
+
+    public function toString():String
+        return 'RFVector($x, $y)';
+
+
+
+    //////////////////// STATIC RFVECTOR ////////////////////
+
+    /**
+     * Adds vector A to vector B.
+     * @param a RFVector
+     * @param b RFVector
+     * @return RFVector
+     * @since RF_DEV_0.3.0
+     */
+     public static function add(a:RFVector, b:RFVector):RFVector{
+        var aNew = a.copy();
+        var bNew = b.copy();
+		aNew.x += bNew.x;
+		aNew.y += bNew.y;
+		return aNew;
+	}
+
+	
+    /**
+     * Subtracts vector A from vector B.
+     * @param a RFVector
+     * @param b RFVector
+     * @return RFVector
+     * @since RF_DEV_0.3.0
+     */
+	public static function subtract(a:RFVector, b:RFVector):RFVector{
+        var aNew = a.copy();
+        var bNew = b.copy();
+		aNew.x -= bNew.x;
+		aNew.y -= bNew.y;
+		return aNew;
 	}
 	
     /**
-     * Subtracts a vector from this vector.
-     * @param v RFVector
+     * Multiplies vector A and vector B.
+     * @param a RFVector
+     * @param b RFVector
      * @return RFVector
      * @since RF_DEV_0.3.0
      */
-	public function subtract(v:RFVector):RFVector{	
-		x -= v.x;
-		y -= v.y;
-		return this;
+     public static function multiply(a:RFVector, b:RFVector):RFVector{
+        var aNew = a.copy();
+        var bNew = b.copy();
+		aNew.x *= bNew.x;
+		aNew.y *= bNew.y;
+		return aNew;
 	}
-	
+
     /**
-     * Multiplies this vector by a vector.
-     * @param k Float
+     * Divides vector A and vector B.
+     * @param a RFVector
+     * @param b RFVector
      * @return RFVector
      * @since RF_DEV_0.3.0
      */
-	public function multiply(k:Float):RFVector{
-		x *= y *= k;
-		return this;
+     public static function divide(a:RFVector, b:RFVector):RFVector{
+        var aNew = a.copy();
+        var bNew = b.copy();
+		aNew.x /= bNew.x;
+		aNew.y /= bNew.y;
+		return aNew;
 	}
 }

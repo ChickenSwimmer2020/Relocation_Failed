@@ -49,7 +49,7 @@ class Playstate extends FlxTransitionableState {
 
         BulletGroup = new FlxGroup();
         
-        
+        Player = new Player(0, 0, this);
 
         FGCAM = new FlxCamera();
         FlxG.cameras.add(FGCAM, false);

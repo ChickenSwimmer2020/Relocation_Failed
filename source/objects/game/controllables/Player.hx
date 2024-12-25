@@ -225,6 +225,7 @@ class Player extends FlxSprite {
 
 		animation.play(curMovementDir);
 		isMoving = curMovementDir != none;
+        if (isMoving) gun.moveCallback();
 
         #if !mobile
         var movementDirs = [FlxG.keys.anyPressed([LEFT, A]), FlxG.keys.anyPressed([RIGHT, D]), FlxG.keys.anyPressed([UP, W]), FlxG.keys.anyPressed([DOWN, S])];
