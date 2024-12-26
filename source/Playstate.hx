@@ -10,7 +10,7 @@ import flixel.group.FlxGroup;
 import backend.*;
 import backend.level.*;
 import objects.game.controllables.*;
-import objects.game.HUD;
+import objects.game.hud.HUD;
 
 class Playstate extends FlxTransitionableState {
     

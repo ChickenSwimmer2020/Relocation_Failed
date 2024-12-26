@@ -1,4 +1,4 @@
-package objects.game;
+package objects.game.hud;
 
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -31,7 +31,10 @@ class HUD extends FlxSpriteGroup {
     public var ammocounter_AMMONUMONE:FlxText; //current ammo ammount
     public var ammocounter_AMMOSLASH:FlxText; //the middle slash
     public var ammocounter_AMMONUMTWO:FlxText; //max ammo ammount
-    //public var ammocounter_AMMOSPR:FlxSprite;
+    public var ammocounter_AMMOSPR1:FlxSprite;
+    public var ammocounter_AMMOSPR2:FlxSprite;
+    public var ammocounter_AMMOSPR3:FlxSprite;
+    public var ammocounter_AMMOSPR4:FlxSprite;
 
     #if mobile
     public static var virtualPad:FlxVirtualPad;
@@ -85,21 +88,37 @@ class HUD extends FlxSpriteGroup {
                 ammocounter_AMMOTEXT.x = 980;
                 CurAmmoCap = Playstate.instance.Player.ShotgunAmmoCap;
                 CurAmmoNum = Playstate.instance.Player.ShotgunAmmoRemaining;
+                ammocounter_AMMOSPR1.animation.play('BS');
+                ammocounter_AMMOSPR2.animation.play('BS');
+                ammocounter_AMMOSPR3.animation.play('BS');
+                ammocounter_AMMOSPR4.animation.play('BS');
             case PISTOLROUNDS:
                 CurAmmoName = '9MM';
                 ammocounter_AMMOTEXT.x = 980;
                 CurAmmoCap = Playstate.instance.Player.PistolAmmoCap;
                 CurAmmoNum = Playstate.instance.Player.PistolAmmoRemaining;
+                ammocounter_AMMOSPR1.animation.play('9MM');
+                ammocounter_AMMOSPR2.animation.play('9MM');
+                ammocounter_AMMOSPR3.animation.play('9MM');
+                ammocounter_AMMOSPR4.animation.play('9MM');
             case RIFLEROUNDS:
                 CurAmmoName = '7.62x51MM NATO';
                 ammocounter_AMMOTEXT.x = 980;
                 CurAmmoCap = Playstate.instance.Player.RifleAmmoCap;
                 CurAmmoNum = Playstate.instance.Player.RifleAmmoRemaining;
+                ammocounter_AMMOSPR1.animation.play('NATO');
+                ammocounter_AMMOSPR2.animation.play('NATO');
+                ammocounter_AMMOSPR3.animation.play('NATO');
+                ammocounter_AMMOSPR4.animation.play('NATO');
             case SMGROUNDS:
                 CurAmmoName = '10MM AUTO';
                 ammocounter_AMMOTEXT.x = 980;
                 CurAmmoCap = Playstate.instance.Player.SMGAmmoCap;
                 CurAmmoNum = Playstate.instance.Player.SMGAmmoRemaining;
+                ammocounter_AMMOSPR1.animation.play('10MM');
+                ammocounter_AMMOSPR2.animation.play('10MM');
+                ammocounter_AMMOSPR3.animation.play('10MM');
+                ammocounter_AMMOSPR4.animation.play('10MM');
             default:
                 ammocounter_AMMOTEXT.x = 0;
                 CurAmmoName = 'FIX ME!';
@@ -177,7 +196,33 @@ class HUD extends FlxSpriteGroup {
         ammocounter_AMMONUMONE = new FlxText(1032, 30, '', 24, true);
         ammocounter_AMMOSLASH = new FlxText(0, 30, 0, '/', 24, true);
         ammocounter_AMMONUMTWO = new FlxText(0, 30, 0, '', 24, true);
-        
+
+
+        ammocounter_AMMOSPR1 = new FlxSprite(1241, 25).loadGraphic(Assets.image('HUD_Bullets'), true, 9, 31);
+        ammocounter_AMMOSPR1.animation.add('9MM', [0], 1, false, false, false);
+        ammocounter_AMMOSPR1.animation.add('10MM', [1], 1, false, false, false);
+        ammocounter_AMMOSPR1.animation.add('BS', [2], 1, false, false, false);
+        ammocounter_AMMOSPR1.animation.add('NATO', [3], 1, false, false, false);
+        ammocounter_AMMOSPR1.animation.play('9MM');
+        ammocounter_AMMOSPR2 = new FlxSprite(1250, 25).loadGraphic(Assets.image('HUD_Bullets'), true, 9, 31);
+        ammocounter_AMMOSPR2.animation.add('9MM', [0], 1, false, false, false);
+        ammocounter_AMMOSPR2.animation.add('10MM', [1], 1, false, false, false);
+        ammocounter_AMMOSPR2.animation.add('BS', [2], 1, false, false, false);
+        ammocounter_AMMOSPR2.animation.add('NATO', [3], 1, false, false, false);
+        ammocounter_AMMOSPR2.animation.play('9MM');
+        ammocounter_AMMOSPR3 = new FlxSprite(1259, 25).loadGraphic(Assets.image('HUD_Bullets'), true, 9, 31);
+        ammocounter_AMMOSPR3.animation.add('9MM', [0], 1, false, false, false);
+        ammocounter_AMMOSPR3.animation.add('10MM', [1], 1, false, false, false);
+        ammocounter_AMMOSPR3.animation.add('BS', [2], 1, false, false, false);
+        ammocounter_AMMOSPR3.animation.add('NATO', [3], 1, false, false, false);
+        ammocounter_AMMOSPR3.animation.play('9MM');
+        ammocounter_AMMOSPR4 = new FlxSprite(1268, 25).loadGraphic(Assets.image('HUD_Bullets'), true, 9, 31);
+        ammocounter_AMMOSPR4.animation.add('9MM', [0], 1, false, false, false);
+        ammocounter_AMMOSPR4.animation.add('10MM', [1], 1, false, false, false);
+        ammocounter_AMMOSPR4.animation.add('BS', [2], 1, false, false, false);
+        ammocounter_AMMOSPR4.animation.add('NATO', [3], 1, false, false, false);
+        ammocounter_AMMOSPR4.animation.play('9MM');
+
 
         FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
         
@@ -195,6 +240,10 @@ class HUD extends FlxSpriteGroup {
         add(ammocounter_AMMONUMONE);
         add(ammocounter_AMMOSLASH);
         add(ammocounter_AMMONUMTWO);
+        add(ammocounter_AMMOSPR1);
+        add(ammocounter_AMMOSPR2);
+        add(ammocounter_AMMOSPR3);
+        add(ammocounter_AMMOSPR4);
     }
 
 }

@@ -164,5 +164,9 @@ class WaterMarks extends FlxState
                     mesh.rotationY += 100 * (elapsed * 2);
             }
         }
+        if(FlxG.keys.anyJustPressed([SPACE, ENTER, ESCAPE, BACKSPACE])) {
+            FlxG.sound.music.stop();
+            FlxG.switchState(new MainMenu());
+        }
     }
 }
