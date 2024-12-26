@@ -100,7 +100,7 @@ class MainMenu extends FlxTransitionableState {
         Button_Play.camera = shipCam;
         add(Button_Play);
 
-        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ trace('implement save loading and saving.'); }, 1, false);
+        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerState.LoadPlayerSaveState(); }, 1, false);
         Button_Load.DaButton.updateHitbox();
         Button_Load.updateTextPosition();
         Button_Load.camera = shipCam;
@@ -111,7 +111,7 @@ class MainMenu extends FlxTransitionableState {
         Button_Settings.DaButton.updateHitbox();
         Button_Settings.updateTextPosition();
         Button_Settings.camera = shipCam;
-        add(Button_Settings);
+        //add(Button_Settings);
 
         shipGlow = new FlxSprite(0, 0, 'assets/ship-glow.png');
         shipGlow.setGraphicSize(1280, 720);
@@ -156,7 +156,7 @@ class MainMenu extends FlxTransitionableState {
     var _:Int = 0;
     override public function update(elapsed:Float) {
             super.update(elapsed);
-            _++; _ %= 2;
+            _++; _ %= 2; //let me guess, spawn stars on every other frame? --CS2020
             if (_ == 0){
                 var star:Star = cast new Star(Std.int(FlxG.width/2), Std.int(FlxG.height/2) - 30, null, false, 2).makeGraphic(10, 10);
                 star.cameras = [starCam];

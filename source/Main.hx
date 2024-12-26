@@ -1,5 +1,7 @@
 package;
 
+import menu.intro.WindowIntro;
+
 class Main extends Sprite{
 
     public function new() {
@@ -9,7 +11,7 @@ class Main extends Sprite{
     
     function start()
     {
-        var game:FlxGame = new FlxGame(0, 0, menu.intro.WindowIntro, 60, 60, false, false);
+        var game:FlxGame = new FlxGame(0, 0, WindowIntro, 60, 60, false, false);
         @:privateAccess
             game._customSoundTray = objects.SoundTray;
         @:privateAccess

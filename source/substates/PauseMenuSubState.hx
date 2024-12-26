@@ -5,6 +5,7 @@ class PauseMenuSubState extends FlxSubState {
     var icon:FlxText;
     
     var button_backToGame:FlxButton;
+    var button_saveGame:FlxButton;
     var button_mainMenu:FlxButton;
 
     public static var PauseJustClosed:Bool = false;
@@ -22,11 +23,15 @@ class PauseMenuSubState extends FlxSubState {
         add(icon);
 
         button_backToGame = new FlxButton(0, icon.y + 75, "Back", () -> {close();});
-        button_backToGame.cameras = [pauseCAM];
+        button_backToGame.camera = pauseCAM;
         add(button_backToGame);
 
-        button_mainMenu = new FlxButton(0, button_backToGame.y + 20, "Main Menu", () -> {close(); FlxG.switchState(new menu.MainMenu()); pauseCAM.destroy();});
-        button_mainMenu.cameras = [pauseCAM];
+        button_saveGame = new FlxButton(0, button_backToGame.y + 20, "Save", () -> { PlayerState.SavePlayerSaveState(); });
+        button_saveGame.camera = pauseCAM;
+        add(button_saveGame);
+
+        button_mainMenu = new FlxButton(0, button_saveGame.y + 20, "Main Menu", () -> {close(); FlxG.switchState(new menu.MainMenu()); pauseCAM.destroy();});
+        button_mainMenu.camera = pauseCAM;
         add(button_mainMenu);
     }
 

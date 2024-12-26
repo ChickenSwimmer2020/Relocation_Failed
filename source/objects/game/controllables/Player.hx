@@ -73,6 +73,8 @@ class Player extends FlxSprite {
     public static var AimerPOSy:Float;
     public static var AimerPOSx:Float;
 
+    public var CurRoom:String;
+
 	public function new(xPos:Float, yPos:Float, playstate:Playstate) {
 		super(xPos, yPos);
         health = 100;

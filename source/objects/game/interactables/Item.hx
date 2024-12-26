@@ -17,6 +17,8 @@ enum ItemType
     //misc
     _OXYGENTANK; //gives oxygen (FOR THE HULL BREACH AREAS ONLY.)
     _SUITBATTERY; //gives +15% armor battery
+    //other
+    _SUIT; //gives players access to sprint, weapons, and hud.
 }
 
 class Item extends FlxGroup{
@@ -63,6 +65,8 @@ class Item extends FlxGroup{
                 Playstate.instance.Player.RifleAmmoRemaining = Playstate.instance.Player.RifleAmmoCap;
             case _RIFLEROUNDSMAG:
                 Playstate.instance.Player.RifleAmmoRemaining += 25;
+            case _SUIT:
+                //do something here, implement soon.
             default:
                 trace('error doing item thingy');
         }

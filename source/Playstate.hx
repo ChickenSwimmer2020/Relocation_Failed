@@ -1,5 +1,7 @@
 package;
 
+import backend.PlayerState.PlayerStatus;
+import backend.level.LevelLoader.LevelHeader;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
 import flixel.addons.transition.FlxTransitionableState;
@@ -38,18 +40,39 @@ class Playstate extends FlxTransitionableState {
         #end
     #end
     
-    override public function new(levelToLoad:String = 'level1') {
+    override public function new(levelToLoad:String = 'level1', ?stats:PlayerStatus) {
         super();
         instance = this;
         _LEVEL = levelToLoad;
+
+        Player = new Player(0, 0, this); //we need to init the player here or else its gonna cause a crash when attempting to load the save-state
+
+        if(stats != null) {
+            //health and stamina
+            Player.health = stats.curHealth;
+            Player.stamina = stats.curStamina;
+            //positioning
+            Player.x = stats.playerX;
+            Player.y = stats.playerY;
+            //ammo stuff.
+            Player.PistolAmmoCap = stats.piscap;
+            Player.PistolAmmoRemaining = stats.pisremain;
+            Player.ShotgunAmmoCap = stats.shtcap;
+            Player.ShotgunAmmoRemaining = stats.shtremain;
+            Player.RifleAmmoCap = stats.rifcap;
+            Player.RifleAmmoRemaining = stats.rifremain;
+            Player.SMGAmmoCap = stats.smgcap;
+            Player.SMGAmmoRemaining = stats.smgremain;
+            //other.
+            //Player.hasSuit =;
+        }
+
     }
 
     override public function create() {
         super.create();
 
         BulletGroup = new FlxGroup();
-        
-        Player = new Player(0, 0, this);
 
         FGCAM = new FlxCamera();
         FlxG.cameras.add(FGCAM, false);
@@ -60,6 +83,7 @@ class Playstate extends FlxTransitionableState {
         HUDCAM.bgColor = 0x0011FF00;
 
         Hud = new HUD(this);
+        // if(!Player.HasSuit) Hud.y = 1350; //move the hud to be invsible if the player doesnt have the suit
         Hud.cameras = [HUDCAM];
         #if !mobile
         Player2 = new Aimer();
@@ -121,6 +145,8 @@ class Playstate extends FlxTransitionableState {
 
         if(FlxG.camera.zoom < 1) FlxG.camera.zoom = 1;
         if(FGCAM.zoom < 1) FGCAM.zoom = 1;
+
+        Player.CurRoom = Level.LevelID;
 
         #if !mobile
         AimerGroup.setPosition(Player2.x, Player2.y);

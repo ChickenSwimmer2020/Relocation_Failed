@@ -1,7 +1,7 @@
 {
     "header":{
             "NOTE": "DO NOT FUCK WITH OUR LEVELS. unless your modding",
-            "LevelID": "TestMap01",
+            "LevelID": "level1",
             "Chapter": 0,
             "Boundries": [1280, 720],
             "CameraLocked": false,

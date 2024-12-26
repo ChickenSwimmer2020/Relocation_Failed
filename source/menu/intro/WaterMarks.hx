@@ -55,7 +55,7 @@ class WaterMarks extends FlxState
 
         SNF = new FlxSprite(0, 1350, 'assets/studiotext.png');
         add(SNF);
-        SNF.setGraphicSize(841, 619);
+        SNF.setGraphicSize(841, 308);
         SNF.screenCenter(X);
         SNF.alpha = 0;
         SNF.angle = -5;    
