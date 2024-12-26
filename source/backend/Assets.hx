@@ -44,6 +44,26 @@ class Assets
         return cast Sound.fromFile('assets/$Key');
     #end
 
+    #if html5
+    /**
+     * Returns the path to a music asset.
+     * @param Key The key of the music.
+     * @return The path to the music.
+     * @since RF_DEV_0.3.6
+     */
+    public static function music(Key:String):String
+        return asset(Key);
+    #else
+    /**
+     * Returns the music asset.
+     * @param Key The key of the music.
+     * @return The sound music.
+     * @since RF_DEV_0.3.6
+     */
+    public static function music(Key:String):FlxSoundAsset
+        return cast Sound.fromFile('assets/sound/mus/$Key');
+    #end
+
     /**
      * Returns the path to an asset.
      * @param Key The key of the asset.

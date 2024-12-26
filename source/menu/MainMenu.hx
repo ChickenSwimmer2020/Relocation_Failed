@@ -25,6 +25,7 @@ class MainMenu extends FlxTransitionableState {
     var shipCam:FlxCamera;
     var starCam:FlxCamera;
     var planetCam:FlxCamera;
+    var verCam:FlxCamera;
     var ship:FlxSprite;
     var planet:FlxSprite;
     var shipGlow:FlxSprite;
@@ -41,16 +42,22 @@ class MainMenu extends FlxTransitionableState {
         starCam = new FlxCamera(0, 0, 1280, 720, 1);
         starCam.bgColor = 0x00000000;
         FlxG.cameras.add(starCam, false);
+
         planetCam = new FlxCamera(0, 0, 1280, 720, 1);
         planetCam.bgColor = 0x00000000;
         FlxG.cameras.add(planetCam, false);
+
         shipCam = new FlxCamera(0, 0, 1280, 720, 1);
         shipCam.bgColor = 0x00000000;
         FlxG.cameras.add(shipCam);
 
+        verCam = new FlxCamera(0, 0, 1280, 720, 1);
+        verCam.bgColor = 0x00000000;
+        FlxG.cameras.add(verCam);
+
         shipCam.flash();
         if (!FlxG.sound.music.playing)
-            FlxG.sound.playMusic(Assets.sound('MENU.ogg'));
+            FlxG.sound.playMusic(Assets.music('MENU.ogg'));
         //background
         planet = new FlxSprite(0, 200, 'assets/planet.png');
         planet.camera = planetCam;
@@ -136,12 +143,14 @@ class MainMenu extends FlxTransitionableState {
         platformText.setFormat(null, 24, FlxColor.WHITE, LEFT, NONE, FlxColor.TRANSPARENT, true);
         platformText.text = Functions.GetPlatform();
         platformText.antialiasing = false;
+        platformText.camera = verCam;
         add(platformText);
 
         versiontext = new FlxText(0, 665, 0, "", 8, true);
         versiontext.setFormat(null, 24, FlxColor.WHITE, LEFT, NONE, FlxColor.TRANSPARENT, true);
         versiontext.text = "V " + Application.current.meta.get('version');
         versiontext.antialiasing = false;
+        versiontext.camera = verCam;
         add(versiontext);
     }
 

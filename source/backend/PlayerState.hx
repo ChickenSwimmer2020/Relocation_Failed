@@ -7,33 +7,26 @@ import haxe.io.Path;
 
 /**
  * Data Stored within the save file itself.
-*/
-typedef PlayerStatus = 
-{
-    var curLvl:String;  // last level player was on during save.
-    var curHealth:Int;  // last health value during save.
-    var curStamina:Int; // last stamina value during save.
-    var playerX:Float;  // last x position during save.
-    var playerY:Float;  // last y position during save.
-    //ammo stuffs.
-    var piscap:Int;     // last pistol ammo cap during save.
-    var pisremain:Int;  // last pistol ammo number during save.
-    var shtcap:Int;     // last shotgun ammo cap during save.
-    var shtremain:Int;  // last shotgun ammo number during save.
-    var rifcap:Int;     // last rifle ammo cap during save.
-    var rifremain:Int;  // last rifle ammo number during save.
-    var smgcap:Int;     // last smg ammo cap during save.
-    var smgremain:Int;  // last smg ammo number during save.
-}
-
-typedef SVE =
-{
-    var SaveStats:PlayerStatus;
+ */
+typedef PlayerStatus = {
+	var curLvl:String; // last level player was on during save.
+	var curHealth:Int; // last health value during save.
+	var curStamina:Int; // last stamina value during save.
+	var playerX:Float; // last x position during save.
+	var playerY:Float; // last y position during save.
+	// ammo stuffs.
+	var piscap:Int; // last pistol ammo cap during save.
+	var pisremain:Int; // last pistol ammo number during save.
+	var shtcap:Int; // last shotgun ammo cap during save.
+	var shtremain:Int; // last shotgun ammo number during save.
+	var rifcap:Int; // last rifle ammo cap during save.
+	var rifremain:Int; // last rifle ammo number during save.
+	var smgcap:Int; // last smg ammo cap during save.
+	var smgremain:Int; // last smg ammo number during save.
 }
 
 class PlayerState { // this is for player save instancing, for creating the second save file for game progress (the encrypted save file for actual game progress compared to the other one for preferences)
 	// the main difference between RelocationFailedSAVEDATA.sol and RFSVE.json is that the .sol handles internal preference, EG: max frames, individual volumes, stuff like that.
-    public static var SaveData:SVE;
 
 	/**
 	 * Does the player have the suit?
@@ -47,7 +40,6 @@ class PlayerState { // this is for player save instancing, for creating the seco
 	 * @since RF_DEV_0.3.5
 	 */
 	public static var HasSuit:Bool = false;
-    
 
 	/**
 	 * Load the player save state from the json
@@ -66,31 +58,32 @@ class PlayerState { // this is for player save instancing, for creating the seco
 		if (!FileSystem.exists('$SaveDir')) { // dynamically check if the file already exists, so we dont accidently overwrite it.
 			trace('no data to load.');
 		} else {
-            var jsonContent = File.getContent('$GameFolder/$SaveName');
-            var Data = Json.parse(jsonContent);
+			var jsonContent = File.getContent('$GameFolder/$SaveName');
+			var Data = Json.parse(jsonContent);
 
-            var playerstatus:PlayerStatus = {
-                curLvl: Data.Stats.CurRoom,
-                curHealth: Data.Stats.health,
-                curStamina: Data.Stats.stamina,
-                playerX: Data.Stats.PosX,
-                playerY: Data.Stats.PosY,
-                piscap: Data.Stats.PistolAmmoCap,
-                pisremain: Data.Stats.PistolAmmoRemaining,
-                shtcap: Data.Stats.ShotgunAmmoCap,
-                shtremain: Data.Stats.ShotgunAmmoRemaining,
-                rifcap: Data.Stats.RifleAmmoCap,
-                rifremain: Data.Stats.RifleAmmoRemaining,
-                smgcap: Data.Stats.SMGAmmoCap,
-                smgremain: Data.Stats.SMGAmmoRemaining,
-            }
+			var playerstatus:PlayerStatus = {
+				curLvl: Data.Stats.CurRoom,
+				curHealth: Data.Stats.health,
+				curStamina: Data.Stats.stamina,
+				playerX: Data.Stats.PosX,
+				playerY: Data.Stats.PosY,
+				piscap: Data.Stats.PistolAmmoCap,
+				pisremain: Data.Stats.PistolAmmoRemaining,
+				shtcap: Data.Stats.ShotgunAmmoCap,
+				shtremain: Data.Stats.ShotgunAmmoRemaining,
+				rifcap: Data.Stats.RifleAmmoCap,
+				rifremain: Data.Stats.RifleAmmoRemaining,
+				smgcap: Data.Stats.SMGAmmoCap,
+				smgremain: Data.Stats.SMGAmmoRemaining,
+			}
 
-            loadPlayerState(playerstatus);
+			loadPlayerState(playerstatus);
 		}
 	}
-    static function loadPlayerState(Stats:PlayerStatus) {
-        FlxG.switchState( new Playstate(Stats.curLvl, Stats) );
-    }
+
+	static function loadPlayerState(Stats:PlayerStatus) {
+		FlxG.switchState(new Playstate(Stats.curLvl, Stats));
+	}
 
 	/**
 	 * Save the player save state to the json

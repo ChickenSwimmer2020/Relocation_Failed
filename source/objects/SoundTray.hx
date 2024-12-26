@@ -107,7 +107,7 @@ class SoundTray extends FlxSoundTray {
 		}
 
 		if (!silent) {
-			var soundStr = up ? 'assets/Volup.ogg' : 'assets/Voldown.ogg';
+			var soundStr = up ? 'assets/sound/snd/Volup.ogg' : 'assets/sound/snd/Voldown.ogg';
 
 			if (globalVolume == 10)
 				soundStr = 'assets/VolMAX.ogg';
