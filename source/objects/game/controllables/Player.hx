@@ -61,10 +61,12 @@ class Player extends FlxSprite {
         public var health:Int = 100;
     #end
     public var oxygen:Int = 200;
+    public var battery:Int = 500;
 
     public var maxStamina:Int = 100;
     public var maxHealth:Int = 100;
     public var maxOxygen:Int = 200;
+    public var maxBattery:Int = 500;
 
 	public var playstate:Playstate;
     public var colliders:Array<FlxSprite> = [];
@@ -149,6 +151,9 @@ class Player extends FlxSprite {
 
         if(Playstate.instance.Player.PistolAmmoRemaining > Playstate.instance.Player.PistolAmmoCap)
             Playstate.instance.Player.PistolAmmoRemaining = Playstate.instance.Player.PistolAmmoCap;
+
+        if(Playstate.instance.Player.battery > Playstate.instance.Player.maxBattery)
+            Playstate.instance.Player.battery = Playstate.instance.Player.maxBattery;
     }
 
     private function onMouseWheel(event:MouseEvent):Void {

@@ -56,6 +56,7 @@ class Playstate extends FlxTransitionableState {
             //health and stamina
             Player.health = stats.curHealth;
             Player.stamina = stats.curStamina;
+            Player.battery = stats.curBattery;
             //positioning
             Player.x = stats.playerX;
             Player.y = stats.playerY;

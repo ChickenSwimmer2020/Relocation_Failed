@@ -41,8 +41,9 @@ class ChapterBox extends FlxSpriteGroup {
         if(IMG != null) {
             weHasImage = true;
             var ChapterIMG:FlxSprite = new FlxSprite(X, Y + 15, IMG);
-            ChapterIMG.setGraphicSize(100, 90); //well, i wish i knew this function existed. much better than setscale because i can define exact dimensions.
+            ChapterIMG.setGraphicSize(900, 90); //well, i wish i knew this function existed. much better than setscale because i can define exact dimensions.
             ChapterIMG.updateHitbox();
+            ChapterIMG.scrollFactor.set(0,0);
             add(ChapterIMG);
         }
         if(locked) {

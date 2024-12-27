@@ -110,7 +110,7 @@ class SoundTray extends FlxSoundTray {
 			var soundStr = up ? 'assets/sound/snd/Volup.ogg' : 'assets/sound/snd/Voldown.ogg';
 
 			if (globalVolume == 10)
-				soundStr = 'assets/VolMAX.ogg';
+				soundStr = 'assets/sound/snd/VolMAX.ogg';
 
 			if (soundStr != null)
 				sound.loadEmbedded(soundStr).play();

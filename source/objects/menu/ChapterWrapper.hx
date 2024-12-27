@@ -10,7 +10,7 @@ import flixel.group.FlxSpriteGroup;
 
 class ChapterSelecterGroup extends FlxSpriteGroup {
     private var chapterNames:Array<String> = ["Chapter 0", "Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5"];
-    private var chapterImages:Array<FlxGraphic> = [null, null, null, null, null]; // Replace `null` with actual graphics if needed
+    private var chapterImages:Array<FlxGraphic> = [Assets.image('LVL0'), Assets.image('LVL0'), null, null, null]; // Replace `null` with actual graphics if needed
     private var chapterLocks:Array<Bool> = [false, false, true, false, true]; // Example lock states
 
     private var chapterBoxes:Array<ChapterBox> = [];

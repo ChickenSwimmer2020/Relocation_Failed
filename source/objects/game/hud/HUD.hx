@@ -16,10 +16,12 @@ class HUD extends FlxSpriteGroup {
     public var HPTXT:FlxText;
     public var SMTXT:FlxText;
     public var OXTXT:FlxText;
+    public var BTRTXT:FlxText;
 
     public var stamBar:FlxBar;
     public var healthBar:FlxBar;
     public var oxyBar:FlxBar;
+    public var btrBar:FlxBar;
 
     public var playstate:Playstate;
 
@@ -35,6 +37,8 @@ class HUD extends FlxSpriteGroup {
     public var ammocounter_AMMOSPR2:FlxSprite;
     public var ammocounter_AMMOSPR3:FlxSprite;
     public var ammocounter_AMMOSPR4:FlxSprite;
+
+    public var damageind:FlxSprite;
 
     #if mobile
     public static var virtualPad:FlxVirtualPad;
@@ -63,7 +67,7 @@ class HUD extends FlxSpriteGroup {
         pressforcontrols = new FlxText(0, 700, 0, "Press HOME For Debug Controls", 12, false);
         add(pressforcontrols);
         debugControls = new FlxText(0, 0, 0, "", 24, false);
-        debugControls.text = "Press ONE to toggle hitboxes view\nPress TWO to dump save file to console\nPress THREE to save a screenshot";
+        debugControls.text = "Press ONE to toggle hitboxes view\nPress TWO to dump save file to console";
         debugControls.screenCenter(XY);
         debugControls.alpha = 0;
         add(debugControls);
@@ -81,6 +85,7 @@ class HUD extends FlxSpriteGroup {
         healthBar.value = playstate.Player.health;
         stamBar.value = playstate.Player.stamina;
         oxyBar.value = playstate.Player.oxygen;
+        btrBar.value = playstate.Player.battery;
 
         switch(Playstate.instance.Player.CurWeaponChoice) {
             case SHOTGUNSHELL:
@@ -163,13 +168,19 @@ class HUD extends FlxSpriteGroup {
         SMTXT.alignment = LEFT;
         SMTXT.text = "Stamina";
 
-        OXTXT = new FlxText(620, -1.5);
+        OXTXT = new FlxText(350, -1.5);
         OXTXT.alignment = CENTER;
         OXTXT.text = "OXYGEN";
 
-        oxyBar = new FlxBar(0, 2.5, HORIZONTAL_INSIDE_OUT, 570, 5, playstate.Player, 'oxygen');
+        BTRTXT = new FlxText(885, -1.5);
+        BTRTXT.alignment = CENTER;
+        BTRTXT.text = "BATTERY";
+
+        oxyBar = new FlxBar(350, 2.5, LEFT_TO_RIGHT, 300, 5, playstate.Player, 'oxygen');
         oxyBar.createFilledBar(0xFF003DA0, 0xFF001AFF);
-        oxyBar.screenCenter(X);
+        
+        btrBar = new FlxBar(650, 2.5, RIGHT_TO_LEFT, 280, 5, playstate.Player, 'battery');
+        btrBar.createFilledBar(0xFF007816, 0xFF07D700);
         
 
         HUDBG = new FlxSprite(0, 0).makeGraphic(FlxG.width, 60, FlxColor.TRANSPARENT);
@@ -225,6 +236,8 @@ class HUD extends FlxSpriteGroup {
 
 
         FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
+
+        damageind = new FlxSprite(0, 60).loadGraphic(Assets.image('HUD_DMGINDC')); //TODO: implement when damage works.
         
 
         add(HUDBG);
@@ -234,6 +247,8 @@ class HUD extends FlxSpriteGroup {
         add(SMTXT);
         add(oxyBar);
         add(OXTXT);
+        add(btrBar);
+        add(BTRTXT);
         add(FACEBG);
         add(ammocounter_LINE);
         add(ammocounter_AMMOTEXT);
@@ -244,6 +259,7 @@ class HUD extends FlxSpriteGroup {
         add(ammocounter_AMMOSPR2);
         add(ammocounter_AMMOSPR3);
         add(ammocounter_AMMOSPR4);
+        add(damageind);
     }
 
 }

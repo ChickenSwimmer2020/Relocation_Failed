@@ -14,6 +14,7 @@ typedef PlayerSaveStatus = {
 	var curLvl:String; // last level player was on during save.
 	var curHealth:Int; // last health value during save.
 	var curStamina:Int; // last stamina value during save.
+	var curBattery:Int; // last battery value during save.
 	var playerX:Float; // last x position during save.
 	var playerY:Float; // last y position during save.
 	// ammo stuffs.
@@ -89,6 +90,7 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
             {name: 'curLvl', type: '', value: Playstate.instance._LEVEL},
             {name: 'curHealth', type: 0, value: Playstate.instance.Player.health},
             {name: 'curStamina', type: 0, value: Playstate.instance.Player.stamina},
+			{name: 'curBattery', type: 0, value: Playstate.instance.Player.battery},
             {name: 'playerX', type: 0.0, value: Playstate.instance.Player.x},
             {name: 'playerY', type: 0.0, value: Playstate.instance.Player.y},
             {name: 'piscap', type: 0, value: Playstate.instance.Player.PistolAmmoCap},
