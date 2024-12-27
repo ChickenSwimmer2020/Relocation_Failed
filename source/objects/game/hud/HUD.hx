@@ -63,7 +63,7 @@ class HUD extends FlxSpriteGroup {
         pressforcontrols = new FlxText(0, 700, 0, "Press HOME For Debug Controls", 12, false);
         add(pressforcontrols);
         debugControls = new FlxText(0, 0, 0, "", 24, false);
-        debugControls.text = "Press ONE to toggle hitboxes view\nPress TWO to dump save file to console";
+        debugControls.text = "Press ONE to toggle hitboxes view\nPress TWO to dump save file to console\nPress THREE to save a screenshot";
         debugControls.screenCenter(XY);
         debugControls.alpha = 0;
         add(debugControls);

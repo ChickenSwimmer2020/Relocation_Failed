@@ -86,7 +86,7 @@ class Gun{
 
     public function shoot() {
         var mousePos = FlxG.mouse.getPosition();
-        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice, true));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice, Preferences.save.bulletTracers));
         theGunTexture.x -= 10;
         theGunTexture.angle -= 15;
     }

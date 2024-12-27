@@ -1,5 +1,7 @@
 package backend;
 
+import openfl.geom.Rectangle;
+import flixel.addons.plugin.screengrab.FlxScreenGrab;
 import flixel.input.keyboard.FlxKey;
 
 /**
@@ -28,7 +30,7 @@ class DEBUGKEYS{
         //toggle hitboxes drawing.
         () -> { FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug; },
         () -> { trace(FlxG.save.data); },
-        () -> {},
+        () -> { FlxScreenGrab.grab(new Rectangle(0, 0, FlxG.width, FlxG.height), true); },
         () -> {},
         () -> {},
         () -> {},

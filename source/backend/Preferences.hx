@@ -1,7 +1,18 @@
 package backend;
 
 @:structInit class SaveVariables {
+	/**
+	 * test varible :/
+	 * ---
+	 * @since RF_DEV_0.3.5
+	 */
     public var testVarible:String = 'bruhh';
+	/**
+	 * does the player have bullet tracers enabled?
+	 * ---
+	 * @since RF_DEV_0.3.6
+	 */
+	public var bulletTracers:Bool = true;
 }
 
 class Preferences {
@@ -26,7 +37,11 @@ class Preferences {
 		FlxG.watch.addQuick('Save Muted State:', FlxG.save.data.VolumeIsMuted);
 		#end
 	}
-
+	/**
+	  * save the settings to the preferences SOL file
+	  * ---
+	  * @since RF_DEV_0.1.0
+	  */
     public static function saveSettings() {
         // Saves all variables in the save via Reflection
 		for (saveVar in Reflect.fields(save))
@@ -36,9 +51,11 @@ class Preferences {
 		FlxG.save.flush(); // Flushes data to AppData
 		FlxG.log.add("Settings saved!");
 	}
-    
-    static var CurVolumeLevel:Float = 1;
-    static var VolumeIsMuted:Bool = false;
+    /**
+	  * Load the settings from the preferences SOL file
+	  * ---
+	  * @since RF_DEV_0.1.0
+	  */
     public static function loadSettings() {
         for (saveVar in Reflect.fields(FlxG.save.data)){
             if (Reflect.hasField(Preferences, saveVar))

@@ -47,6 +47,9 @@ class Playstate extends FlxTransitionableState {
         this.saveSlot = saveSlot;
         _LEVEL = levelToLoad;
 
+        FlxG.sound.music.stop();
+            FlxG.sound.playMusic(Assets.music('IDLE.ogg'));
+
         Player = new Player(0, 0, this); //we need to init the player here or else its gonna cause a crash when attempting to load the save-state
 
         if(stats != null) {

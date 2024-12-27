@@ -63,7 +63,11 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 			loadPlayerState(playerstatus);
 		}
 	}
-
+	/**
+	 * Actually load the player save state from the rsf
+	 * ---
+	 * @since RF_DEV_0.3.5
+	 */
 	static function loadPlayerState(Stats:SaveState) {
 		FlxG.switchState(new Playstate(Stats.curLvl, Stats));
 	}
@@ -81,7 +85,7 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
         var GameFolderNormalized:String = Path.normalize(Path.removeTrailingSlashes(GameFolder));
 
         var saveData:Array<Save> = [
-            {name: 'saveVer', type: '', value: 'RF_DEV_0.3.5'},
+            {name: 'saveVer', type: '', value: '${Application.current.meta.get('version')}'}, //so you didnt just use the current game version, why?
             {name: 'curLvl', type: '', value: Playstate.instance._LEVEL},
             {name: 'curHealth', type: 0, value: Playstate.instance.Player.health},
             {name: 'curStamina', type: 0, value: Playstate.instance.Player.stamina},

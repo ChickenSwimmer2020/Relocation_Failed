@@ -1,7 +1,7 @@
 {
     "header":{
             "NOTE": "DO NOT FUCK WITH OUR LEVELS. unless your modding",
-            "LevelID": "level1",
+            "LevelID": "level0",
             "Chapter": 0,
             "Boundries": [1280, 720],
             "CameraLocked": false,
@@ -20,7 +20,60 @@
             "SFY": 1,
             "IMG": "lebackgroundtestsprite",
             "VIS": true,
-            "IsBackground": false
+            "IsBackground": true
+        },
+        {
+            "Name": "COLLTEST",
+            "Alpha": 1,
+            "X": 500,
+            "Y": 500,
+            "ScaleX": 1,
+            "ScaleY": 1,
+            "SFX": 1,
+            "SFY": 1,
+            "IMG": "ButtonTEST",
+            "IsBackground": false,
+            "VIS": true,
+            "CollidesWithPlayer": true
+        },
+        {
+            "Name": "TestObject1",
+            "Alpha": 1,
+            "X": 0,
+            "Y": 0,
+            "ScaleX": 10,
+            "ScaleY": 1,
+            "SFX": 3,
+            "SFY": 0,
+            "IMG": "ButtonTEST",
+            "VIS": true
+        },
+        {
+            "Name": "TestObject2",
+            "Alpha": 1,
+            "X": 0,
+            "Y": 0,
+            "ScaleX": 2,
+            "ScaleY": 2,
+            "SFX": 1,
+            "SFY": 1,
+            "IMG": "ButtonTEST",
+            "VIS": true,
+            "CollidesWithPlayer": false
+        },
+        {
+            "Name": "TESTOVERLAYSPRITE",
+            "Alpha": 1,
+            "X": 500,
+            "Y": 0,
+            "ScaleX": 2,
+            "ScaleY": 2,
+            "SFX": 1,
+            "SFY": 1,
+            "IMG": "ButtonTEST",
+            "VIS": true,
+            "CollidesWithPlayer": false,
+            "RenderOverPlayer": true
         }
     ],
     "items":[

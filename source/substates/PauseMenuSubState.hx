@@ -24,7 +24,7 @@ class PauseMenuSubState extends FlxSubState {
         icon.cameras = [pauseCAM];
         add(icon);
 
-        button_backToGame = new FlxButton(0, icon.y + 75, "Back", () -> {close();});
+        button_backToGame = new FlxButton(0, icon.y + 75, "Back", () -> { close(); FlxG.sound.music.resume(); });
         button_backToGame.camera = pauseCAM;
         add(button_backToGame);
 
@@ -43,6 +43,8 @@ class PauseMenuSubState extends FlxSubState {
         if(FlxG.keys.anyJustPressed([ESCAPE])) {
             close();
             PauseJustClosed = true;
+            if(FlxG.sound.music != null && !FlxG.sound.music.playing)
+                FlxG.sound.music.resume();
         }
         #end
     }

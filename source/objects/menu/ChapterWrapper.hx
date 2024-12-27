@@ -9,9 +9,9 @@ import openfl.events.MouseEvent;
 import flixel.group.FlxSpriteGroup;
 
 class ChapterSelecterGroup extends FlxSpriteGroup {
-    private var chapterNames:Array<String> = ["test", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5"];
+    private var chapterNames:Array<String> = ["Chapter 0", "Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5"];
     private var chapterImages:Array<FlxGraphic> = [null, null, null, null, null]; // Replace `null` with actual graphics if needed
-    private var chapterLocks:Array<Bool> = [false, true, false, false, true]; // Example lock states
+    private var chapterLocks:Array<Bool> = [false, false, true, false, true]; // Example lock states
 
     private var chapterBoxes:Array<ChapterBox> = [];
     private var currentOffset:Float = 0;
@@ -97,9 +97,9 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
             trace("Selected: " + chapterNames[index]);
             switch(index) {
                 case 0: // Chapter 1
-                    FlxG.switchState(new Playstate('level1'));
+                    FlxG.switchState(new Playstate('level0'));
                 case 1: // Chapter 2
-                    // Handle Chapter 2 click
+                    FlxG.switchState(new Playstate('level1'));
                 case 2: // Chapter 3
                     // Handle Chapter 3 click
                 case 3: // Chapter 4

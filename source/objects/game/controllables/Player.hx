@@ -124,8 +124,11 @@ class Player extends FlxSprite {
 
 	function checkForPauseMenu() {
         #if !mobile
-		if (FlxG.keys.anyPressed([ESCAPE]) && !PauseMenuSubState.PauseJustClosed) //so the pause menu can be closed with the escape key and not instantly reopen
+		if (FlxG.keys.anyPressed([ESCAPE]) && !PauseMenuSubState.PauseJustClosed) { //so the pause menu can be closed with the escape key and not instantly reopen
 			FlxG.state.openSubState(new substates.PauseMenuSubState());
+            if(FlxG.sound.music != null)
+                FlxG.sound.music.pause();
+        }
         #else
         if (HUD.virtualPad.buttonC.pressed)
             FlxG.state.openSubState(new substates.PauseMenuSubState()); //support for mobile pausing
