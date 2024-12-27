@@ -33,7 +33,7 @@ class Player extends FlxSprite {
     public var collisionPhysProps:PhysicProperties = {
         speed: 300,
         drag: 999999999999 // Damn bro cs2020 what the hell is thissss 😭
-    };
+    };                      // an unused thing that imma remove so i dont know why im writing this reply comment because its gonna be deleted-
     public var curPhysProperties:PhysicProperties;
     public var curMovementDir:MovementDirection;
 

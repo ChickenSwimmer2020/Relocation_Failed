@@ -152,6 +152,11 @@ class MainMenu extends FlxTransitionableState {
         versiontext.antialiasing = false;
         versiontext.camera = verCam;
         add(versiontext);
+
+        #if (debug || modded)
+        var LevelEditorButton:FlxButton = new FlxButton(0, 0, 'Level Editor', ()->{ FlxG.switchState( new debug.LevelEditorState() ); });
+        add(LevelEditorButton);
+        #end
     }
 
     override public function destroy()

@@ -62,7 +62,7 @@ class Functions
     
 
     // RIP Single Trace function, you are useless to me :>
-    // RIP FlxDemo change transition function, you are useless to me aswell:>
+    // RIP FlxDemo change transition function, you are useless to me aswell:> //HEY, SOLAR I WANTED THAT, I WANTED COOL TRANSITIONS :sob:
 
 
     /**

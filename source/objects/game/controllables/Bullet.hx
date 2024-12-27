@@ -56,7 +56,7 @@ class Bullet extends FlxSprite {
         });
 
         if(Tracer){
-            tracy = new RFTrail(this, null, 10, 2, 0.4, 0.05);
+            tracy = new RFTrail(this, null, 10, 0, 1, 0.1);
             Playstate.instance.BulletGroup.add(tracy);
             ApplyTracer = true;
         }
