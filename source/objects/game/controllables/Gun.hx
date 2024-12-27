@@ -56,7 +56,11 @@ class Gun{
      * @since RF_DEV_0.3.0
      */
     public function changeTexture(X:Float, Y:Float, Texture:String, isShotgun:Bool = false, ?hasAnims:Bool = false, ?idleAnim:Array<Int>, ?shootAnim:Array<Int>, ?reloadAnim:Array<Int>, ?pumpAnim:Array<Int>, FPS:Int = 24, FrameWidth:Int = 32, FrameHeight:Int = 32) {
-        theGunTexture.loadGraphic(Assets.image(Texture), hasAnims, FrameWidth, FrameHeight);
+        try{
+            theGunTexture.loadGraphic(Assets.image(Texture), hasAnims, FrameWidth, FrameHeight);
+        } catch(e) {
+            trace('Error loading texture: ' + e.message);
+        }
         theGunTexture.setPosition(X, Y);
         realGunXPOS = X;
         realGunYPOS = Y;

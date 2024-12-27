@@ -1,5 +1,7 @@
 package substates;
 
+import backend.save.PlayerSaveStateUtil;
+
 class PauseMenuSubState extends FlxSubState {
     var pauseCAM:FlxCamera;
     var icon:FlxText;
@@ -26,7 +28,7 @@ class PauseMenuSubState extends FlxSubState {
         button_backToGame.camera = pauseCAM;
         add(button_backToGame);
 
-        button_saveGame = new FlxButton(0, button_backToGame.y + 20, "Save", () -> { PlayerState.SavePlayerSaveState(); });
+        button_saveGame = new FlxButton(0, button_backToGame.y + 20, "Save", () -> { PlayerSaveStateUtil.SavePlayerSaveState(); });
         button_saveGame.camera = pauseCAM;
         add(button_saveGame);
 

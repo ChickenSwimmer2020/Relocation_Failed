@@ -6,6 +6,7 @@ import backend.Assets;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import backend.Functions;
+import backend.save.PlayerSaveStateUtil;
 import objects.menu.Button;
 
 class MainMenu extends FlxTransitionableState {
@@ -107,7 +108,7 @@ class MainMenu extends FlxTransitionableState {
         Button_Play.camera = shipCam;
         add(Button_Play);
 
-        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerState.LoadPlayerSaveState(); }, 1, false);
+        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); }, 1, false);
         Button_Load.DaButton.updateHitbox();
         Button_Load.updateTextPosition();
         Button_Load.camera = shipCam;

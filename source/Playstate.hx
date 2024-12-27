@@ -1,6 +1,6 @@
 package;
 
-import backend.PlayerState.PlayerStatus;
+import backend.save.SaveState;
 import backend.level.LevelLoader.LevelHeader;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
@@ -32,6 +32,7 @@ class Playstate extends FlxTransitionableState {
     public var followStyle:FlxCameraFollowStyle;
 
     public var _LEVEL:String;
+    public var saveSlot:Int = 1;
 
     public var BulletGroup:FlxGroup;
     #if !mobile
@@ -40,9 +41,10 @@ class Playstate extends FlxTransitionableState {
         #end
     #end
     
-    override public function new(levelToLoad:String = 'level1', ?stats:PlayerStatus) {
+    override public function new(levelToLoad:String = 'level1', ?stats:SaveState, ?saveSlot:Int = 1,) {
         super();
         instance = this;
+        this.saveSlot = saveSlot;
         _LEVEL = levelToLoad;
 
         Player = new Player(0, 0, this); //we need to init the player here or else its gonna cause a crash when attempting to load the save-state
