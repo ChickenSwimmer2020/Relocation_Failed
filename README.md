@@ -1,4 +1,4 @@
-<h1 align="center">RELOCATION FAILED<br>Top-Down Shooter Made Completely with HaxeFlixel!</h1>
+<h1 align="center">RELOCATION FAILED<br>A Top-Down Shooter Made Completely with HaxeFlixel!</h1>
 
 ### what is relocation failed?
 
