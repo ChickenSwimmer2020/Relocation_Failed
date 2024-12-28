@@ -66,10 +66,13 @@ class Button extends FlxTypedGroup<FlxObject>
 
     function CheckHover()
         {
-            if(Hover)
+            if(Hover) {
                 DaButton.color = 0xff159cea;
-            else
+                DaButton.updateHitbox();
+            }else{
                 DaButton.color = 0xffffffff;
+                DaButton.updateHitbox();
+            }
         }
 }
 

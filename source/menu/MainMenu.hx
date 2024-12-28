@@ -101,26 +101,7 @@ class MainMenu extends FlxTransitionableState {
         Suffix.antialiasing = false;
         add(Suffix);
 
-        //button handling
-        Button_Play = new Button('New\nGame', 560, 280, Assets.image('ButtonTEST'), ()->{ FlxG.state.openSubState(new substates.ChapterSelectSubState(this)); }, 1, false);
-        Button_Play.DaButton.updateHitbox();
-        Button_Play.updateTextPosition();
-        Button_Play.camera = shipCam;
-        add(Button_Play);
-
-        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); }, 1, false);
-        Button_Load.DaButton.updateHitbox();
-        Button_Load.updateTextPosition();
-        Button_Load.camera = shipCam;
-        add(Button_Load);
-
-        Button_Settings = new Button('Settings', Button_Play.DaButton.x + 100, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), 
-        ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
-        Button_Settings.DaButton.updateHitbox();
-        Button_Settings.updateTextPosition();
-        Button_Settings.camera = shipCam;
-        //add(Button_Settings);
-
+        //                      these should have been behind the buttons.              \\
         shipGlow = new FlxSprite(0, 0, 'assets/ship-glow.png');
         shipGlow.setGraphicSize(1280, 720);
         shipGlow.updateHitbox();
@@ -134,6 +115,26 @@ class MainMenu extends FlxTransitionableState {
         shipGlow2.antialiasing = false;
         shipGlow2.camera = shipCam;
         add(shipGlow2);
+
+        //button handling
+        Button_Play = new Button('New\nGame', 560, 280, Assets.image('ButtonTEST'), ()->{ FlxG.state.openSubState(new substates.ChapterSelectSubState(this)); }, 1, false);
+        //Button_Play.DaButton.updateHitbox();
+        Button_Play.updateTextPosition();
+        Button_Play.camera = shipCam;
+        add(Button_Play);
+
+        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); }, 1, false);
+        //Button_Load.DaButton.updateHitbox();
+        Button_Load.updateTextPosition();
+        Button_Load.camera = shipCam;
+        add(Button_Load);
+
+        Button_Settings = new Button('Settings', Button_Load.DaButton.x + 150, Button_Load.DaButton.y + 85, Assets.image('ButtonTEST'),
+        ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
+        //Button_Settings.DaButton.updateHitbox();
+        Button_Settings.updateTextPosition();
+        Button_Settings.camera = shipCam;
+        add(Button_Settings);
 
         var vingette = new FlxSprite(0, 0, 'assets/Vingette.png');
         vingette.alpha = 0.4;
@@ -185,9 +186,8 @@ class MainMenu extends FlxTransitionableState {
                     FlxTween.cancelTweensOf(Button_Play.DaButton);
                     FlxTween.cancelTweensOf(Button_Play.DaText);
                     Button_Play.Hover = true;
-                    Button_Play.DaButton.updateHitbox();
                     Button_Play.updateTextPosition();
-                    FlxTween.tween(Button_Play.DaButton, {"scale.x": 0.8, "scale.y": 0.8, x: FlxG.width/2 - Button_Play.DaButton.width / 2 + 20}, 0.5, {
+                    FlxTween.tween(Button_Play.DaButton, {"scale.x": 0.8, "scale.y": 0.8, x: 585}, 0.5, {
                         ease: FlxEase.circOut
                     });
                     FlxTween.tween(Button_Play.DaText, {"scale.x": 0.8, "scale.y": 0.8}, 0.5, {
@@ -199,9 +199,8 @@ class MainMenu extends FlxTransitionableState {
                     FlxTween.cancelTweensOf(Button_Play.DaButton);
                     FlxTween.cancelTweensOf(Button_Play.DaText);
                     Button_Play.Hover = false;
-                    Button_Play.DaButton.updateHitbox();
                     Button_Play.updateTextPosition();
-                    FlxTween.tween(Button_Play.DaButton, {"scale.x": 0.6, "scale.y": 0.6, x: FlxG.width/2 - Button_Play.DaButton.width / 2 + 20}, 0.5, {
+                    FlxTween.tween(Button_Play.DaButton, {"scale.x": 0.6, "scale.y": 0.6, x: 600}, 0.5, {
                         ease: FlxEase.circOut
                     });
                     FlxTween.tween(Button_Play.DaText, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
@@ -214,9 +213,8 @@ class MainMenu extends FlxTransitionableState {
                     FlxTween.cancelTweensOf(Button_Load.DaButton);
                     FlxTween.cancelTweensOf(Button_Load.DaText);
                     Button_Load.Hover = true;
-                    Button_Load.DaButton.updateHitbox();
                     Button_Load.updateTextPosition();
-                    FlxTween.tween(Button_Load.DaButton, {"scale.x": 0.8, "scale.y": 0.8, x: FlxG.width/2 - Button_Load.DaButton.width / 2 + 20}, 0.5, {
+                    FlxTween.tween(Button_Load.DaButton, {"scale.x": 0.8, "scale.y": 0.8, x: 585}, 0.5, {
                         ease: FlxEase.circOut
                     });
                     FlxTween.tween(Button_Load.DaText, {"scale.x": 0.8, "scale.y": 0.8}, 0.5, {
@@ -228,9 +226,8 @@ class MainMenu extends FlxTransitionableState {
                     FlxTween.cancelTweensOf(Button_Load.DaButton);
                     FlxTween.cancelTweensOf(Button_Load.DaText);
                     Button_Load.Hover = false;
-                    Button_Load.DaButton.updateHitbox();
                     Button_Load.updateTextPosition();
-                    FlxTween.tween(Button_Load.DaButton, {"scale.x": 0.6, "scale.y": 0.6, x: FlxG.width/2 - Button_Load.DaButton.width / 2 + 20}, 0.5, {
+                    FlxTween.tween(Button_Load.DaButton, {"scale.x": 0.6, "scale.y": 0.6, x: 600}, 0.5, {
                         ease: FlxEase.circOut
                     });
                     FlxTween.tween(Button_Load.DaText, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
@@ -243,10 +240,9 @@ class MainMenu extends FlxTransitionableState {
                     FlxTween.cancelTweensOf(Button_Settings.DaButton);
                     FlxTween.cancelTweensOf(Button_Settings.DaText);
                     Button_Settings.Hover = true;
-                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 0.6, "scale.y": 0.6, x: FlxG.width/2 - Button_Settings.DaButton.width / 2 + 20}, 0.5, {
+                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
                         ease: FlxEase.circOut
                     });
-                    Button_Settings.DaButton.updateHitbox();
                     Button_Settings.updateTextPosition();
                     FlxTween.tween(Button_Settings.DaText, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
                         ease: FlxEase.circOut
@@ -257,9 +253,8 @@ class MainMenu extends FlxTransitionableState {
                     FlxTween.cancelTweensOf(Button_Settings.DaButton);
                     FlxTween.cancelTweensOf(Button_Settings.DaText);
                     Button_Settings.Hover = false;
-                    Button_Settings.DaButton.updateHitbox();
                     Button_Settings.updateTextPosition();
-                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 0.5, "scale.y": 0.5, x: FlxG.width/2 - Button_Settings.DaButton.width / 2 + 20}, 0.5, {
+                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 0.5, "scale.y": 0.5, x: 770}, 0.5, {
                         ease: FlxEase.circOut
                     });
                     FlxTween.tween(Button_Settings.DaText, {"scale.x": 0.5, "scale.y": 0.5}, 0.5, {
