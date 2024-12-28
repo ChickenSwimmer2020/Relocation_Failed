@@ -41,7 +41,7 @@ class Playstate extends FlxTransitionableState {
         #end
     #end
     
-    override public function new(levelToLoad:String = 'level1', ?stats:SaveState, ?saveSlot:Int = 1,) {
+    override public function new(levelToLoad:String = 'level1', ?stats:SaveState, ?saveSlot:Int = 1) {
         super();
         instance = this;
         this.saveSlot = saveSlot;
@@ -54,12 +54,12 @@ class Playstate extends FlxTransitionableState {
 
         if(stats != null) {
             //health and stamina
-            Player.health = stats.curHealth;
-            Player.stamina = stats.curStamina;
-            Player.battery = stats.curBattery;
+            Player.health = stats.cur_health;
+            Player.stamina = stats.cur_stamina;
+            Player.battery = stats.cur_battery;
             //positioning
-            Player.x = stats.playerX;
-            Player.y = stats.playerY;
+            Player.x = stats.player_x;
+            Player.y = stats.player_y;
             //ammo stuff.
             Player.PistolAmmoCap = stats.piscap;
             Player.PistolAmmoRemaining = stats.pisremain;

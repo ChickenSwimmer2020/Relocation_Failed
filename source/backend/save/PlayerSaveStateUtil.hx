@@ -70,7 +70,7 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 	 * @since RF_DEV_0.3.5
 	 */
 	static function loadPlayerState(Stats:SaveState) {
-		FlxG.switchState(new Playstate(Stats.curLvl, Stats));
+		FlxG.switchState(new Playstate(Stats.cur_lvl, Stats));
 	}
 
 	/**
@@ -86,13 +86,13 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
         var GameFolderNormalized:String = Path.normalize(Path.removeTrailingSlashes(GameFolder));
 
         var saveData:Array<Save> = [
-            {name: 'saveVer', type: '', value: '${Application.current.meta.get('version')}'}, //so you didnt just use the current game version, why?
-            {name: 'curLvl', type: '', value: Playstate.instance._LEVEL},
-            {name: 'curHealth', type: 0, value: Playstate.instance.Player.health},
-            {name: 'curStamina', type: 0, value: Playstate.instance.Player.stamina},
-			{name: 'curBattery', type: 0, value: Playstate.instance.Player.battery},
-            {name: 'playerX', type: 0.0, value: Playstate.instance.Player.x},
-            {name: 'playerY', type: 0.0, value: Playstate.instance.Player.y},
+            {name: 'save_ver', type: '', value: '${Application.current.meta.get('version')}'}, //so you didnt just use the current game version, why?
+            {name: 'cur_lvl', type: '', value: Playstate.instance._LEVEL},
+            {name: 'cur_health', type: 0, value: Playstate.instance.Player.health},
+            {name: 'cur_stamina', type: 0, value: Playstate.instance.Player.stamina},
+			{name: 'cur_battery', type: 0, value: Playstate.instance.Player.battery},
+            {name: 'player_x', type: 0.0, value: Playstate.instance.Player.x},
+            {name: 'player_y', type: 0.0, value: Playstate.instance.Player.y},
             {name: 'piscap', type: 0, value: Playstate.instance.Player.PistolAmmoCap},
             {name: 'pisremain', type: 0, value: Playstate.instance.Player.PistolAmmoRemaining},
             {name: 'shtcap', type: 0, value: Playstate.instance.Player.ShotgunAmmoCap},

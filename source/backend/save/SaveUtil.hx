@@ -13,6 +13,43 @@ abstract SaveType(Dynamic) from String from Float from Int from Bool to String t
 
 class SaveUtil
 {
+    private static final encodingMap:Map<String, String> = [
+        // Lowercase
+        "a" => "m", "b" => "n", "c" => "o",
+        "d" => "p", "e" => "q", "f" => "r",
+        "g" => "s", "h" => "t", "i" => "u",
+        "j" => "v", "k" => "w", "l" => "x",
+        "m" => "y", "n" => "z", "o" => "a",
+        "p" => "b", "q" => "c", "r" => "d",
+        "s" => "e", "t" => "f", "u" => "g",
+        "v" => "h", "w" => "i", "x" => "j",
+        "y" => "k", "z" => "l",
+
+        "0" => "&", "1" => "%",
+        "2" => "@", "3" => "(",
+        "4" => ")", "5" => "#",
+        "6" => "^", "7" => "!",
+        "8" => "}", "9" => "$"
+    ];
+
+    private static final decodingMap:Map<String, String> = [
+        // Lowercase
+        "m" => "a", "n" => "b", "o" => "c",
+        "p" => "d", "q" => "e", "r" => "f",
+        "s" => "g", "t" => "h", "u" => "i",
+        "v" => "j", "w" => "k", "x" => "l",
+        "y" => "m", "z" => "n", "a" => "o",
+        "b" => "p", "c" => "q", "d" => "r",
+        "e" => "s", "f" => "t", "g" => "u",
+        "h" => "v", "i" => "w", "j" => "x",
+        "k" => "y", "l" => "z",
+
+        "&" => "0", "%" => "1",
+        "@" => "2", "(" => "3",
+        ")" => "4", "#" => "5",
+        "^" => "6", "!" => "7",
+        "}" => "8", "$" => "9"
+    ];
 	public static function parseSave(saveStr:String, verbose:Bool = false, outerSeperator:String = '|', innerSeperator:String = '-',
         saveSeperator:String = ':'):Array<Save>
 	{
@@ -63,11 +100,11 @@ class SaveUtil
 				switch (saveVarPartToken)
 				{
 					case 'N':
-						nameStr = saveVarPartVal;
+						nameStr = decodeString(saveVarPartVal);
 					case 'T':
 						typeStr = saveVarPartVal;
 					case 'V':
-						valueStr = saveVarPartVal;
+						valueStr = decodeString(saveVarPartVal);
 					default:
 						trace('Invalid save! Expected tokens: N,T,V But got $saveVarPartToken. Save may be parsed incorrectly, posssibly leading to a crash.');
 				}
@@ -113,9 +150,9 @@ class SaveUtil
 		}
 		for (save in saves)
 		{
-			addSet('N', save.name);
+			addSet('N', encodeString(save.name));
 			addSet('T', typeToString(save.type));
-			addSet('V', Std.string(save.value));
+			addSet('V', encodeString(Std.string(save.value)));
 			res.add(os);
 		}
         var s = res.toString();
@@ -157,4 +194,22 @@ class SaveUtil
 			return parseBool(str);
 		return null;
 	}
+
+    public static function encodeLetter(letter:String):String {
+        letter = letter.toLowerCase();
+        return encodingMap.exists(letter) ? encodingMap[letter] : letter;
+    }
+
+    public static function decodeLetter(letter:String):String {
+        letter = letter.toLowerCase();
+        return decodingMap.exists(letter) ? decodingMap[letter] : letter;
+    }
+
+    public static function encodeString(text:String):String {
+        return [for (i in 0...text.length) encodeLetter(text.charAt(i))].join("");
+    }
+
+    public static function decodeString(text:String):String {
+        return [for (i in 0...text.length) decodeLetter(text.charAt(i))].join("");
+    }
 }
