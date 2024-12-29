@@ -65,7 +65,7 @@
             "Graphic": "DOOR",
             "Frame": [31, 31],
             "openAnimLength": 1,
-            "PlayerPosition": [210, 210],
+            "PlayerPosition": [215, 215],
             "scale": [2, 2],
             "X": 150,
             "Y": 150
