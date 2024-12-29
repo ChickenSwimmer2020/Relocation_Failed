@@ -41,7 +41,7 @@ class Playstate extends FlxTransitionableState {
         #end
     #end
     
-    override public function new(levelToLoad:String = 'level1', ?stats:SaveState, ?saveSlot:Int = 1) {
+    override public function new(levelToLoad:String = 'level1', ?PlayerPosition:Array<Float> = null, ?stats:SaveState, ?saveSlot:Int = 1) {
         super();
         instance = this;
         this.saveSlot = saveSlot;
@@ -50,7 +50,10 @@ class Playstate extends FlxTransitionableState {
         FlxG.sound.music.stop();
             FlxG.sound.playMusic(Assets.music('IDLE.ogg'));
 
-        Player = new Player(0, 0, this); //we need to init the player here or else its gonna cause a crash when attempting to load the save-state
+        if(PlayerPosition == null) PlayerPosition = [0, 0];
+
+        Player = new Player(PlayerPosition[0], PlayerPosition[1], this); //we need to init the player here or else its gonna cause a crash when attempting to load the save-state
+        Player.Transitioning = false;
 
         if(stats != null) {
             //health and stamina

@@ -4,6 +4,7 @@ import haxe.Json;
 
 /**
  * The header of a level.
+ * @since RF_DEV_0.1.4
  */
 typedef LevelHeader = 
 {
@@ -17,6 +18,7 @@ typedef LevelHeader =
 
 /**
  * Animation data of an object in a level.
+ * @since RF_DEV_0.1.4
  */
 typedef AnimData = {
     var ?AnimFrames:Array<Int>; //anim frames
@@ -29,6 +31,7 @@ typedef AnimData = {
 
 /**
  * An object in a level.
+ * @since RF_DEV_0.1.4
  */
 typedef LevelObject =
 {
@@ -49,9 +52,27 @@ typedef LevelObject =
     var ?ParrallaxBG:Bool; //should it be a parrallax?
     var ?Anims:Array<AnimData>; // animation data if needed
 }
+/**
+ * A door in a level.
+ * @since RF_DEV_0.3.7
+ */
+typedef LevelDoor =
+{
+    var Name:String; //internal name
+    var LevelToLoad:String; //what level do we load.
+    var isAnimated:Bool; //do we have animation?
+    var Graphic:String; //what graphic do we load, most of the time though, this will just stay as 'DOOR'.
+    var ?Frame:Array<Int>; //the frame bounds, value 1 is height, value 2 is width.
+    var openAnimLength:Float; //how long does it take for the door to open before switching levels.
+    var PlayerPosition:Array<Float>; //where should the player spawn in the new level?
+    var scale:Array<Float>; //scale.
+    var X:Float; //x position.
+    var Y:Float; //y position.
+}
 
 /**
  * An item in a level.
+ * @since RF_DEV_0.1.4
  */
 typedef LevelItem = //should allow us to put items into the level directly
 {
@@ -67,16 +88,24 @@ typedef LevelData =
 {
     /**
      * The items in the level.
+     * @since RF_DEV_0.1.4
      */
     var items:Array<LevelItem>;
     /**
      * The objects in the level.
+     * @since RF_DEV_0.1.4
      */
     var objects:Array<LevelObject>;
     /**
      * The header of the level.
+     * @since RF_DEV_0.1.4
      */
     var header:LevelHeader;
+    /**
+     * the doors of a level.
+     * @since RF_DEV_0.3.7
+     */
+    var doors:Array<LevelDoor>;
 }
 
 class LevelLoader

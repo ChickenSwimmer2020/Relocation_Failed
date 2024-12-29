@@ -30,10 +30,6 @@ class Player extends FlxSprite {
         speed: 375,
         drag: 5000
     };
-    public var collisionPhysProps:PhysicProperties = {
-        speed: 300,
-        drag: 999999999999 // Damn bro cs2020 what the hell is thissss 😭
-    };                      // an unused thing that imma remove so i dont know why im writing this reply comment because its gonna be deleted-
     public var curPhysProperties:PhysicProperties;
     public var curMovementDir:MovementDirection;
 
@@ -76,6 +72,8 @@ class Player extends FlxSprite {
     public static var AimerPOSx:Float;
 
     public var CurRoom:String;
+
+    public var Transitioning:Bool = false;
 
 	public function new(xPos:Float, yPos:Float, playstate:Playstate) {
 		super(xPos, yPos);
@@ -286,24 +284,25 @@ class Player extends FlxSprite {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-        if (!collide())
-		    movement();
-        colliding = false;
+        if(!Transitioning) { //prevent a crash by making sure none of this stuff gets called when using a door.
+            if (!collide())
+    		    movement();
+            colliding = false;
 
-		checkForPauseMenu();
-        resetPauseMenu();
-        forceCaps(); //so variables such as health and ammo dont go above 100
-        #if !mobile
-        AimerPOSx = this.getGraphicMidpoint().x - 15;
-        AimerPOSy = this.getGraphicMidpoint().y - 15;
-        gun.update(elapsed);
-        gun.updateTexturePosition(AimerPOSx, AimerPOSy);
-        #else
-        #end
-		#if debug
-		FlxG.watch.addQuick('Stamina', stamina);
-		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
-		#end
-        
+    		checkForPauseMenu();
+            resetPauseMenu();
+            forceCaps(); //so variables such as health and ammo dont go above 100
+            #if !mobile
+            AimerPOSx = this.getGraphicMidpoint().x - 15;
+            AimerPOSy = this.getGraphicMidpoint().y - 15;
+            gun.update(elapsed);
+            gun.updateTexturePosition(AimerPOSx, AimerPOSy);
+            #else
+            #end
+    		#if debug
+    		FlxG.watch.addQuick('Stamina', stamina);
+    		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
+    		#end
+        }
 	}
 }

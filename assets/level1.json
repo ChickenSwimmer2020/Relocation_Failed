@@ -56,5 +56,19 @@
             "X": 800,
             "Y": 200
         }
+    ],
+    "doors":[
+        {
+            "Name": "testdoor02",
+            "LevelToLoad": "level0",
+            "isAnimated": true,
+            "Graphic": "DOOR",
+            "Frame": [31, 31],
+            "openAnimLength": 1,
+            "PlayerPosition": [210, 210],
+            "scale": [2, 2],
+            "X": 150,
+            "Y": 150
+        }
     ]
 }

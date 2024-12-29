@@ -76,7 +76,11 @@ class Gun{
                 if(pumpAnim != null)
                     theGunTexture.animation.addByIndices('Shoot', 'addlater', pumpAnim, '', FPS, false, false, false);
         }
-        Playstate.instance.AimerGroup.add(theGunTexture);
+        try{
+            Playstate.instance.AimerGroup.add(theGunTexture); //WHAT. CASUES. THAT. STUPID. CRASH. AHHHHHHOJWEFHOUHDILABGS
+        }catch(e){
+            trace('GOTCHA!\nerror:\n$e');
+        }
     } //i mean, if we're having different guns. we need textures!
 
     public function updateTexturePosition(X:Float, Y:Float) {
