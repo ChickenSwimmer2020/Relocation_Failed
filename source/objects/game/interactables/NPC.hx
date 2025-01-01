@@ -2,8 +2,17 @@ package objects.game.interactables;
 
 import backend.Assets;
 import flixel.math.FlxPoint;
+import flixel.group.FlxGroup;
+import openfl.display.TriangleCulling;
 
-class NPC extends FlxSprite {
+using flixel.util.FlxSpriteUtil;
+
+class NPC extends FlxGroup {
+    public var NPC:FlxSprite;
+    public var _VIEW:Array<FlxPoint>;
+    public var _VIEWRANGE:Int = 50; //default
+    public var FOV:Int = 50; //default
+    public var ViewTriangle:FlxSprite;
     /**
         # This is the main NPC character script
         ## you make NPC's with this, there are a couple variables.
@@ -17,14 +26,20 @@ class NPC extends FlxSprite {
         @param ?forcedMovementPath[Array:FlxPoint] should the NPC be forced to follow a certain path.
     **/                                                                                          //TODO: implement
     public function new(xPos:Float, yPos:Float, FrameBounds:Array<Int>, Spr:String, /*Behavior:NPCBehavior, Weapon:String,*/ FreeMovement:Bool, ?forcedMovementPath:Array<FlxPoint>) {
-        super(xPos, yPos, Spr);
-        loadGraphic(Assets.image(Spr), true, FrameBounds[0], FrameBounds[1]);
+        super();
+        NPC = new FlxSprite(xPos, yPos).loadGraphic(Assets.image(Spr), true, FrameBounds[0], FrameBounds[1]);
+        add(NPC);
+
+        _VIEW = [new FlxPoint(xPos, yPos), new FlxPoint(xPos + _VIEWRANGE, yPos + FOV), new FlxPoint(xPos + -_VIEWRANGE, yPos + -FOV), new FlxPoint(xPos, yPos)];
+        ViewTriangle = new FlxSprite(xPos, yPos);
+        ViewTriangle.drawTriangle(xPos, yPos, _VIEWRANGE);
+        add(ViewTriangle);
     }
 
     override public function update(elapsed:Float) {
         super.update(elapsed);
-        if(this.animation.getByName('idle') != null)
-            this.animation.play('idle');
+        if(NPC.animation.getByName('idle') != null)
+            NPC.animation.play('idle');
     }
 
     /**
@@ -37,6 +52,6 @@ class NPC extends FlxSprite {
         @param ?loop[Bool] should the animation loop.
     **/
     public function AddAnimation(animName:String, animFrames:Array<Int>, frameRate:Int, flipX:Bool, flipY:Bool, ?loop:Bool = false) {
-        this.animation.add(animName, animFrames, frameRate, loop, flipX, flipY);
+        NPC.animation.add(animName, animFrames, frameRate, loop, flipX, flipY);
     }
 }

@@ -1,7 +1,6 @@
 package menu;
 
 import flixel.math.FlxRandom;
-import openfl.Lib;
 import flixel.addons.transition.FlxTransitionableState;
 import menu.intro.Star;
 import backend.Assets;
