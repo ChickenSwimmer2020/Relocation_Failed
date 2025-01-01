@@ -1,5 +1,7 @@
 package menu;
 
+import flixel.math.FlxRandom;
+import openfl.Lib;
 import flixel.addons.transition.FlxTransitionableState;
 import menu.intro.Star;
 import backend.Assets;
@@ -21,6 +23,7 @@ class MainMenu extends FlxTransitionableState {
     var Button_Play:Button;
     var Button_Load:Button;
     var Button_Settings:Button;
+    var Button_exit:Button;
 
     var stars:Array<Star> = [];
     var shipCam:FlxCamera;
@@ -32,6 +35,9 @@ class MainMenu extends FlxTransitionableState {
     var shipGlow:FlxSprite;
     var shipGlow2:FlxSprite;
 
+    public var OutroText:Array<String> = ["Goodbye...", "Until our paths cross again", "Your fate is in your hands"];
+    public var RandomNumber:Int;
+
     public static var instance:MainMenu; //because of variable instancing needing to be done for button disabling when in the chapter substate
 
     public function new() {
@@ -40,6 +46,8 @@ class MainMenu extends FlxTransitionableState {
     }
 
     override public function create() {
+        //determin the outro message now.
+        RandomNumber = new FlxRandom().int(0, OutroText.length - 1);
         starCam = new FlxCamera(0, 0, 1280, 720, 1);
         starCam.bgColor = 0x00000000;
         FlxG.cameras.add(starCam, false);
@@ -129,12 +137,33 @@ class MainMenu extends FlxTransitionableState {
         Button_Load.camera = shipCam;
         add(Button_Load);
 
-        Button_Settings = new Button('Settings', Button_Load.DaButton.x + 150, Button_Load.DaButton.y + 85, Assets.image('ButtonTEST'),
+        Button_Settings = new Button('Settings', Button_Load.DaButton.x + 250, Button_Load.DaButton.y + 10, Assets.image('ButtonTEST'),
         ()->{ FlxG.switchState(new menu.Settings()); }, 1, false);
         //Button_Settings.DaButton.updateHitbox();
         Button_Settings.updateTextPosition();
         Button_Settings.camera = shipCam;
         add(Button_Settings);
+
+        Button_exit = new Button('Exit', Button_Settings.DaButton.x - 200, Button_Settings.DaButton.y + 75, Assets.image('ButtonTEST'),
+        ()->{ 
+            var black:FlxSprite = new FlxSprite(0, 0);
+            black.makeGraphic(FlxG.width, FlxG.height, 0xff000000);
+            black.alpha = 0;
+            add(black);
+            var goodbye:FlxText = new FlxText(0, 0, 0, OutroText[RandomNumber], 24, true);
+            goodbye.screenCenter(XY);
+            add(goodbye);
+            FlxTween.tween(black, {alpha: 1}, 1, {ease: FlxEase.smootherStepInOut});
+            FlxTween.tween(goodbye, {alpha: 0}, 1, {ease: FlxEase.smootherStepInOut});
+            FlxG.sound.music.fadeOut(1);
+            wait(1, function() {
+                Sys.exit(0); 
+            });
+        }, 1, false);
+        //Button_Settings.DaButton.updateHitbox();
+        Button_exit.updateTextPosition();
+        Button_exit.camera = shipCam;
+        add(Button_exit);
 
         var vingette = new FlxSprite(0, 0, 'assets/Vingette.png');
         vingette.alpha = 0.4;
@@ -240,11 +269,11 @@ class MainMenu extends FlxTransitionableState {
                     FlxTween.cancelTweensOf(Button_Settings.DaButton);
                     FlxTween.cancelTweensOf(Button_Settings.DaText);
                     Button_Settings.Hover = true;
-                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
+                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 0.8, "scale.y": 0.8}, 0.5, {
                         ease: FlxEase.circOut
                     });
                     Button_Settings.updateTextPosition();
-                    FlxTween.tween(Button_Settings.DaText, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
+                    FlxTween.tween(Button_Settings.DaText, {"scale.x": 0.8, "scale.y": 0.8}, 0.5, {
                         ease: FlxEase.circOut
                     });
                 }
@@ -254,10 +283,36 @@ class MainMenu extends FlxTransitionableState {
                     FlxTween.cancelTweensOf(Button_Settings.DaText);
                     Button_Settings.Hover = false;
                     Button_Settings.updateTextPosition();
-                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 0.5, "scale.y": 0.5, x: 770}, 0.5, {
+                    FlxTween.tween(Button_Settings.DaButton, {"scale.x": 0.6, "scale.y": 0.6, x: 770}, 0.5, {
                         ease: FlxEase.circOut
                     });
-                    FlxTween.tween(Button_Settings.DaText, {"scale.x": 0.5, "scale.y": 0.5}, 0.5, {
+                    FlxTween.tween(Button_Settings.DaText, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
+                        ease: FlxEase.circOut
+                    });
+                }
+            if(FlxG.mouse.overlaps(Button_exit))
+                {
+                    FlxTween.cancelTweensOf(Button_exit.DaButton);
+                    FlxTween.cancelTweensOf(Button_exit.DaText);
+                    Button_exit.Hover = true;
+                    FlxTween.tween(Button_exit.DaButton, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
+                        ease: FlxEase.circOut
+                    });
+                    Button_exit.updateTextPosition();
+                    FlxTween.tween(Button_exit.DaText, {"scale.x": 0.6, "scale.y": 0.6}, 0.5, {
+                        ease: FlxEase.circOut
+                    });
+                }
+            else
+                {
+                    FlxTween.cancelTweensOf(Button_exit.DaButton);
+                    FlxTween.cancelTweensOf(Button_exit.DaText);
+                    Button_exit.Hover = false;
+                    Button_exit.updateTextPosition();
+                    FlxTween.tween(Button_exit.DaButton, {"scale.x": 0.5, "scale.y": 0.5, x: 770}, 0.5, {
+                        ease: FlxEase.circOut
+                    });
+                    FlxTween.tween(Button_exit.DaText, {"scale.x": 0.5, "scale.y": 0.5}, 0.5, {
                         ease: FlxEase.circOut
                     });
                 }
