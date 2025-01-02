@@ -91,7 +91,7 @@ class Functions
       * there uhm, probably a lot of a better way to do this...
       * ---
       * Example: how to format the function
-      * ```
+      * ```haxe
       * mysprite.angle = Functions.getSpriteAngleFromMousePos();
       * ```
       * ---

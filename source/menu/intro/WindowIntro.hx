@@ -1,5 +1,6 @@
 package menu.intro;
 
+import sys.thread.Thread;
 import lime.math.Vector2;
 #if hl import hlwnative.HLNativeWindow; #end
 import lime.ui.Window;
@@ -14,6 +15,16 @@ class WindowIntro extends FlxState
     override public function create()
     {
         super.create();
+        Thread.create(() -> {
+            var logoCache:FlxSprite = new FlxSprite(0, 0, Assets.image("StudioLogo")); //cache the studio logos so it doesnt lag when doing stuff.
+            var logoCache2:FlxSprite = new FlxSprite(0, 0, Assets.image("studiotext"));
+            add(logoCache);
+            add(logoCache2);
+            wait(0.1, () -> {
+                logoCache.alpha = 0;
+                logoCache2.alpha = 0;
+            });
+        });
         #if hl
         HLNativeWindow.setWindowLayered();
         HLNativeWindow.setWindowDarkMode(true); // It just looks cleaner

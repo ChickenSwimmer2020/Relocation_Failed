@@ -1,5 +1,7 @@
 package objects.game.interactables;
 
+import flixel.tweens.FlxEase;
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxSpriteGroup;
 
 class Door extends FlxSpriteGroup {
@@ -15,6 +17,8 @@ class Door extends FlxSpriteGroup {
     var PlayingOpenAnim:Bool = false;
     var interactPrompt:FlxSprite;
 
+    var Fade:FlxSprite;
+
     public function new(X:Float, Y:Float, Graphic:String, ?isAnimated:Bool = false, ?Frame:Array<Int> = null, openAnimLength:Float = 0, LevelToLoad:String, PlayerPosition:Array<Float> = null) {
         super();
         if(Frame == null) Frame = [0, 0]; //null handling
@@ -29,10 +33,19 @@ class Door extends FlxSpriteGroup {
             SPR.animation.add('open', [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], 24, false, false, false);
             hasAnim = true;
         }
-        interactPrompt = new FlxSprite(SPR.x + 15.5, SPR.y);
+        interactPrompt = new FlxSprite(SPR.x + 15.5, SPR.y - 35);
         interactPrompt.loadGraphic(Assets.image('interactprompt'), false);
         add(interactPrompt);
         interactPrompt.visible = false;
+
+        Fade = new FlxSprite(0,0);
+        Fade.makeGraphic(FlxG.width, FlxG.height, 0xff000000);
+        Fade.scrollFactor.set(0,0);
+        Fade.camera = Playstate.instance.HUDCAM;
+        Fade.alpha = 0;
+        Playstate.instance.add(Fade);
+
+        FlxTween.tween(interactPrompt, {y: SPR.y - 30}, 2.5, { type: FlxTweenType.PINGPONG, ease: FlxEase.smootherStepInOut });
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);
@@ -52,12 +65,16 @@ class Door extends FlxSpriteGroup {
                 if(hasAnim) {
                     if(!animPlayed) {
                         SPR.animation.play('open', true); //make sure the anim only plays once.
+                        interactPrompt.alpha = 0;
                         animPlayed = true;
                         PlayingOpenAnim = true;
                     }
                 }
+
                 wait(WaitTime, ()->{
-                    FlxG.switchState(new Playstate(Level, PlayerPos));
+                    FlxTween.tween(Fade, {alpha: 1}, 0.7, { type: FlxTweenType.PINGPONG, ease: FlxEase.smootherStepInOut, onComplete: function(twn:FlxTween){
+                        FlxG.switchState(new Playstate(Level, PlayerPos));
+                    }});
                 });
             }
         }else{

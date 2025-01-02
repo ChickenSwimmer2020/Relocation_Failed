@@ -121,11 +121,10 @@ class Level extends FlxGroup
         }
         for (door in levelData.doors){
             var drr:Door = new Door(door.X, door.Y, door.Graphic, door.isAnimated, door.Frame, door.openAnimLength, door.LevelToLoad, door.PlayerPosition);
-            drr.scale.set(door.scale[0], door.scale[1]);
             @:privateAccess {
+                drr.SPR.scale.set(door.scale[0], door.scale[1]); //should have done it like this from the start :man_facepalming:
                 drr.SPR.updateHitbox();
                 drr.interactPrompt.updateHitbox();
-                drr.updateHitbox();
             }
             doors.set(door.Name, drr);
             add(drr);
