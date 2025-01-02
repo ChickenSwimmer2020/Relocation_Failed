@@ -17,7 +17,7 @@ class Level extends FlxGroup
     public var levelHeader:LevelHeader;
     public var objects:Map<String, LevelSprite> = new Map();
     public var items:Map<String, FlxGroup> = new Map();
-    public var doors:Map<String, FlxSprite> = new Map();
+    public var doors:Map<String, FlxSpriteGroup> = new Map();
     public var colliders:Array<LevelSprite>;
 
     public var LevelID:String;
@@ -120,9 +120,13 @@ class Level extends FlxGroup
             add(itm);
         }
         for (door in levelData.doors){
-            var drr = cast(new Door(door.X, door.Y, door.Graphic, door.isAnimated, door.Frame, door.openAnimLength, door.LevelToLoad, door.PlayerPosition));
+            var drr:Door = new Door(door.X, door.Y, door.Graphic, door.isAnimated, door.Frame, door.openAnimLength, door.LevelToLoad, door.PlayerPosition);
             drr.scale.set(door.scale[0], door.scale[1]);
-            drr.updateHitbox();
+            @:privateAccess {
+                drr.SPR.updateHitbox();
+                drr.interactPrompt.updateHitbox();
+                drr.updateHitbox();
+            }
             doors.set(door.Name, drr);
             add(drr);
         }
