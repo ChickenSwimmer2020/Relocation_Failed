@@ -8,8 +8,8 @@ import flixel.tweens.FlxTween;
 class IntroState extends FlxState
 {
     var stars:Array<Star> = [];
-    var starCam:FlxCamera;
-    var shipCam:FlxCamera;
+    public var starCam:FlxCamera;
+    public var shipCam:FlxCamera;
     var ship:FlxSprite;
     var overlay:FlxSprite;
     var dur:Float = 0.8;

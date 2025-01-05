@@ -6,6 +6,7 @@ import flixel.group.FlxGroup;
 import openfl.events.MouseEvent;
 import rf_flixel.ui.FlxSquareButton;
 import flixel.addons.ui.*;
+import sys.FileSystem;
 
 class LevelEditorState extends FlxState {
     var closeButton:FlxSquareButton;
@@ -58,7 +59,7 @@ class LevelEditorState extends FlxState {
     var Level:Int = 0;
     var CameraLocked:Bool = false;
     var CameraFollowType:String = '';
-    var CameraFollowLerpN:Int = 0;
+    var CameraFollowLerpN:Float = 0;
     
 
     public function new() {
@@ -198,6 +199,15 @@ class LevelEditorState extends FlxState {
             @:privateAccess
             TabGroups.resize(TabGroups.get_width(), 150);
         }
+
+
+        //actually asign level values to the steppers and input. I SOMEHOW FORGOT TO DO THIS :man_facepalming:
+        Boundries[0] = Std.parseFloat(BoundriesX.text);
+        Boundries[1] = Std.parseFloat(BoundriesY.text);
+        Chapter = Std.int(ChapterIDStepper.value);
+        Level = Std.int(LevelIDStepper.value);
+        CameraLocked = CameraLockerBox.checked;
+        CameraFollowLerpN = CameraFollowLerp.value;
     }
     override public function destroy() {
         super.destroy();
@@ -206,5 +216,20 @@ class LevelEditorState extends FlxState {
 
     public function saveLevel() { 
         //TODO: make this work properly and save to custom json location.
-    }
+		var SaveDir:String;
+		var SaveName:String = 'Level$Level.json';
+
+		SaveDir = 'assets';
+        FileSystem.createDirectory(SaveDir);
+		File.saveContent('$SaveDir/$SaveName', '{
+"header":{
+"LevelID": "level$Level",
+"Chapter": $Chapter,
+"Boundries": [${Boundries[0]}, ${Boundries[1]}],
+"CameraLocked": ${CameraLocked},
+"CameraFollowStyle": "$CameraFollowType",
+"CameraFollowLerp": $CameraFollowLerpN
+}
+        }');
+	}
 }

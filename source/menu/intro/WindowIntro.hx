@@ -18,11 +18,13 @@ class WindowIntro extends FlxState
         Thread.create(() -> {
             var logoCache:FlxSprite = new FlxSprite(0, 0, Assets.image("StudioLogo")); //cache the studio logos so it doesnt lag when doing stuff.
             var logoCache2:FlxSprite = new FlxSprite(0, 0, Assets.image("studiotext"));
+            logoCache.setGraphicSize(6000,6000);
+            logoCache2.setGraphicSize(6000,6000);
             add(logoCache);
             add(logoCache2);
             wait(0.1, () -> {
-                logoCache.alpha = 0;
-                logoCache2.alpha = 0;
+                logoCache.alpha = 0.00001;
+                logoCache2.alpha = 0.00001;
             });
         });
         #if hl
