@@ -6,6 +6,7 @@ import sys.io.File;
 import math.RFMath;
 import openfl.events.MouseEvent;
 import rf_flixel.ui.FlxSquareButton;
+import rf_flixel.ui.FlxSquareButtonLarger;
 import flixel.addons.ui.*;
 import haxe.io.Path;
 import sys.FileSystem;
@@ -26,10 +27,10 @@ class LevelEditorState extends FlxState {
     var LevelLoad:String = '';
 
     //BUTTONS
-    var SelecterTool:FlxSquareButton;
-    var ObjectTool:FlxSquareButton;
-    var ItemTool:FlxSquareButton;
-    var TriggerTool:FlxSquareButton;
+    var SelecterTool:FlxSquareButton2;
+    var ObjectTool:FlxSquareButton2;
+    var ItemTool:FlxSquareButton2;
+    var TriggerTool:FlxSquareButton2;
     //UI
     var TabGroups:FlxUITabMenu;
     var tabs = [
@@ -96,10 +97,18 @@ class LevelEditorState extends FlxState {
     }
 
     public function CreateUI() {
-        SelecterTool = new FlxSquareButton(200, 0, 'S', ()->{ ToolSwap('Selector'); });
-        ObjectTool = new FlxSquareButton(200, 20, 'O', ()->{  ToolSwap('Object'); });
-        ItemTool = new FlxSquareButton(200, 40, 'I', ()->{    ToolSwap('Item'); });
-        TriggerTool = new FlxSquareButton(200, 60, 'T', ()->{ ToolSwap('Trigger'); });
+        SelecterTool = new FlxSquareButton2(200, 0, '', ()->{ ToolSwap('Selector'); });
+        SelecterTool.label.font = 'assets/fonts/SEGMDL2.TTF';
+        SelecterTool.label.antialiasing = false;
+        ObjectTool = new FlxSquareButton2(200, 30, '', ()->{  ToolSwap('Object'); });
+        ObjectTool.label.font = 'assets/fonts/SEGMDL2.TTF';
+        ObjectTool.label.antialiasing = false;
+        ItemTool = new FlxSquareButton2(200, 60, '', ()->{    ToolSwap('Item'); });
+        ItemTool.label.font = 'assets/fonts/SEGMDL2.TTF';
+        ItemTool.label.antialiasing = false;
+        TriggerTool = new FlxSquareButton2(200, 90, '', ()->{ ToolSwap('Trigger'); });
+        TriggerTool.label.font = 'assets/fonts/SEGMDL2.TTF';
+        TriggerTool.label.antialiasing = false;
         TabGroups = new FlxUITabMenu(null, tabs, true);
 
         //tab group one -- metadata (the level header's data.)                   //ignore these blocks, their for formatting.
