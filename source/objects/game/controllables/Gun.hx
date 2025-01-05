@@ -79,7 +79,7 @@ class Gun{
         try{
             Playstate.instance.AimerGroup.add(theGunTexture); //WHAT. CASUES. THAT. STUPID. CRASH. AHHHHHHOJWEFHOUHDILABGS
         }catch(e){
-            trace('GOTCHA!\nerror:\n$e');
+            trace('GOTCHA!\nerror:\n${e.message}\n${e.stack}');
         }
     } //i mean, if we're having different guns. we need textures!
 

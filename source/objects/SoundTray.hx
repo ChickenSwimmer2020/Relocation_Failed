@@ -23,6 +23,8 @@ class SoundTray extends FlxSoundTray {
 		super();
 		removeChildren();
 
+		y = 550;
+
 		var bg:Bitmap = new Bitmap(openfl.Assets.getBitmapData(Assets.asset("soundtray.png")));
 		bg.scaleX = graphicScale;
 		bg.scaleY = graphicScale;

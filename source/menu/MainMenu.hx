@@ -47,13 +47,14 @@ class MainMenu extends FlxTransitionableState {
     override public function create() {
         //determin the outro message now.
         RandomNumber = new FlxRandom().int(0, OutroText.length - 1);
-        starCam = new FlxCamera(0, 0, 1280, 720, 1);
-        starCam.bgColor = 0x00000000;
-        FlxG.cameras.add(starCam, false);
 
         planetCam = new FlxCamera(0, 0, 1280, 720, 1);
         planetCam.bgColor = 0x00000000;
         FlxG.cameras.add(planetCam, false);
+        
+        starCam = new FlxCamera(0, 0, 1280, 720, 1);
+        starCam.bgColor = 0x00000000;
+        FlxG.cameras.add(starCam, false);
 
         shipCam = new FlxCamera(0, 0, 1280, 720, 1);
         shipCam.bgColor = 0x00000000;
@@ -130,7 +131,7 @@ class MainMenu extends FlxTransitionableState {
         Button_Play.camera = shipCam;
         add(Button_Play);
 
-        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); }, 1, false);
+        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); FlxG.sound.music.stop(); FlxG.sound.playMusic(Assets.music('IDLE.ogg'), 1, true); }, 1, false);
         //Button_Load.DaButton.updateHitbox();
         Button_Load.updateTextPosition();
         Button_Load.camera = shipCam;
