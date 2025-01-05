@@ -1,19 +1,29 @@
 package debug;
 
+import backend.level.LevelLoader.LevelData;
+import haxe.Json;
 import sys.io.File;
 import math.RFMath;
-import flixel.group.FlxGroup;
 import openfl.events.MouseEvent;
 import rf_flixel.ui.FlxSquareButton;
 import flixel.addons.ui.*;
+import haxe.io.Path;
 import sys.FileSystem;
+import backend.level.LevelLoader.LevelHeader;
+
+using StringTools;
 
 class LevelEditorState extends FlxState {
     var closeButton:FlxSquareButton;
     var saveButton:FlxButton;
+    var loadButton:FlxButton;
     var curTool:String = '';
     var ToolText:FlxText;
     var cameraInfotext:FlxText;
+    var LevelInputText:FlxUIInputText;
+
+    //DO NOT TOUCH
+    var LevelLoad:String = '';
 
     //BUTTONS
     var SelecterTool:FlxSquareButton;
@@ -69,6 +79,11 @@ class LevelEditorState extends FlxState {
         add(closeButton);
         saveButton = new FlxButton(1180, 0, 'Save', ()->{ saveLevel(); });
         add(saveButton);
+        loadButton = new FlxButton(1100, 0, 'Load', ()->{ loadLevel(); });
+        add(loadButton);
+
+        LevelInputText = new FlxUIInputText(1100, 20, 80);
+        add(LevelInputText);
 
         ToolText = new FlxText(0, 220, 0, '', 12);
         add(ToolText);
@@ -187,6 +202,9 @@ class LevelEditorState extends FlxState {
 
     override public function update(elapsed:Float) {
         super.update(elapsed);
+
+        LevelLoad = LevelInputText.text + '.json';
+
         if(FlxG.mouse.overlaps(TXT_levelID)) {
             levelID_TP.show(TXT_levelID, 'Watch out!', 'make sure to set this to the file name or save loading wont work!', true, true, true);
         }else{
@@ -222,14 +240,51 @@ class LevelEditorState extends FlxState {
 		SaveDir = 'assets';
         FileSystem.createDirectory(SaveDir);
 		File.saveContent('$SaveDir/$SaveName', '{
-"header":{
-"LevelID": "level$Level",
-"Chapter": $Chapter,
-"Boundries": [${Boundries[0]}, ${Boundries[1]}],
-"CameraLocked": ${CameraLocked},
-"CameraFollowStyle": "$CameraFollowType",
-"CameraFollowLerp": $CameraFollowLerpN
-}
-        }');
+    "header":{
+    "LevelID": "level$Level",
+    "Chapter": $Chapter,
+    "Boundries": [${Boundries[0]}, ${Boundries[1]}],
+    "CameraLocked": ${CameraLocked},
+    "CameraFollowStyle": "$CameraFollowType",
+    "CameraFollowLerp": $CameraFollowLerpN
+    }
+}');
 	}
+
+    public function loadLevel() {
+		var SaveDir = Path.join(['assets/', LevelLoad]);
+
+		if (!FileSystem.exists('$SaveDir')) { // dynamically check if the file already exists, so we dont accidently overwrite it.
+			trace('no data to load.');
+		} else {
+            var jsonContent = File.getContent('assets/$LevelLoad');
+            var Data = Json.parse(jsonContent);
+            //trace(Data);
+            ActuallyLoadLevelDataIntoTheUI(Data);
+		}
+    }
+    private function ActuallyLoadLevelDataIntoTheUI(Json:LevelData) {
+        LevelIDStepper.value = Std.parseFloat(Json.header.LevelID.substr(5));
+        CameraFollowLerp.value = Std.int(Json.header.CameraFollowLerp);
+        switch(Json.header.CameraFollowStyle) {
+            case 'LOCKON':
+                CameraFollowStyleDropdown.selectedId = '0';
+            case 'PLATFORMER':
+                CameraFollowStyleDropdown.selectedId = '1';
+            case 'TOPDOWN':
+                CameraFollowStyleDropdown.selectedId = '2';
+            case 'TOPDOWN_TIGHT':
+                CameraFollowStyleDropdown.selectedId = '3';
+            case 'SCREEN_BY_SCREEN':
+                CameraFollowStyleDropdown.selectedId = '4';
+            case 'NO_DEAD_ZONE':
+                CameraFollowStyleDropdown.selectedId = '5';
+            default:
+                CameraFollowStyleDropdown.selectedId = '0';
+        }
+        BoundriesX.text = Std.string(Json.header.Boundries[0]);
+        BoundriesY.text = Std.string(Json.header.Boundries[1]);
+        CameraLockerBox.checked = Json.header.CameraLocked;
+        ChapterIDStepper.value = Std.int(Json.header.Chapter);
+    }
 }
