@@ -12,6 +12,7 @@ import flixel.addons.ui.*;
 import haxe.io.Path;
 import sys.FileSystem;
 import backend.level.LevelLoader.LevelHeader;
+import flixel.group.FlxGroup;
 
 using StringTools;
 
@@ -23,6 +24,10 @@ class LevelEditorState extends FlxState {
     var ToolText:FlxText;
     var cameraInfotext:FlxText;
     var LevelInputText:FlxUIInputText;
+    var CameraFollow:FlxObject;
+
+    var levelGroup:FlxSpriteGroup;
+    var uiGroup:FlxSpriteGroup;
 
     //DO NOT TOUCH
     var LevelLoad:String = '';
@@ -63,8 +68,8 @@ class LevelEditorState extends FlxState {
         var OBJ_alpha:FlxUINumericStepper;
         var OBJ_positionX:FlxUIInputText;
         var OBJ_positionY:FlxUIInputText;
-        var OBJ_scaleX:FlxUINumericStepper;
-        var OBJ_scaleY:FlxUINumericStepper;
+        var OBJ_scaleX:FlxUIInputText;
+        var OBJ_scaleY:FlxUIInputText;
         var OBJ_scrollFactorX:FlxUINumericStepper;
         var OBJ_scrollFactorY:FlxUINumericStepper;
         var OBJ_image:FlxUIInputText;
@@ -97,21 +102,30 @@ class LevelEditorState extends FlxState {
     public function new() {
         super();
 
+        CameraFollow = new FlxObject(1280/20, 720/2, 0, 0);
+        add(CameraFollow);
+
+        levelGroup = new FlxSpriteGroup();
+        add(levelGroup);
+        uiGroup = new FlxSpriteGroup();
+        add(uiGroup);
+        uiGroup.scrollFactor.set(0, 0);
+
         closeButton = new FlxSquareButton(1260, 0, 'X', ()->{ FlxG.switchState(new menu.MainMenu()); });
-        add(closeButton);
+        uiGroup.add(closeButton);
         saveButton = new FlxButton(1180, 0, 'Save', ()->{ saveLevel(); });
-        add(saveButton);
+        uiGroup.add(saveButton);
         loadButton = new FlxButton(1100, 0, 'Load', ()->{ loadLevel(); });
-        add(loadButton);
+        uiGroup.add(loadButton);
 
         LevelInputText = new FlxUIInputText(1100, 20, 80);
-        add(LevelInputText);
+        uiGroup.add(LevelInputText);
 
         ToolText = new FlxText(0, 220, 0, '', 12);
-        add(ToolText);
+        uiGroup.add(ToolText);
 
         cameraInfotext = new FlxText(0, 700, 0, '', 8);
-        add(cameraInfotext);
+        uiGroup.add(cameraInfotext);
 
         CreateUI();
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -198,9 +212,15 @@ class LevelEditorState extends FlxState {
             OBJ_name.name = 'Name';
             OBJ_alpha = new FlxUINumericStepper(50, 25, 1, 0, 0, 100, 0, 0);
                 var alphaText:FlxUIText = new FlxUIText(5, 25, 0, 'Alpha', 8);
-            OBJ_positionX = new FlxUIInputText(120, 5, 50);
-            OBJ_positionY = new FlxUIInputText(175, 5, 50);
-                var posText:FlxUIText = new FlxUIText(5, 45, 0, 'Position\nX        Y', 8);
+            OBJ_positionX = new FlxUIInputText(120, 15, 50);
+            OBJ_positionY = new FlxUIInputText(175, 15, 50);
+                var posText:FlxUIText = new FlxUIText(150, 0, 0, 'Position', 8);
+            OBJ_scaleX = new FlxUIInputText(120, 40, 50);
+            OBJ_scaleY = new FlxUIInputText(175, 40, 50);
+                var sclText:FlxUIText = new FlxUIText(155, 27, 0, 'Scale', 8);
+            OBJ_scrollFactorX = new FlxUINumericStepper(230, 65, 1, 0, 0, 100, 0, 0);
+            OBJ_scrollFactorY = new FlxUINumericStepper(250, 65, 1, 0, 0, 100, 0, 0);
+                var srfText:FlxUIText = new FlxUIText(230, 0, 0, 'ScrollFactor', 8);
 
 
 
@@ -212,16 +232,22 @@ class LevelEditorState extends FlxState {
             tab_group_2.add(OBJ_positionX);
             tab_group_2.add(OBJ_positionY);
             tab_group_2.add(posText);
+            tab_group_2.add(OBJ_scaleX);
+            tab_group_2.add(OBJ_scaleY);
+            tab_group_2.add(sclText);
+            tab_group_2.add(OBJ_scrollFactorX);
+            tab_group_2.add(OBJ_scrollFactorY);
+            tab_group_2.add(srfText);
             TabGroups.addGroup(tab_group_2);
         
-        add(TabGroups);
+        uiGroup.add(TabGroups);
 
-        add(SelecterTool);
-        add(ObjectTool);
-        add(ItemTool);
-        add(TriggerTool);
+        uiGroup.add(SelecterTool);
+        uiGroup.add(ObjectTool);
+        uiGroup.add(ItemTool);
+        uiGroup.add(TriggerTool);
 
-        add(levelID_TP);
+        uiGroup.add(levelID_TP);
     }
 
     private function onMouseWheel(event:MouseEvent):Void { //chatgpt re-wrote this to possibly cause less problems? idk, if we need to rewrite it we can.
@@ -231,8 +257,8 @@ class LevelEditorState extends FlxState {
             0.1, // Minimum valid zoom level (updated from -0.5)
             maxOffset
         );
-        FlxG.camera.zoom = currentOffset;
-        FlxG.log.add("Zoom level set to: " + currentOffset); //keep track of the zoom properly even though we have a text for that.
+        //levelGroup.scale.set(currentOffset, currentOffset);
+        //FlxG.log.add("Zoom level set to: " + currentOffset); //keep track of the zoom properly even though we have a text for that.
     }
 
     public function ToolSwap(Tool:String) {
@@ -253,6 +279,8 @@ class LevelEditorState extends FlxState {
     override public function update(elapsed:Float) {
         super.update(elapsed);
 
+        FlxG.camera.follow(CameraFollow, LOCKON, 15);
+
         LevelLoad = LevelInputText.text + '.json';
 
         if(FlxG.mouse.overlaps(TXT_levelID) && TabGroups.selected_tab_id == 'MetaData') {
@@ -261,7 +289,34 @@ class LevelEditorState extends FlxState {
             levelID_TP.hide();
         }
         ToolText.text = curTool;
-        cameraInfotext.text = 'Zoom:${FlxG.camera.zoom}';
+        //cameraInfotext.text = 'Zoom:${levelGroup.scale}';
+
+        if(FlxG.keys.anyPressed([UP, DOWN, LEFT, RIGHT, SHIFT])) {
+            if(FlxG.keys.anyPressed([UP])) {
+                CameraFollow.y -= 10;
+            }
+            if(FlxG.keys.anyPressed([DOWN])) {
+                CameraFollow.y += 10;
+            }
+            if(FlxG.keys.anyPressed([LEFT])) {
+                CameraFollow.x -= 10;
+            }
+            if(FlxG.keys.anyPressed([RIGHT])) {
+                CameraFollow.x += 10;
+            }
+            if(FlxG.keys.anyPressed([UP]) && FlxG.keys.anyPressed([SHIFT])) {
+                CameraFollow.y -= 100;
+            }
+            if(FlxG.keys.anyPressed([DOWN]) && FlxG.keys.anyPressed([SHIFT])) {
+                CameraFollow.y += 100;
+            }
+            if(FlxG.keys.anyPressed([LEFT]) && FlxG.keys.anyPressed([SHIFT])) {
+                CameraFollow.x -= 100;
+            }
+            if(FlxG.keys.anyPressed([RIGHT]) && FlxG.keys.anyPressed([SHIFT])) {
+                CameraFollow.x += 100;
+            }
+        }
 
         @:privateAccess {
         switch(TabGroups.selected_tab_id)
@@ -282,15 +337,6 @@ class LevelEditorState extends FlxState {
                     TabGroups.resize(300, 150);
             }
         }
-
-
-        //actually asign level values to the steppers and input. I SOMEHOW FORGOT TO DO THIS :man_facepalming:
-        Boundries[0] = Std.parseFloat(BoundriesX.text);
-        Boundries[1] = Std.parseFloat(BoundriesY.text);
-        Chapter = Std.int(ChapterIDStepper.value);
-        Level = Std.int(LevelIDStepper.value);
-        CameraLocked = CameraLockerBox.checked;
-        CameraFollowLerpN = CameraFollowLerp.value;
     }
     override public function destroy() {
         super.destroy();
@@ -318,6 +364,7 @@ class LevelEditorState extends FlxState {
 
     public function loadLevel() {
 		var SaveDir = Path.join(['assets/', LevelLoad]);
+        var SaveDir2 = '$LevelLoad';
 
 		if (!FileSystem.exists('$SaveDir')) { // dynamically check if the file already exists, so we dont accidently overwrite it.
 			trace('no data to load.');
@@ -326,6 +373,7 @@ class LevelEditorState extends FlxState {
             var Data = Json.parse(jsonContent);
             //trace(Data);
             ActuallyLoadLevelDataIntoTheUI(Data);
+            CreateLevel(SaveDir2);
 		}
     }
     private function ActuallyLoadLevelDataIntoTheUI(Json:LevelData) {
@@ -351,5 +399,19 @@ class LevelEditorState extends FlxState {
         BoundriesY.text = Std.string(Json.header.Boundries[1]);
         CameraLockerBox.checked = Json.header.CameraLocked;
         ChapterIDStepper.value = Std.int(Json.header.Chapter);
+
+        //assign these down here so it does it only when a file is loaded instead of EVERY. SINGLE. FRAME.
+        Boundries[0] = Std.parseFloat(BoundriesX.text);
+        Boundries[1] = Std.parseFloat(BoundriesY.text);
+        Chapter = Std.int(ChapterIDStepper.value);
+        Level = Std.int(LevelIDStepper.value);
+        CameraLocked = CameraLockerBox.checked;
+        CameraFollowLerpN = CameraFollowLerp.value;
+    }
+    private function CreateLevel(Json:String) {
+        var Level:Level;
+        Level = new Level(LevelLoader.ParseLevelData(Assets.asset(Json)), true);
+		Level.loadLevel();
+        levelGroup.add(Level);
     }
 }

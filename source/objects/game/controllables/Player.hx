@@ -305,4 +305,8 @@ class Player extends FlxSprite {
     		#end
         }
 	}
+    override function destroy() {
+        super.destroy();
+        FlxG.stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+    }
 }

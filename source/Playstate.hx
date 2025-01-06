@@ -104,6 +104,7 @@ class Playstate extends FlxTransitionableState {
 		#else
 		#end
 		Level = new Level(LevelLoader.ParseLevelData(Assets.asset('$_LEVEL.json')));
+		Level.EditorMode = false;
 		Level.loadLevel();
 
 		for (obj in Level.objects)

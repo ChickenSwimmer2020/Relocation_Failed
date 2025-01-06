@@ -1,5 +1,6 @@
 package backend.level;
 
+import debug.LevelEditorState;
 import objects.game.interactables.Door;
 import objects.game.interactables.Item;
 import objects.game.interactables.Item.ItemType;
@@ -11,12 +12,12 @@ import haxe.PosInfos;
 import backend.level.LevelLoader.LevelData;
 import flixel.group.FlxGroup;
 
-class Level extends FlxGroup
+class Level extends FlxSpriteGroup
 {
     public var levelData:LevelData;
     public var levelHeader:LevelHeader;
     public var objects:Map<String, LevelSprite> = new Map();
-    public var items:Map<String, FlxGroup> = new Map();
+    public var items:Map<String, FlxSpriteGroup> = new Map();
     public var doors:Map<String, FlxSpriteGroup> = new Map();
     public var colliders:Array<LevelSprite>;
 
@@ -28,13 +29,17 @@ class Level extends FlxGroup
     public var CameraLerp:Float;
     public var CameraFollowStyle:String;
 
-    override public function new(levelData:LevelData) {
+    public var EditorMode:Bool = false;
+
+    override public function new(levelData:LevelData, ?inEditor:Bool = false) {
         super();
         this.levelData = levelData;
+        EditorMode = inEditor;
     }
 
     public function loadLevel(?_:PosInfos)
     {
+        trace('Loading level...');
         if (levelData == null)
             throw new LevelExceptions.LevelNullException('Level is null!', '', _);
 
@@ -68,8 +73,9 @@ class Level extends FlxGroup
             if(!object.VIS)
                 obj.alpha = 0; //so that the collision can still be done
 
-            if(object.RenderOverPlayer)
-                obj.cameras = [Playstate.instance.FGCAM];
+            if(!EditorMode)
+                if(object.RenderOverPlayer)
+                    obj.camera = Playstate.instance.FGCAM;
 
             if(object.ParrallaxBG != null)
                 //do something
@@ -91,6 +97,7 @@ class Level extends FlxGroup
 
             objects.set(object.Name, obj);
             add(obj);
+            trace('new object added!\n\n$obj');
         }
         for (item in levelData.items){
             var BEHAVIOR:ItemType;
@@ -115,19 +122,22 @@ class Level extends FlxGroup
                 default:
                     BEHAVIOR = null;
             }
-            var itm = cast(new Item(item.X, item.Y, Assets.image(item.texture), BEHAVIOR));
+            var itm = cast(new Item(item.X, item.Y, Assets.image(item.texture), BEHAVIOR, EditorMode));
             items.set(item.Name, itm); //should work?
             add(itm);
+            trace('new item added!\n\n$itm');
         }
         for (door in levelData.doors){
-            var drr:Door = new Door(door.X, door.Y, door.Graphic, door.isAnimated, door.Frame, door.openAnimLength, door.LevelToLoad, door.PlayerPosition);
+            var drr:Door = new Door(door.X, door.Y, door.Graphic, door.isAnimated, door.Frame, door.openAnimLength, door.LevelToLoad, door.PlayerPosition, EditorMode);
             @:privateAccess {
                 drr.SPR.scale.set(door.scale[0], door.scale[1]); //should have done it like this from the start :man_facepalming:
                 drr.SPR.updateHitbox();
-                drr.interactPrompt.updateHitbox();
+                if(!EditorMode)
+                    drr.interactPrompt.updateHitbox();
             }
             doors.set(door.Name, drr);
             add(drr);
+            trace('new door added!\n\n$drr');
         }
     }
 }
