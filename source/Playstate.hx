@@ -167,6 +167,7 @@ class Playstate extends FlxTransitionableState {
 		Player.CurRoom = Level.LevelID;
 
 		#if !mobile
+        AimerGroup.update(elapsed); //you know, this might cause issues with animations :facepalm:
 		AimerGroup.setPosition(Player2.x, Player2.y);
 		Playstate.instance.AimerGroup.angle = Player2.angle + 1;
 		#else

@@ -7,8 +7,9 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import backend.Functions;
+import flixel.group.FlxSpriteGroup;
 
-class Gun{
+class Gun extends FlxSpriteGroup{
     /**
      * the gun texture varible for changing the fun sprites.
      * @since RF_DEV_0.3.0
@@ -37,7 +38,8 @@ class Gun{
     public var ContainsAnimation:Bool = false;
 
     public function new() {
-        moveCallback = () -> { ratio = 0; };
+        super();
+        //moveCallback = () -> { ratio = 0; }; //this is causing problems somehow
     }
 
     /**
@@ -68,10 +70,8 @@ class Gun{
                 trace("Animation object is null!");
                 return;
             }
-            
-            // Add animations and verify they were added
-            theGunTexture.animation.add('Idle', [0], 24, false, false, false);         
-            theGunTexture.animation.add('Pew', [1,2,3,4,5], 24, false, false, false);
+        
+            loadInitialAnimationData();
             
             // Verify animations exist
             trace('Available animations: ${[for (name in theGunTexture.animation.getNameList()) name]}');
@@ -82,6 +82,7 @@ class Gun{
             realGunANGLE = theGunTexture.angle;
             
             Playstate.instance.AimerGroup.add(theGunTexture);
+            loadRealAnimationData(); //add the animations to the actual gun within playstate itself
             theGunTexture.animation.play('Idle');
         } catch(e) {
             trace('Error in changeTexture: ${e.message}\n${e.stack}');
@@ -93,12 +94,26 @@ class Gun{
         realGunYPOS = Y;
     }
 
+    public function loadInitialAnimationData() {
+        // Add animations and verify they were added
+        theGunTexture.animation.add('Idle', [0], 24, false, false, false);         
+        theGunTexture.animation.add('Pew', [1,2,3,4,5], 12, false, false, false);
+    }
+
+    public function loadRealAnimationData() {
+        // Add animations and verify they were added
+        Playstate.instance.AimerGroup.members[0].animation.add('Idle', [0], 24, false, false, false);         
+        Playstate.instance.AimerGroup.members[0].animation.add('Pew', [1,2,3,4,5], 12, false, false, false);
+    }
+
     public function shoot() {
         var mousePos = FlxG.mouse.getPosition();
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice, Preferences.save.bulletTracers));
-        theGunTexture.x -= 10;
-        theGunTexture.angle -= 15;
-        theGunTexture.animation.play('Pew', true);
+        Playstate.instance.AimerGroup.members[0].x -= 10;
+        Playstate.instance.AimerGroup.members[0].angle -= 15;
+        theGunTexture.x = -15;
+        theGunTexture.angle = -15;
+        Playstate.instance.AimerGroup.members[0].animation.play('Pew', true);
     }
 
     public function shotgunShoot() {
@@ -130,10 +145,12 @@ class Gun{
         return spread;
     }
 
-    public function update(elapsed:Float) {
+    override public function update(elapsed:Float) {
+        super.update(elapsed);
+        this.angle = Playstate.instance.Player2.angle; //change the group angle to the players instead of the gun, since it will move the gun with it and hopefully center the guns rotation possibly.
         if (ratio < 1)
-            ratio += 0.05;
-        theGunTexture.x = RFInterp.easedInterp(realGunXPOS, theGunTexture.x, ratio, 'smootherStepInOut');
-        theGunTexture.angle = RFInterp.easedInterp(Playstate.instance.Player2.angle, theGunTexture.angle, ratio, 'smootherStepInOut');
+            ratio += 0.0001;
+        Playstate.instance.AimerGroup.members[0].x = RFInterp.easedInterp(Playstate.instance.Player2.x + 15, realGunXPOS, ratio, 'smootherStepInOut');
+        Playstate.instance.AimerGroup.members[0].angle = RFInterp.easedInterp(Playstate.instance.Player2.angle, 0, ratio, 'smootherStepInOut');
     }
 }
