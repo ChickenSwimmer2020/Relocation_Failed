@@ -1,5 +1,6 @@
 package debug;
 
+import flixel.text.FlxInputText;
 import backend.level.LevelLoader.LevelData;
 import haxe.Json;
 import sys.io.File;
@@ -35,11 +36,14 @@ class LevelEditorState extends FlxState {
     var TabGroups:FlxUITabMenu;
     var tabs = [
         {name: "MetaData", label: "MetaData"},
-        {name: "tab_2", label: "Objects"},
+        {name: "Objects", label: "Objects"},
         {name: "tab_3", label: "Items"},
-        {name: "tab_4", label: "Triggers"}
+        {name: "tab_4", label: "Triggers"},
+        {name: "tab_5", label: "Doors"},
+        {name: "tab_6", label: "Npcs"}
     ];
     var tab_group_1:FlxUI;
+    var tab_group_2:FlxUI;
     //GROUP 1 [METADATA]
         var TXT_boundries_outline:FlxUIText;
         var TXT_chapterID:FlxUIText;
@@ -54,6 +58,23 @@ class LevelEditorState extends FlxState {
         var CameraLockerBox:FlxUICheckBox;
         var CameraFollowStyleDropdown:FlxUIDropDownMenu;
         var CameraFollowLerp:FlxUINumericStepper;
+    //GROUP 2 [OBJECTS]
+        var OBJ_name:FlxUIInputText;
+        var OBJ_alpha:FlxUINumericStepper;
+        var OBJ_positionX:FlxUIInputText;
+        var OBJ_positionY:FlxUIInputText;
+        var OBJ_scaleX:FlxUINumericStepper;
+        var OBJ_scaleY:FlxUINumericStepper;
+        var OBJ_scrollFactorX:FlxUINumericStepper;
+        var OBJ_scrollFactorY:FlxUINumericStepper;
+        var OBJ_image:FlxUIInputText;
+        var OBJ_visible:FlxUICheckBox;
+        var OBJ_collidesWithPlayer:FlxUICheckBox;
+        var OBJ_isBackground:FlxUICheckBox;
+        var OBJ_renderOverPlayer:FlxUICheckBox;
+        var OBJ_isAnimated:FlxUICheckBox;
+        var OBJ_parrallaxBG:FlxUICheckBox;
+    //GROUP 3 [ITEMS]
     //SCROLLING
     private var currentOffset:Float = 1;
     private var scrollSpeed:Float = 0.01;
@@ -97,16 +118,16 @@ class LevelEditorState extends FlxState {
     }
 
     public function CreateUI() {
-        SelecterTool = new FlxSquareButton2(200, 0, '', ()->{ ToolSwap('Selector'); });
+        SelecterTool = new FlxSquareButton2(300, 0, '', ()->{ ToolSwap('Selector'); });
         SelecterTool.label.font = 'assets/fonts/SEGMDL2.TTF';
         SelecterTool.label.antialiasing = false;
-        ObjectTool = new FlxSquareButton2(200, 30, '', ()->{  ToolSwap('Object'); });
+        ObjectTool = new FlxSquareButton2(300, 30, '', ()->{  ToolSwap('Object'); });
         ObjectTool.label.font = 'assets/fonts/SEGMDL2.TTF';
         ObjectTool.label.antialiasing = false;
-        ItemTool = new FlxSquareButton2(200, 60, '', ()->{    ToolSwap('Item'); });
+        ItemTool = new FlxSquareButton2(300, 60, '', ()->{    ToolSwap('Item'); });
         ItemTool.label.font = 'assets/fonts/SEGMDL2.TTF';
         ItemTool.label.antialiasing = false;
-        TriggerTool = new FlxSquareButton2(200, 90, '', ()->{ ToolSwap('Trigger'); });
+        TriggerTool = new FlxSquareButton2(300, 90, '', ()->{ ToolSwap('Trigger'); });
         TriggerTool.label.font = 'assets/fonts/SEGMDL2.TTF';
         TriggerTool.label.antialiasing = false;
         TabGroups = new FlxUITabMenu(null, tabs, true);
@@ -172,6 +193,26 @@ class LevelEditorState extends FlxState {
             tab_group_1.add(CameraFollowStyleDropdown);
             tab_group_1.add(CameraFollowLerp);
             TabGroups.addGroup(tab_group_1);
+        //tab group 2 -- objects [the object data]
+            OBJ_name = new FlxUIInputText(5, 5, 100);
+            OBJ_name.name = 'Name';
+            OBJ_alpha = new FlxUINumericStepper(50, 25, 1, 0, 0, 100, 0, 0);
+                var alphaText:FlxUIText = new FlxUIText(5, 25, 0, 'Alpha', 8);
+            OBJ_positionX = new FlxUIInputText(120, 5, 50);
+            OBJ_positionY = new FlxUIInputText(175, 5, 50);
+                var posText:FlxUIText = new FlxUIText(5, 45, 0, 'Position\nX        Y', 8);
+
+
+
+            tab_group_2 = new FlxUI(null, TabGroups, null);
+            tab_group_2.name = 'Objects';
+            tab_group_2.add(OBJ_name);
+            tab_group_2.add(OBJ_alpha);
+            tab_group_2.add(alphaText);
+            tab_group_2.add(OBJ_positionX);
+            tab_group_2.add(OBJ_positionY);
+            tab_group_2.add(posText);
+            TabGroups.addGroup(tab_group_2);
         
         add(TabGroups);
 
@@ -214,7 +255,7 @@ class LevelEditorState extends FlxState {
 
         LevelLoad = LevelInputText.text + '.json';
 
-        if(FlxG.mouse.overlaps(TXT_levelID)) {
+        if(FlxG.mouse.overlaps(TXT_levelID) && TabGroups.selected_tab_id == 'MetaData') {
             levelID_TP.show(TXT_levelID, 'Watch out!', 'make sure to set this to the file name or save loading wont work!', true, true, true);
         }else{
             levelID_TP.hide();
@@ -222,9 +263,24 @@ class LevelEditorState extends FlxState {
         ToolText.text = curTool;
         cameraInfotext.text = 'Zoom:${FlxG.camera.zoom}';
 
-        if(TabGroups.selected_tab_id == 'MetaData') {
-            @:privateAccess
-            TabGroups.resize(TabGroups.get_width(), 150);
+        @:privateAccess {
+        switch(TabGroups.selected_tab_id)
+            {
+                case 'MetaData':
+                    TabGroups.resize(300, 150);
+                case 'Objects':
+                    TabGroups.resize(300, 150);
+                case 'tab_3':
+                    TabGroups.resize(300, 150);
+                case 'tab_4':
+                    TabGroups.resize(300, 150);
+                case 'tab_5':
+                    TabGroups.resize(300, 150);
+                case 'tab_6':
+                    TabGroups.resize(300, 150);
+                default:
+                    TabGroups.resize(300, 150);
+            }
         }
 
 
