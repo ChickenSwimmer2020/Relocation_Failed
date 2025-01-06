@@ -98,7 +98,7 @@ class Player extends FlxSprite {
 		animation.play('idle');
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
         CurWeaponChoice = PISTOLROUNDS; //prevent a crash from the hud trying to read the curweaponchoice as null
-        gun.changeTexture(15, 15, 'W_pistol', false, false); //do this so the texture automatically loads.
+        gun.changeTexture(15, 15, 'W_pistol', 64, 64); //do this so the texture automatically loads.
 	}
 
     public function collide():Bool {
@@ -176,7 +176,7 @@ class Player extends FlxSprite {
         switch(weapons[currentWeaponIndex]) {
             case 'Pistol':
                 CurWeaponChoice = PISTOLROUNDS;
-                gun.changeTexture(15, 15, 'W_pistol', false, false);
+                gun.changeTexture(15, 15, 'W_pistol', 64, 64);
             case 'Shotgun':
                 CurWeaponChoice = SHOTGUNSHELL;
             case 'Rifle':

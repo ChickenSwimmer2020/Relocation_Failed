@@ -34,6 +34,8 @@ class Gun{
 
     public var moveCallback:Void->Void;
 
+    public var ContainsAnimation:Bool = false;
+
     public function new() {
         moveCallback = () -> { ratio = 0; };
     }
@@ -55,31 +57,34 @@ class Gun{
      * @param FrameHeight how tall is each frame, int. defaults to 32
      * @since RF_DEV_0.3.0
      */
-    public function changeTexture(X:Float, Y:Float, Texture:String, isShotgun:Bool = false, ?hasAnims:Bool = false, ?idleAnim:Array<Int>, ?shootAnim:Array<Int>, ?reloadAnim:Array<Int>, ?pumpAnim:Array<Int>, FPS:Int = 24, FrameWidth:Int = 32, FrameHeight:Int = 32) {
-        try{
-            theGunTexture.loadGraphic(Assets.image(Texture), hasAnims, FrameWidth, FrameHeight);
+     public function changeTexture(X:Float, Y:Float, Texture:String, isShotgun:Bool = false, FrameWidth:Int = 64, FrameHeight:Int = 64) {
+        try {
+            theGunTexture.loadGraphic(Assets.image(Texture), true, FrameWidth, FrameHeight);
+            // Add trace to check total frames available
+            trace('Total frames in sprite: ${theGunTexture.numFrames}');
+            
+            // Make sure animations are initialized
+            if (theGunTexture.animation == null) {
+                trace("Animation object is null!");
+                return;
+            }
+            
+            // Add animations and verify they were added
+            theGunTexture.animation.add('Idle', [0], 24, false, false, false);         
+            theGunTexture.animation.add('Pew', [1,2,3,4,5], 24, false, false, false);
+            
+            // Verify animations exist
+            trace('Available animations: ${[for (name in theGunTexture.animation.getNameList()) name]}');
+            
+            theGunTexture.setPosition(X, Y);
+            realGunXPOS = X;
+            realGunYPOS = Y;
+            realGunANGLE = theGunTexture.angle;
+            
+            Playstate.instance.AimerGroup.add(theGunTexture);
+            theGunTexture.animation.play('Idle');
         } catch(e) {
-            trace('Error loading texture: ' + e.message);
-        }
-        theGunTexture.setPosition(X, Y);
-        realGunXPOS = X;
-        realGunYPOS = Y;
-        realGunANGLE = theGunTexture.angle;
-        if(hasAnims != null && hasAnims == true) {
-            if(idleAnim != null)
-                theGunTexture.animation.addByIndices('Idle', 'addlater', idleAnim, '', FPS, false, false, false);
-            if(shootAnim != null)
-                theGunTexture.animation.addByIndices('Shoot', 'addlater', shootAnim, '', FPS, false, false, false);
-            if(reloadAnim != null)
-                theGunTexture.animation.addByIndices('Shoot', 'addlater', reloadAnim, '', FPS, false, false, false);
-            if(isShotgun)
-                if(pumpAnim != null)
-                    theGunTexture.animation.addByIndices('Shoot', 'addlater', pumpAnim, '', FPS, false, false, false);
-        }
-        try{
-            Playstate.instance.AimerGroup.add(theGunTexture); //WHAT. CASUES. THAT. STUPID. CRASH. AHHHHHHOJWEFHOUHDILABGS
-        }catch(e){
-            trace('GOTCHA!\nerror:\n${e.message}\n${e.stack}');
+            trace('Error in changeTexture: ${e.message}\n${e.stack}');
         }
     } //i mean, if we're having different guns. we need textures!
 
@@ -93,6 +98,7 @@ class Gun{
         Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice, Preferences.save.bulletTracers));
         theGunTexture.x -= 10;
         theGunTexture.angle -= 15;
+        theGunTexture.animation.play('Pew', true);
     }
 
     public function shotgunShoot() {
