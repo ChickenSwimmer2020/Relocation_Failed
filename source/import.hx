@@ -23,4 +23,6 @@ import lime.app.*;
 import backend.Functions.wait;
 import backend.level.*;
 import backend.*;
+
+using backend.GUtils;
 #end

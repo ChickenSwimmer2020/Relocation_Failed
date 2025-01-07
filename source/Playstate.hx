@@ -1,6 +1,9 @@
 package;
 
+import lime.system.Clipboard;
+import backend.dialogue.DialogueTypedefs.Dialogue;
 import menu.MainMenu;
+import tjson.TJSON;
 import backend.save.PlayerSaveStateUtil;
 import backend.save.PlayerSaveStateUtil.PlayerSaveStatus;
 import flixel.tweens.FlxEase;
@@ -44,11 +47,127 @@ class Playstate extends FlxTransitionableState {
 	public var DebuggerHelper = new backend.DEBUGKEYS();
 	#end
 	#end
-	override public function new(levelToLoad:String = 'level1', ?PlayerPosition:Array<Float> = null, ?stats:SaveState, ?saveSlot:Int = 1) {
+	override public function new(levelToLoad:String = 'level1', ?PlayerPosition:Array<Float> = null, ?save:SaveState, ?saveSlot:Int = 1) {
 		super();
 		instance = this;
 		this.saveSlot = saveSlot;
 		_LEVEL = levelToLoad;
+        // Test dialogue
+        var dialogue:Dialogue = {
+            strings: [
+                {
+                    dialogueBox: {
+                        texPath: '',
+                        idleAnim: {
+                            name: 'idle',
+                            frame: [100, 70],
+                            looped: true,
+                            fps: 24,
+                            flipX: false,
+                            flipY: false
+                        },
+                        scaleX: 1,
+                        scaleY: 1,
+                        xOffset: 0,
+                        yOffset: 0
+                    },
+                    fontTex: '',
+                    charLeft: 'gilbert',
+                    charRight: 'chillbert',
+                    charCenter: '',
+                    speakingCharacters: ['gilbert'],
+                    sounds: [
+                        {
+                            voiceMode: 'perChar',
+                            soundPath: 'assets/sound/voices/gilbert/1.wav',
+                            volume: 1
+                        },
+                        {
+                            voiceMode: 'perChar',
+                            soundPath: 'assets/sound/voices/chillbert/1.wav',
+                            volume: 1
+                        }
+                    ],
+                    text: [
+                        {
+                            autoplayNext: true,
+                            animsToPlay: [
+                                {
+                                    charName: 'gilbert',
+                                    animName: 'speak'
+                                },
+                                {
+                                    charName: 'chillbert',
+                                    animName: 'speak'
+                                }
+                            ],
+                            speed: 1,
+                            text: 'I,',
+                            postTextPause: 1,
+                            format: {
+                                color: '0xFF000000',
+                                borderColor: '0xFF000000',
+                                underlined: false
+                            }
+                        },
+                        {
+                            autoplayNext: true,
+                            animsToPlay: [
+                                {
+                                    charName: 'gilbert',
+                                    animName: 'speak'
+                                },
+                                {
+                                    charName: 'chillbert',
+                                    animName: 'speak'
+                                }
+                            ],
+                            speed: 1,
+                            text: 'AM,',
+                            postTextPause: 1,
+                            format: {
+                                color: '0xFF000000',
+                                borderColor: '0xFF000000',
+                                underlined: false
+                            }
+                        },
+                        {
+                            autoplayNext: true,
+                            animsToPlay: [
+                                {
+                                    charName: 'gilbert',
+                                    animName: 'yell'
+                                },
+                                {
+                                    charName: 'chillbert',
+                                    animName: 'yell'
+                                }
+                            ],
+                            speed: 1,
+                            text: 'THE ONE!!!!!',
+                            postTextPause: 1,
+                            format: {
+                                color: '0xFFFF0000',
+                                borderColor: '0xFFFF0000',
+                                underlined: true
+                            }
+                        }
+                    ]
+                }
+            ],
+            bgMusic: {
+                songs: [
+                    {
+                        volume: 1,
+                        path: 'assets/sound/mus/IDLE.ogg',
+                        looped: false
+                    }
+                ],
+            },
+            hscriptPath: ''
+        };
+        Clipboard.text = TJSON.encode(dialogue, 'fancy');
+        trace('JSON DIALOGUE: \n${TJSON.encode(dialogue, 'fancy')}');
 
 		if (PlayerPosition == null)
 			PlayerPosition = [0, 0];
@@ -57,27 +176,31 @@ class Playstate extends FlxTransitionableState {
 			this); // we need to init the player here or else its gonna cause a crash when attempting to load the save-state
 		Player.Transitioning = false;
 
-		if (stats != null) {
+		loadSaveState(save);
+	}
+
+    function loadSaveState(?state:SaveState) {
+        if (state != null) {
 			// health and stamina
-			Player.health = stats.cur_health;
-			Player.stamina = stats.cur_stamina;
-			Player.battery = stats.cur_battery;
+			Player.health = state.cur_health;
+			Player.stamina = state.cur_stamina;
+			Player.battery = state.cur_battery;
 			// positioning
-			Player.x = stats.player_x;
-			Player.y = stats.player_y;
+			Player.x = state.player_x;
+			Player.y = state.player_y;
 			// ammo stuff.
-			Player.PistolAmmoCap = stats.piscap;
-			Player.PistolAmmoRemaining = stats.pisremain;
-			Player.ShotgunAmmoCap = stats.shtcap;
-			Player.ShotgunAmmoRemaining = stats.shtremain;
-			Player.RifleAmmoCap = stats.rifcap;
-			Player.RifleAmmoRemaining = stats.rifremain;
-			Player.SMGAmmoCap = stats.smgcap;
-			Player.SMGAmmoRemaining = stats.smgremain;
+			Player.PistolAmmoCap = state.piscap;
+			Player.PistolAmmoRemaining = state.pisremain;
+			Player.ShotgunAmmoCap = state.shtcap;
+			Player.ShotgunAmmoRemaining = state.shtremain;
+			Player.RifleAmmoCap = state.rifcap;
+			Player.RifleAmmoRemaining = state.rifremain;
+			Player.SMGAmmoCap = state.smgcap;
+			Player.SMGAmmoRemaining = state.smgremain;
 			// other.
 			// Player.hasSuit =;
 		}
-	}
+    }
 
 	override public function create() {
 		super.create();
@@ -97,7 +220,7 @@ class Playstate extends FlxTransitionableState {
 		HUDCAM.bgColor = 0x0011FF00;
 
 		Hud = new HUD(this);
-		// if(!Player.HasSuit) Hud.y = 1350; //move the hud to be invsible if the player doesnt have the suit
+		// if(!Player.HasSuit) Hud.visible = false; // make the hud invsible if the player doesnt have the suit
 		Hud.cameras = [HUDCAM];
 		#if !mobile
 		Player2 = new Aimer();
@@ -189,9 +312,11 @@ class DeathState extends FlxState {
 	var deathText3:FlxText;
 	var bg:FlxSprite; // remember to make this into a semi-transparent version of whereever you are in the main playstate somehow.
 	var deathanim:FlxSprite;
+    var saveSlot:Int = 1;
 
-	public function new() {
+	public function new(saveSlot:Int = 1) {
 		super();
+        this.saveSlot = saveSlot;
 		bg = new FlxSprite(0, 0);
 		bg.makeGraphic(FlxG.width, FlxG.height, 0xFF51FF00);
 		// bg.creategraphicfromscreenshotorseomthignidfk add function to create graphic from screenshot.
@@ -224,7 +349,7 @@ class DeathState extends FlxState {
             FlxG.switchState(new MainMenu());
         }
         if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
-            PlayerSaveStateUtil.LoadPlayerSaveState(1); //TODO: make this load the save state from the last save properly depending on save slot.
+            PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
         }
     }
 }

@@ -12,6 +12,8 @@ import haxe.PosInfos;
 import backend.level.LevelLoader.LevelData;
 import flixel.group.FlxGroup;
 
+
+
 class Level extends FlxSpriteGroup
 {
     public var levelData:LevelData;
@@ -19,13 +21,13 @@ class Level extends FlxSpriteGroup
     public var objects:Map<String, LevelSprite> = new Map();
     public var items:Map<String, FlxSpriteGroup> = new Map();
     public var doors:Map<String, FlxSpriteGroup> = new Map();
-    public var colliders:Array<LevelSprite>;
+    public var colliders:Array<LevelSprite> = [];
 
     public var LevelID:String;
     public var ChapterID:Int;
     public var MapBounds:FlxRect;
-    public var CameraLocked:Bool = false;
 
+    public var CameraLocked:Bool = false;
     public var CameraLerp:Float;
     public var CameraFollowStyle:String;
 
@@ -35,6 +37,34 @@ class Level extends FlxSpriteGroup
         super();
         this.levelData = levelData;
         EditorMode = inEditor;
+    }
+
+    public function unloadLevel(?_:PosInfos)
+    {
+        trace('Unloading level...');
+        levelData = null;
+        levelHeader = null;
+        objects.clear();
+        items.clear();
+        doors.clear();
+        
+        colliders.clearArray((collider) -> {
+            collider.destroy();
+        });
+        
+        members.clearArray((member) -> {
+            member.destroy();
+        });
+
+        LevelID = '';
+        ChapterID = 1;
+        MapBounds = null;
+
+        CameraLocked = false;
+        CameraLerp = 0;
+        CameraFollowStyle = '';
+
+        EditorMode = false;
     }
 
     public function loadLevel(?_:PosInfos)

@@ -1,6 +1,6 @@
 package backend.level;
 
-import haxe.Json;
+import tjson.TJSON;
 
 /**
  * The header of a level.
@@ -118,7 +118,7 @@ class LevelLoader
     inline static public function ParseLevelData(file:String):LevelData
     {
         try{
-            return Json.parse(openfl.Assets.getText(file));
+            return TJSON.parse(openfl.Assets.getText(file), 'Level Data');
         }catch(e)
             throw new LevelExceptions.LevelParseErrorException(e.message, e.stack.toString());
     }
