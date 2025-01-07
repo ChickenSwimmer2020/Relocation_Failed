@@ -97,7 +97,7 @@ class Playstate extends FlxTransitionableState {
 		HUDCAM.bgColor = 0x0011FF00;
 
 		Hud = new HUD(this);
-		// if(!Player.HasSuit) Hud.y = 1350; //move the hud to be invsible if the player doesnt have the suit
+		// if(!Player.HasSuit) Hud.y = 1350; //*  the hud to be invsible if the player doesnt have the suit
 		Hud.cameras = [HUDCAM];
 		#if !mobile
 		Player2 = new Aimer();

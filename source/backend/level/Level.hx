@@ -12,7 +12,7 @@ import haxe.PosInfos;
 import backend.level.LevelLoader.LevelData;
 import flixel.group.FlxGroup;
 
-class Level extends FlxSpriteGroup
+class Level extends FlxGroup
 {
     public var levelData:LevelData;
     public var levelHeader:LevelHeader;
@@ -29,7 +29,7 @@ class Level extends FlxSpriteGroup
     public var CameraLerp:Float;
     public var CameraFollowStyle:String;
 
-    public var EditorMode:Bool = false;
+    public var EditorMode:Bool;
 
     override public function new(levelData:LevelData, ?inEditor:Bool = false) {
         super();
@@ -60,6 +60,7 @@ class Level extends FlxSpriteGroup
         for (object in levelData.objects){
             var obj = cast(new LevelSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG)), LevelSprite);
             obj.scale.set(object.ScaleX, object.ScaleY);
+            obj.texture = object.IMG;
 
             if(object.ScaleX > 1 || object.ScaleX < 1 || (object.ScaleY > 1 || object.ScaleY < 1)) //stupid `On static platforms, null can't be useds as basic type Float` error.
                     obj.updateHitbox(); //since we're doing collision stuff, hitboxes actually need to update now
@@ -73,11 +74,14 @@ class Level extends FlxSpriteGroup
             if(!object.VIS)
                 obj.alpha = 0; //so that the collision can still be done
 
-            if(!EditorMode)
-                if(object.RenderOverPlayer)
+            if(!EditorMode) {
+                if(object.RenderOverPlayer) {
                     obj.camera = Playstate.instance.FGCAM;
+                }
+            }
 
             if(object.ParrallaxBG != null)
+                obj.parrallaxBG = object.ParrallaxBG;
                 //do something
 
             if(object.IsAnimated != null)
@@ -89,12 +93,13 @@ class Level extends FlxSpriteGroup
             if (object.IsBackground != null)
                 if(object.IsBackground)
                     {
+                        obj.isBackground = true;
                         obj.setPosition(0, 0);
                         obj.setGraphicSize(levelHeader.Boundries[0],levelHeader.Boundries[1]);
                         obj.scrollFactor.set(0,0);
                         obj.screenCenter(XY);
                     }
-
+            obj.name = object.Name;
             objects.set(object.Name, obj);
             add(obj);
             trace('new object added!\n\n$obj');
@@ -146,6 +151,10 @@ class LevelSprite extends FlxSprite
 {
     public var isCollider:Bool = false;
     public var isForeGroundSprite:Bool = false;
+    public var isBackground:Bool = false;
+    public var name:String = '';
+    public var parrallaxBG:Bool = false;
+    public var texture:String = '';
 
     override public function update(elapsed:Float) { //WORKING COLLISION?!?!?!
         if(this.isCollider) {
