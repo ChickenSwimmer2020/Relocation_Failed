@@ -303,6 +303,20 @@ class Player extends FlxSprite {
     		FlxG.watch.addQuick('Stamina', stamina);
     		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
     		#end
+            //#if !debug
+                if (FlxG.keys.anyJustPressed([ONE, TWO, THREE, FOUR])) {
+                    if (FlxG.keys.anyJustPressed([ONE])) {
+                        currentWeaponIndex = 0;
+                    } else if (FlxG.keys.anyJustPressed([TWO])) {
+                        currentWeaponIndex = 1;
+                    } else if (FlxG.keys.anyJustPressed([THREE])) {
+                        currentWeaponIndex = 2;
+                    } else if (FlxG.keys.anyJustPressed([FOUR])) {
+                        currentWeaponIndex = 3;
+                    }
+                    updateWeapon();
+                }
+            //#end
         }
 	}
     override function destroy() {
