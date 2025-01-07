@@ -414,7 +414,7 @@ class LevelEditorState extends FlxState {
 			trace('no data to load.');
 		} else {
             var jsonContent = File.getContent('assets/$LevelLoad');
-            var Data = Json.parse(jsonContent);
+            var Data = tjson.TJSON.parse(jsonContent);
             //trace(Data);
             ActuallyLoadLevelDataIntoTheUI(Data);
             if (FileSystem.exists(Assets.asset('$SaveDir2')))
