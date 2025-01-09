@@ -51,7 +51,7 @@ class IntroState extends FlxState
         skipTxt.alpha = 0.4;
         skipTxt.camera = overlayCam;
         add(skipTxt);
-        planet = new FlxSprite(0, 200, 'assets/planet.png');
+        planet = new FlxSprite(0, 1200, 'assets/planet.png');
         planet.alpha = 0;
         add(planet);
         pIndex = members.indexOf(planet);
