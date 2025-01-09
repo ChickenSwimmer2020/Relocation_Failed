@@ -1,8 +1,8 @@
 package debug;
 
+import haxe.Json;
 import flixel.text.FlxInputText;
 import backend.level.LevelLoader;
-import haxe.Json;
 import sys.io.File;
 import math.RFMath;
 import openfl.events.MouseEvent;
@@ -11,12 +11,30 @@ import rf_flixel.ui.FlxSquareButtonLarger;
 import flixel.addons.ui.*;
 import haxe.io.Path;
 import sys.FileSystem;
-import backend.level.LevelLoader.LevelHeader;
 import flixel.group.FlxGroup;
 
 using StringTools;
 
 class LevelEditorState extends FlxState {
+    var defaultObject = [
+        { //dummy object, null prevention. //? find a way to maybe remove it when the file gets saved?
+            Name: "",
+            Alpha: 0.0,
+            X: 0.0,
+            Y: 0.0,
+            ScaleX: 1.0,
+            ScaleY: 1.0,
+            SFX: 0,
+            SFY: 0,
+            IMG: "",
+            VIS: null,
+            CollidesWithPlayer: null,
+            IsBackground: null,
+            RenderOverPlayer: null,
+            ParrallaxBG: null
+        },
+    ];
+    var DefaultObjectData = [];
     var Level:Level;
     var closeButton:FlxSquareButton;
     var saveButton:FlxButton;
@@ -28,6 +46,7 @@ class LevelEditorState extends FlxState {
     var CameraFollow:FlxObject;
 
     var levelGroup:FlxGroup;
+    var objectGroup:FlxSpriteGroup;
     var uiGroup:FlxSpriteGroup;
 
     //! DO NOT TOUCH
@@ -66,6 +85,7 @@ class LevelEditorState extends FlxState {
         var CameraFollowLerp:FlxUINumericStepper;
     //* GROUP 2 [OBJECTS]
         var OBJ_name:FlxUIInputText;
+        var name_text:FlxUIText; 
         var OBJ_alpha:FlxUINumericStepper;
         var OBJ_positionX:FlxUIInputText;
         var OBJ_positionY:FlxUIInputText;
@@ -74,12 +94,17 @@ class LevelEditorState extends FlxState {
         var OBJ_scrollFactorX:FlxUINumericStepper;
         var OBJ_scrollFactorY:FlxUINumericStepper;
         var OBJ_image:FlxUIInputText;
+        var image_text:FlxUIText;
         var OBJ_visible:FlxUICheckBox;
         var OBJ_collidesWithPlayer:FlxUICheckBox;
         var OBJ_isBackground:FlxUICheckBox;
         var OBJ_renderOverPlayer:FlxUICheckBox;
         var OBJ_isAnimated:FlxUICheckBox;
         var OBJ_parrallaxBG:FlxUICheckBox;
+        var OBJ_imagetip:FlxUITooltip;
+        var OBJ_new:FlxButton;//* values = name, image, x, y, scale:x, scale:y, scrollX, scrollY, alpha, collide with player, visible, isBG, parrallaxBG, render over player
+            var InputData:Array<Dynamic> = ['', '', 0, 0, 1, 1, 1, 1, 1, false, true, false, false, false]; //* oh boy here we go...
+            //                             [name, image, x, y, sclX, sclY, scrf]
     //* GROUP 3 [ITEMS]
     //* SCROLLING
     private var currentOffset:Float = 1;
@@ -106,6 +131,8 @@ class LevelEditorState extends FlxState {
 
         levelGroup = new FlxGroup();
         add(levelGroup);
+        objectGroup = new FlxSpriteGroup();
+        add(objectGroup);
         uiGroup = new FlxSpriteGroup();
         add(uiGroup);
         uiGroup.scrollFactor.set(0, 0);
@@ -128,6 +155,22 @@ class LevelEditorState extends FlxState {
 
         CreateUI();
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+        DefaultObjectData.push({
+            "Name": "i am a dummy object! ignore me.",
+            "Alpha": 0,
+            "X": 0,
+            "Y": 0,
+            "ScaleX": 0,
+            "ScaleY": 0, 
+            "SFX": 0,
+            "SFY": 0,
+            "IMG": "",
+            "IsBackground": false,
+            "VIS": false,
+            "CollidesWithPlayer": false,
+            "RenderOverPlayer": false,
+            "ParrallaxBG": false
+        });
     }
 
     public function CreateUI() {
@@ -209,7 +252,11 @@ class LevelEditorState extends FlxState {
             TabGroups.addGroup(tab_group_1);
         //* tab group 2 -- objects [the object data]
             OBJ_name = new FlxUIInputText(5, 5, 100);
+                name_text = new FlxUIText(5, 5, 0, 'Object Name', 8);
+                name_text.color = 0x333333;
             OBJ_image = new FlxUIInputText(5, 25, 100);
+                image_text = new FlxUIText(5, 25, 0, 'Image Path', 8);
+                image_text.color = 0x333333;
 
             OBJ_alpha = new FlxUINumericStepper(230, 40, 1, 0, 0, 100, 0, 0);
                 var alphaText:FlxUIText = new FlxUIText(230, 27, 0, 'Alpha', 8);
@@ -229,6 +276,10 @@ class LevelEditorState extends FlxState {
             OBJ_parrallaxBG = new FlxUICheckBox(100, 75, null, null, 'Parrallax BG', null, null, null);
             OBJ_renderOverPlayer = new FlxUICheckBox(200, 75, null, null, 'Render Over Player', null, null, null);
             OBJ_visible = new FlxUICheckBox(100, 55, null, null, 'Visible', null, null, null);
+
+            OBJ_imagetip = new FlxUITooltip(120, 120, new Anchor(0, 0, "right", "top", "left", "top"));
+
+            OBJ_new = new FlxButton(100, 80, 'New Object', ()->{ CreateObject(InputData); });
 
 
 
@@ -253,6 +304,9 @@ class LevelEditorState extends FlxState {
             tab_group_2.add(OBJ_parrallaxBG);
             tab_group_2.add(OBJ_renderOverPlayer);
             tab_group_2.add(OBJ_visible);
+            tab_group_2.add(OBJ_new);
+            tab_group_2.add(name_text);
+            tab_group_2.add(image_text);
             TabGroups.addGroup(tab_group_2);
         
         uiGroup.add(TabGroups);
@@ -263,6 +317,7 @@ class LevelEditorState extends FlxState {
         uiGroup.add(TriggerTool);
 
         uiGroup.add(levelID_TP);
+        uiGroup.add(OBJ_imagetip);
     }
 
     private function onMouseWheel(event:MouseEvent):Void { //* chatgpt re-wrote this to possibly cause less problems? idk, if we need to rewrite it we can.
@@ -294,15 +349,34 @@ class LevelEditorState extends FlxState {
     override public function update(elapsed:Float) {
         super.update(elapsed);
 
+        if(FlxG.mouse.overlaps(name_text) || OBJ_name.text != '') {
+            name_text.alpha = 0;
+        } else if (!FlxG.mouse.overlaps(name_text) || OBJ_name.text == '') {
+            name_text.alpha = 1;
+        }
+
+        if(FlxG.mouse.overlaps(image_text) || OBJ_image.text != '') {
+            image_text.alpha = 0;
+        } else if (!FlxG.mouse.overlaps(image_text) || OBJ_image.text == '') {
+            image_text.alpha = 1;
+        }
+
         FlxG.camera.follow(CameraFollow, LOCKON, 15);
 
-        LevelLoad = LevelInputText.text + '.json';
+        LevelLoad = LevelInputText.text.toLowerCase() + '.json';
 
         if(FlxG.mouse.overlaps(TXT_levelID) && TabGroups.selected_tab_id == 'MetaData') {
             levelID_TP.show(TXT_levelID, 'Watch out!', 'make sure to set this to the file name or save loading wont work!', true, true, true);
         }else{
             levelID_TP.hide();
         }
+
+        if(FlxG.mouse.overlaps(OBJ_image) && TabGroups.selected_tab_id == 'Objects') {
+            OBJ_imagetip.show(OBJ_image, 'Heads Up!', 'the default path is assets, if you have a sub-folder your image is in, make sure to type\n\"[folderTitle]/[ImageTitle]\"\nminus the brackets!', true, true, true);
+        }else{
+            OBJ_imagetip.hide();
+        }
+
         ToolText.text = curTool;
         ////cameraInfotext.text = 'Zoom:${levelGroup.scale}';
 
@@ -334,6 +408,21 @@ class LevelEditorState extends FlxState {
                 }
             }
         }
+
+        InputData[0] = OBJ_name.text; //* name
+        InputData[1] = OBJ_image.text; //* image
+        InputData[2] = OBJ_positionX.text; //* X
+        InputData[3] = OBJ_positionY.text; //* Y
+        InputData[4] = OBJ_scaleX.text; //* Scale X
+        InputData[5] = OBJ_scaleY.text; //* Scale Y
+        InputData[6] = OBJ_scrollFactorX.value; //* Scroll X
+        InputData[7] = OBJ_scrollFactorY.value; //* Scroll Y
+        InputData[8] = (OBJ_alpha.value / 100); //* alpha
+        InputData[9] = OBJ_collidesWithPlayer.checked; //* collide with player
+        InputData[10] = OBJ_visible.checked; //* visible
+        InputData[11] = OBJ_isBackground.checked; //* is background
+        InputData[12] = OBJ_parrallaxBG.checked; //* is parallax bg
+        InputData[13] = OBJ_renderOverPlayer.checked; //* render over player
 
         if(FlxG.keys.anyPressed([UP, DOWN, LEFT, RIGHT, SHIFT])) {
             if(FlxG.keys.anyPressed([UP])) {
@@ -387,22 +476,48 @@ class LevelEditorState extends FlxState {
         FlxG.stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
     }
 
+    public function CreateObject(Data:Array<Dynamic>) {
+        var spr:FlxSprite = cast (new FlxSprite(Std.parseFloat(Data[2]), Std.parseFloat(Data[3])).loadGraphic(Assets.image(Data[1]), false, 0, 0));
+        spr.alpha = Data[8];
+        spr.scale.set(Std.parseInt(Data[4]), Std.parseInt(Data[5]));
+        spr.updateHitbox();
+        spr.scrollFactor.set(Data[6], Data[7]);
+        objectGroup.add(spr);
+        trace(Data);
+        DefaultObjectData.push({
+            Name: Data[0],
+            Alpha: Data[8],
+            X: Std.parseFloat(Data[2]),
+            Y: Std.parseFloat(Data[3]),
+            ScaleX: Std.parseFloat(Data[4]),
+            ScaleY: Std.parseFloat(Data[5]),
+            SFX: Data[6],
+            SFY: Data[7],
+            IMG: Data[1],
+            VIS: Data[10],
+            CollidesWithPlayer: Data[9],
+            IsBackground: Data[11],
+            RenderOverPlayer: Data[13],
+            ParrallaxBG: Data[12]
+        },);
+    }
+
     public function saveLevel() { 
-        //TODO: make this work properly and save to custom json location.
 		var SaveDir:String;
-		var SaveName:String = 'Level$Level.json';
+		var SaveName:String = 'level${LevelIDStepper.value}.json';
 
 		SaveDir = 'assets';
         FileSystem.createDirectory(SaveDir);
 		File.saveContent('$SaveDir/$SaveName', '{
     "header":{
-    "LevelID": "level$Level",
-    "Chapter": $Chapter,
-    "Boundries": [${Boundries[0]}, ${Boundries[1]}],
-    "CameraLocked": ${CameraLocked},
-    "CameraFollowStyle": "$CameraFollowType",
-    "CameraFollowLerp": $CameraFollowLerpN
-    }
+        "LevelID": "level${LevelIDStepper.value}",
+        "Chapter": $Chapter,
+        "Boundries": [${Boundries[0]}, ${Boundries[1]}],
+        "CameraLocked": ${CameraLocked},
+        "CameraFollowStyle": "$CameraFollowType",
+        "CameraFollowLerp": $CameraFollowLerpN
+    },
+    "objects":${tjson.TJSON.encode(DefaultObjectData)} //it does the [] automatically.
 }');
 	}
 
@@ -416,7 +531,7 @@ class LevelEditorState extends FlxState {
             var jsonContent = File.getContent('assets/$LevelLoad');
             var Data = tjson.TJSON.parse(jsonContent);
             //trace(Data);
-            ActuallyLoadLevelDataIntoTheUI(Data);
+            ActuallyLoadLevelDataIntoTheUI(Data); //* (HEADER) load the level directly into the ui.
             if (FileSystem.exists(Assets.asset('$SaveDir2')))
                 CreateLevel(SaveDir2);
             else
@@ -459,5 +574,23 @@ class LevelEditorState extends FlxState {
         Level = new Level(LevelLoader.ParseLevelData(Assets.asset(Json)), true);
 		Level.loadLevel();
         levelGroup.add(Level);
+        for(object in Level.objects) {
+            DefaultObjectData.push({
+                Name: object.name,
+                Alpha: object.alpha,
+                X: object.x,
+                Y: object.y,
+                ScaleX: object.scale.x,
+                ScaleY: object.scale.y,
+                SFX: object.scrollFactor.x,
+                SFY: object.scrollFactor.y,
+                IMG: object.texture,
+                VIS: object.visible,
+                CollidesWithPlayer: object.isCollider,
+                IsBackground: object.isBackground,
+                RenderOverPlayer: object.isForeGroundSprite,
+                ParrallaxBG: object.parrallaxBG
+            },);
+        }
     }
 }
