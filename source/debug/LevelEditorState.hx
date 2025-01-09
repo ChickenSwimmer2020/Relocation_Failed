@@ -1,5 +1,7 @@
 package debug;
 
+import backend.level.LevelExceptions.LevelNullException;
+import openfl.Assets;
 import haxe.Json;
 import flixel.text.FlxInputText;
 import backend.level.LevelLoader;
@@ -16,25 +18,7 @@ import flixel.group.FlxGroup;
 using StringTools;
 
 class LevelEditorState extends FlxState {
-    var defaultObject = [
-        { //dummy object, null prevention. //? find a way to maybe remove it when the file gets saved?
-            Name: "",
-            Alpha: 0.0,
-            X: 0.0,
-            Y: 0.0,
-            ScaleX: 1.0,
-            ScaleY: 1.0,
-            SFX: 0,
-            SFY: 0,
-            IMG: "",
-            VIS: null,
-            CollidesWithPlayer: null,
-            IsBackground: null,
-            RenderOverPlayer: null,
-            ParrallaxBG: null
-        },
-    ];
-    var DefaultObjectData = [];
+    var DefaultObjectData:Array<LevelObject> = [];
     var Level:Level;
     var closeButton:FlxSquareButton;
     var saveButton:FlxButton;
@@ -155,22 +139,6 @@ class LevelEditorState extends FlxState {
 
         CreateUI();
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-        DefaultObjectData.push({
-            "Name": "i am a dummy object! ignore me.",
-            "Alpha": 0,
-            "X": 0,
-            "Y": 0,
-            "ScaleX": 0,
-            "ScaleY": 0, 
-            "SFX": 0,
-            "SFY": 0,
-            "IMG": "",
-            "IsBackground": false,
-            "VIS": false,
-            "CollidesWithPlayer": false,
-            "RenderOverPlayer": false,
-            "ParrallaxBG": false
-        });
     }
 
     public function CreateUI() {
@@ -279,7 +247,7 @@ class LevelEditorState extends FlxState {
 
             OBJ_imagetip = new FlxUITooltip(120, 120, new Anchor(0, 0, "right", "top", "left", "top"));
 
-            OBJ_new = new FlxButton(100, 80, 'New Object', ()->{ CreateObject(InputData); });
+            OBJ_new = new FlxButton(5, 105, 'New Object', ()->{ CreateObject(InputData); });
 
 
 
@@ -380,31 +348,29 @@ class LevelEditorState extends FlxState {
         ToolText.text = curTool;
         ////cameraInfotext.text = 'Zoom:${levelGroup.scale}';
 
-        if(curTool == 'Selector Tool') {
-            if(Level != null) {
-                for(object in Level.objects) {
-                    if(!object.isBackground) {
-                        if(FlxG.mouse.overlaps(object)) {
-                            object.color = 0x1900ff;
-                            if(FlxG.mouse.justPressed) {
-                                OBJ_name.text = object.name;
-                                OBJ_alpha.value = object.alpha;
-                                OBJ_positionX.text = Std.string(object.x);
-                                OBJ_positionY.text = Std.string(object.y);
-                                OBJ_scaleX.text = Std.string(object.scale.x);
-                                OBJ_scaleY.text = Std.string(object.scale.y);
-                                OBJ_scrollFactorX.value = object.scrollFactor.x;
-                                OBJ_scrollFactorY.value = object.scrollFactor.y;
-                                OBJ_image.text = object.texture;
-                                OBJ_visible.checked = object.visible;
-                                OBJ_collidesWithPlayer.checked = object.isCollider;
-                                OBJ_isBackground.checked = object.isBackground;
-                                OBJ_renderOverPlayer.checked = object.isForeGroundSprite;
-                                OBJ_parrallaxBG.checked = object.parrallaxBG;
-                            }
-                        } else
-                            object.color = 0xffffff;
-                    }
+        if(curTool == 'Selector Tool' && Level != null) {
+            for(object in Level.objects) {
+                if(!object.isBackground) {
+                    if(FlxG.mouse.overlaps(object)) {
+                        object.color = 0x1900ff;
+                        if(FlxG.mouse.justPressed) {
+                            OBJ_name.text = object.name;
+                            OBJ_alpha.value = object.alpha;
+                            OBJ_positionX.text = Std.string(object.x);
+                            OBJ_positionY.text = Std.string(object.y);
+                            OBJ_scaleX.text = Std.string(object.scale.x);
+                            OBJ_scaleY.text = Std.string(object.scale.y);
+                            OBJ_scrollFactorX.value = object.scrollFactor.x;
+                            OBJ_scrollFactorY.value = object.scrollFactor.y;
+                            OBJ_image.text = object.texture;
+                            OBJ_visible.checked = object.visible;
+                            OBJ_collidesWithPlayer.checked = object.isCollider;
+                            OBJ_isBackground.checked = object.isBackground;
+                            OBJ_renderOverPlayer.checked = object.isForeGroundSprite;
+                            OBJ_parrallaxBG.checked = object.parrallaxBG;
+                        }
+                    } else
+                        object.color = 0xffffff;
                 }
             }
         }
@@ -504,39 +470,43 @@ class LevelEditorState extends FlxState {
 
     public function saveLevel() { 
 		var SaveDir:String;
-		var SaveName:String = 'level${LevelIDStepper.value}.json';
+		var SaveName:String = '';
 
 		SaveDir = 'assets';
         FileSystem.createDirectory(SaveDir);
-		File.saveContent('$SaveDir/$SaveName', '{
-    "header":{
-        "LevelID": "level${LevelIDStepper.value}",
-        "Chapter": $Chapter,
-        "Boundries": [${Boundries[0]}, ${Boundries[1]}],
-        "CameraLocked": ${CameraLocked},
-        "CameraFollowStyle": "$CameraFollowType",
-        "CameraFollowLerp": $CameraFollowLerpN
-    },
-    "objects":${tjson.TJSON.encode(DefaultObjectData)} //it does the [] automatically.
-}');
+        var header:LevelHeader = {
+            LevelID: 'level${LevelIDStepper.value}',
+            Chapter: Chapter,
+            Boundries: Boundries,
+            CameraLocked: CameraLocked,
+            CameraFollowStyle: CameraFollowType,
+            CameraFollowLerp: CameraFollowLerpN
+        }
+        var level:LevelData = {
+            header: header,
+            objects: DefaultObjectData,
+            doors: [],
+            items: []
+        };
+        File.saveContent('$SaveDir/level${LevelIDStepper.value}.json', tjson.TJSON.encode(level, 'fancy'));
 	}
 
     public function loadLevel() {
-		var SaveDir = Path.join(['assets/', LevelLoad]);
-        var SaveDir2 = '$LevelLoad';
+        var SaveDir = '$LevelLoad';
 
-		if (!FileSystem.exists('$SaveDir')) { // dynamically check if the file already exists, so we dont accidently overwrite it.
-			trace('no data to load.');
-		} else {
-            var jsonContent = File.getContent('assets/$LevelLoad');
-            var Data = tjson.TJSON.parse(jsonContent);
-            //trace(Data);
-            ActuallyLoadLevelDataIntoTheUI(Data); //* (HEADER) load the level directly into the ui.
-            if (FileSystem.exists(Assets.asset('$SaveDir2')))
-                CreateLevel(SaveDir2);
+        var jsonContent = File.getContent('assets/$LevelLoad');
+        var Data = tjson.TJSON.parse(jsonContent);
+        //trace(Data);
+        ActuallyLoadLevelDataIntoTheUI(Data); //* (HEADER) load the level directly into the ui.
+        try{
+            if (FileSystem.exists(backend.Assets.asset(SaveDir)))
+                CreateLevel(SaveDir);
             else
-                trace('level data null exception!');
-		}
+                trace("Level doesn't exist! Looked in directory: " + backend.Assets.asset(SaveDir));
+        } catch(e) {
+            ////trace(e.message, e.stack);
+            trace(new LevelNullException(e.message, e.stack.toString()).toString());
+        }
     }
     private function ActuallyLoadLevelDataIntoTheUI(Json:LevelData) {
         LevelIDStepper.value = Std.parseFloat(Json.header.LevelID.substr(5));
@@ -571,7 +541,7 @@ class LevelEditorState extends FlxState {
         CameraFollowLerpN = CameraFollowLerp.value;
     }
     private function CreateLevel(Json:String) {
-        Level = new Level(LevelLoader.ParseLevelData(Assets.asset(Json)), true);
+        Level = new Level(LevelLoader.ParseLevelData((Json)), true);
 		Level.loadLevel();
         levelGroup.add(Level);
         for(object in Level.objects) {

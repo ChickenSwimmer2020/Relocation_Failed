@@ -262,8 +262,7 @@ class TJSONParser{
                             else throw "Not a hex digit";
                         }
                         
-						var utf = new haxe.Utf8();
-						utf.addChar(hexValue);
+						var utf = new UnicodeString('$hexValue');
 						symbol += utf.toString();
                         
 						continue;
@@ -369,7 +368,7 @@ class TJSONEncoder{
 			throw("Provided object is not an object.");
 		}
 		var st:EncodeStyle;
-		if(Std.is(style, EncodeStyle)){
+		if(Std.isOfType(style, EncodeStyle)){
 			st = style;
 		}
 		else if(style == 'fancy'){
@@ -377,10 +376,10 @@ class TJSONEncoder{
 		}
 		else st = new SimpleStyle();
 		var buffer = new StringBuf();
-		if(Std.is(obj,Array) || Std.is(obj,List)) {
+		if(Std.isOfType(obj,Array) || Std.isOfType(obj,List)) {
 			buffer.add(encodeIterable( obj, st, 0));
 
-		} else if(Std.is(obj, haxe.ds.StringMap)){
+		} else if(Std.isOfType(obj, haxe.ds.StringMap)){
 			buffer.add(encodeMap(obj, st, 0));
 		} else {
 			cacheEncode(obj);
@@ -478,26 +477,26 @@ class TJSONEncoder{
 	}
 
 	private function encodeValue( value:Dynamic, style:EncodeStyle, depth:Int):String {
-		if(Std.is(value, Int) || Std.is(value,Float)){
+		if(Std.isOfType(value, Int) || Std.isOfType(value,Float)){
             return Std.string(value);
 		}
-		else if(Std.is(value,Array) || Std.is(value,List)){
+		else if(Std.isOfType(value,Array) || Std.isOfType(value,List)){
 			var v: Array<Dynamic> = value;
 			return encodeIterable(v,style,depth+1);
 		}
-		else if(Std.is(value,List)){
+		else if(Std.isOfType(value,List)){
 			var v: List<Dynamic> = value;
 			return encodeIterable(v,style,depth+1);
 
 		}
-		else if(Std.is(value,haxe.ds.StringMap)){
+		else if(Std.isOfType(value,haxe.ds.StringMap)){
 			return encodeMap(value,style,depth+1);
 
 		}
-		else if(Std.is(value,String)){
+		else if(Std.isOfType(value,String)){
 			return('"'+Std.string(value).replace("\\","\\\\").replace("\n","\\n").replace("\r","\\r").replace('"','\\"')+'"');
 		}
-		else if(Std.is(value,Bool)){
+		else if(Std.isOfType(value,Bool)){
 			return Std.string(value);
 		}
 		else if(Reflect.isObject(value)){

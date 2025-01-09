@@ -1,5 +1,6 @@
 package backend.level;
 
+import sys.io.File;
 import tjson.TJSON;
 
 /**
@@ -116,10 +117,10 @@ class LevelLoader
      * @return The parsed level data as a LevelData.
      */
     inline static public function ParseLevelData(file:String):LevelData
-    {
         try{
-            return TJSON.parse(openfl.Assets.getText(file), 'Level Data');
-        }catch(e)
-            throw new LevelExceptions.LevelParseErrorException(e.message, e.stack.toString());
-    }
+            return TJSON.parse(File.getContent(file), 'Level Data');
+        }catch(e){
+            trace(new LevelExceptions.LevelParseErrorException(e.message, e.stack.toString()).toString());
+            return null;
+        }
 }
