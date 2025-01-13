@@ -500,7 +500,7 @@ class LevelEditorState extends FlxState {
         ActuallyLoadLevelDataIntoTheUI(Data); //* (HEADER) load the level directly into the ui.
         try{
             if (FileSystem.exists(backend.Assets.asset(SaveDir)))
-                CreateLevel(SaveDir);
+                CreateLevel(LevelLoad);
             else
                 trace("Level doesn't exist! Looked in directory: " + backend.Assets.asset(SaveDir));
         } catch(e) {
@@ -541,7 +541,7 @@ class LevelEditorState extends FlxState {
         CameraFollowLerpN = CameraFollowLerp.value;
     }
     private function CreateLevel(Json:String) {
-        Level = new Level(LevelLoader.ParseLevelData((Json)), true);
+        Level = new Level(LevelLoader.ParseLevelData(('assets/'+ Json)), true); //* I FUCKING HATE CODING :sob:
 		Level.loadLevel();
         levelGroup.add(Level);
         for(object in Level.objects) {

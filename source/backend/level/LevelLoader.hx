@@ -118,7 +118,7 @@ class LevelLoader
      */
     inline static public function ParseLevelData(file:String):LevelData
         try{
-            return TJSON.parse(File.getContent(file), 'Level Data');
+            return TJSON.parse(File.getContent(file), null);
         }catch(e){
             trace(new LevelExceptions.LevelParseErrorException(e.message, e.stack.toString()).toString());
             return null;
