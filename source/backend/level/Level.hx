@@ -88,7 +88,7 @@ class Level extends FlxGroup
         CameraFollowStyle = levelHeader.CameraFollowStyle;
 
         for (object in levelData.objects){
-            var obj = cast(new LevelSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG)), LevelSprite);
+            var obj:LevelSprite = cast(new LevelSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG)));
             obj.scale.set(object.ScaleX, object.ScaleY);
             obj.texture = object.IMG;
 
@@ -132,7 +132,7 @@ class Level extends FlxGroup
             obj.name = object.Name;
             objects.set(object.Name, obj);
             add(obj);
-            trace('new object added!\n\n$obj');
+            trace('new object added!\n${obj.name}\n$obj\n');
         }
         for (item in levelData.items){
             var BEHAVIOR:ItemType;

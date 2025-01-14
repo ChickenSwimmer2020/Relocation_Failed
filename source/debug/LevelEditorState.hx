@@ -33,6 +33,9 @@ class LevelEditorState extends FlxState {
     var objectGroup:FlxSpriteGroup;
     var uiGroup:FlxSpriteGroup;
 
+    var LevelCamera:FlxCamera;
+    var UICamera:FlxCamera;
+
     //! DO NOT TOUCH
     var LevelLoad:String = '';
 
@@ -110,16 +113,27 @@ class LevelEditorState extends FlxState {
     public function new() {
         super();
 
+        LevelCamera = new FlxCamera();
+		FlxG.cameras.add(LevelCamera, false);
+		LevelCamera.bgColor = 0x0011FF00;
+
+		UICamera = new FlxCamera();
+		FlxG.cameras.add(UICamera, false);
+		UICamera.bgColor = 0x0011FF00;
+
         CameraFollow = new FlxObject(1280/20, 720/2, 0, 0);
         add(CameraFollow);
 
         levelGroup = new FlxGroup();
         add(levelGroup);
+        levelGroup.cameras = [LevelCamera];
         objectGroup = new FlxSpriteGroup();
         add(objectGroup);
+        objectGroup.cameras = [LevelCamera];
         uiGroup = new FlxSpriteGroup();
         add(uiGroup);
         uiGroup.scrollFactor.set(0, 0);
+        uiGroup.cameras = [UICamera];
 
         closeButton = new FlxSquareButton(1260, 0, 'X', ()->{ FlxG.switchState(new menu.MainMenu()); });
         uiGroup.add(closeButton);
@@ -466,11 +480,11 @@ class LevelEditorState extends FlxState {
             RenderOverPlayer: Data[13],
             ParrallaxBG: Data[12]
         },);
+        trace('New Object Added To Level\n\n$DefaultObjectData');
     }
 
     public function saveLevel() { 
 		var SaveDir:String;
-		var SaveName:String = '';
 
 		SaveDir = 'assets';
         FileSystem.createDirectory(SaveDir);
@@ -541,7 +555,7 @@ class LevelEditorState extends FlxState {
         CameraFollowLerpN = CameraFollowLerp.value;
     }
     private function CreateLevel(Json:String) {
-        Level = new Level(LevelLoader.ParseLevelData(('assets/'+ Json)), true); //* I FUCKING HATE CODING :sob:
+        Level = new Level(LevelLoader.ParseLevelData(('assets/' + Json)), true); //* I FUCKING HATE CODING :sob:
 		Level.loadLevel();
         levelGroup.add(Level);
         for(object in Level.objects) {
