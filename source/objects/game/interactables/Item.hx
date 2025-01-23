@@ -104,6 +104,8 @@ class Item extends FlxSpriteGroup{
                     Playstate.instance.Player.hasPistol = true;
                     Playstate.instance.Player.CurWeaponChoice = PISTOLROUNDS;
                     Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Pistol Acquired!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
+                    if(Playstate.instance.Player.gun.theGunTexture.alpha == 0)
+                        Playstate.instance.Player.gun.theGunTexture.alpha = 1;
                 case _SHOTGUN:
                     Playstate.instance.Player.hasShotgun = true;
                     Playstate.instance.Player.CurWeaponChoice = SHOTGUNSHELL;

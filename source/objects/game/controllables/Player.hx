@@ -105,7 +105,7 @@ class Player extends FlxSprite {
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
         CurWeaponChoice = NULL; //prevent a crash from the hud trying to read the curweaponchoice as null
         gun.changeTexture(1, 1, 'W_pistol', false, 64, 64); //placeholder, dont want a gaphic but want at minimum for the sprite to exist to prevent null access.
-        gun.alpha = 0;
+        gun.theGunTexture.alpha = 0;
 	}
 
     public function collide():Bool {
@@ -182,30 +182,34 @@ class Player extends FlxSprite {
                 if(hasPistol) {
                     CurWeaponChoice = PISTOLROUNDS;
                     gun.changeTexture(15, 15, 'W_pistol', 64, 64);
-                    gun.alpha = 1;
+                    gun.theGunTexture.alpha = 1;
                 }else{
                     trace('You do not have the pistol!');
+                    gun.theGunTexture.alpha = 0;
                 }
             case 'Shotgun':
                 if(hasShotgun) {
                     CurWeaponChoice = SHOTGUNSHELL;
-                    gun.alpha = 1;
+                    gun.theGunTexture.alpha = 1;
                 }else{
                     trace('You do not have the shotgun!');
+                    gun.theGunTexture.alpha = 0;
                 }
             case 'Rifle':
                 if(hasRifle) {
                     CurWeaponChoice = RIFLEROUNDS;
-                    gun.alpha = 1;
+                    gun.theGunTexture.alpha = 1;
                 }else{
                     trace('You do not have the rifle!');
+                    gun.theGunTexture.alpha = 0;
                 }
             case 'Smg':
                 if(hasSMG) {
                     CurWeaponChoice = SMGROUNDS;
-                    gun.alpha = 1;
+                    gun.theGunTexture.alpha = 1;
                 }else{
                     trace('You do not have the SMG!');
+                    gun.theGunTexture.alpha = 0;
                 }
         }
     }
