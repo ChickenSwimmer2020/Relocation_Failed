@@ -3,11 +3,8 @@ package objects.game.hud;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxPoint;
+import objects.game.hud.StatusMessage;
 using flixel.util.FlxSpriteUtil;
-
-#if mobile
-import flixel.ui.FlxVirtualPad;
-#end
 
 class HUD extends FlxSpriteGroup {
     public var HUDBG:FlxSprite;
@@ -25,6 +22,7 @@ class HUD extends FlxSpriteGroup {
 
     public var playstate:Playstate;
 
+    public var StatMSGContainer:StatusMessageHolder;
     public var ammocounter_AMMOTEXT:FlxText;
     public var ammocounter_LINE:FlxSprite;
     public var CurAmmoName:String;
@@ -40,10 +38,6 @@ class HUD extends FlxSpriteGroup {
 
     public var damageind:FlxSprite;
 
-    #if mobile
-    public static var virtualPad:FlxVirtualPad;
-    #end
-
     #if debug
     public var debugControls:FlxText;
     public static var pressforcontrols:FlxText;
@@ -57,11 +51,6 @@ class HUD extends FlxSpriteGroup {
         scrollFactor.set(0, 0);
 
         createHud(); //i dont wanna clutter the new function, so imma just move all that to a seperate function
-        
-        #if mobile
-        virtualPad = new FlxVirtualPad(FULL, NONE);
-        add(virtualPad);
-        #end
 
         #if debug
         pressforcontrols = new FlxText(0, 700, 0, "Press HOME For Debug Controls", 12, false);
@@ -126,7 +115,7 @@ class HUD extends FlxSpriteGroup {
                 ammocounter_AMMOSPR4.animation.play('10MM');
             default:
                 ammocounter_AMMOTEXT.x = 0;
-                CurAmmoName = 'FIX ME!';
+                CurAmmoName = 'None';
                 CurAmmoCap = 0;
                 CurAmmoNum = 0;
         };
@@ -149,6 +138,8 @@ class HUD extends FlxSpriteGroup {
     }
 
     function createHud():Void {
+        StatMSGContainer = new StatusMessageHolder(200, 300, #if debug true #else false #end);
+
         healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, playstate.Player, 'health');
         healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
         
@@ -260,6 +251,7 @@ class HUD extends FlxSpriteGroup {
         add(ammocounter_AMMOSPR3);
         add(ammocounter_AMMOSPR4);
         add(damageind);
+        add(StatMSGContainer);
     }
 
 }

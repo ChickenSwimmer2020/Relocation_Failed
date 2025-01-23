@@ -108,6 +108,14 @@
             "SCL": 1,
             "X": 800,
             "Y": 200
+        },
+        {
+            "Name": "TestWEAPON01",
+            "behavior": "_PISTOL",
+            "texture": "itm_pistol",
+            "SCL": 1,
+            "X": 900,
+            "Y": 200
         }
     ],
     "doors":[

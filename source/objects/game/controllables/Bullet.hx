@@ -8,6 +8,7 @@ import flixel.math.FlxPoint;
 
 enum BulletType
 {
+    NULL; //for when you dont have the suit or have a melee weapon equipped
     SHOTGUNSHELL; //display name: 12 Gauge Buckshot
     PISTOLROUNDS; //display name: 9 MilliMeter
     RIFLEROUNDS; //display name: 7.62x51mm NATO
@@ -44,6 +45,9 @@ class Bullet extends FlxSprite {
             case SMGROUNDS:
                 lifetime = 1;
                 makeGraphic(5, 5, FlxColor.CYAN);
+            case NULL:
+                lifetime = 0;
+                makeGraphic(5, 5, FlxColor.TRANSPARENT);
         }
 
         wait(lifetime, () -> {

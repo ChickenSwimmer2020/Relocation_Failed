@@ -84,7 +84,6 @@ class Functions
         }
         return boolToCheck;
     }
-    #if !mobile
     /**
       * # getSpriteAngleFromMousePos();
       * ## isnt there a better way to do this?!
@@ -124,7 +123,6 @@ class Functions
             #end
             return angle;
         }
-    #end
 
     /**
      * Formats a PosInfos object into a string.

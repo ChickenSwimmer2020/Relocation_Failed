@@ -53,15 +53,8 @@ class Button extends FlxTypedGroup<FlxObject>
     override public function update(elapsed:Float) {
         super.update(elapsed);
         CheckHover();
-        #if !mobile
         if(FlxG.mouse.overlaps(this) && FlxG.mouse.justPressed)
             Pressed();
-        #else
-        for (touch in FlxG.touches.justReleased()) {
-            if (touch.overlaps(this) && touch.justPressed)
-                Pressed();
-        }
-        #end
     }
 
     function CheckHover()

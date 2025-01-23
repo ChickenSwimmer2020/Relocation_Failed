@@ -3,7 +3,6 @@ package objects.game.controllables;
 import flixel.math.FlxPoint;
 import flixel.math.FlxAngle;
 import flixel.effects.FlxFlicker;
-#if !mobile
 class Aimer extends FlxSprite {
     static public var curAngle:Float;
     var shotgunPumping:Bool = false; //so we can make sure that you cant fire while the shotgun is pumping
@@ -22,14 +21,10 @@ class Aimer extends FlxSprite {
         this.x = Player.AimerPOSx;
         this.y = Player.AimerPOSy;
         this.updateHitbox(); //since angle stuff changes, we want this to update. right?
-        #if !mobile
         AimAtCusor();
-        #else
-        //TODO: DO THIS
-        #end
         curAngle = this.angle;
 
-        #if !mobile //we need to calculate the shooting from the player so we can check ammo numberss
+        //we need to calculate the shooting from the player so we can check ammo numberss
         if(FlxG.mouse.pressed && !shotgunPumping) {
             if(checkAmmo() == true) {
                 switch(Playstate.instance.Player.CurWeaponChoice) { //remove some ammo when we fire the gun
@@ -71,6 +66,8 @@ class Aimer extends FlxSprite {
                         Playstate.instance.FGCAM.shake(0.001, 0.1);
                         Playstate.instance.HUDCAM.shake(0.001, 0.1);
                         Playstate.instance.camera.shake(0.001, 0.1);
+                    case NULL:
+                        //donothing hahaha.
                 }
             }
             else {
@@ -81,8 +78,6 @@ class Aimer extends FlxSprite {
                 //play empty ammo noise
             }
         }
-        #else
-        #end
     }
     function checkAmmo():Bool {
         switch(Playstate.instance.Player.CurWeaponChoice) {
@@ -106,9 +101,10 @@ class Aimer extends FlxSprite {
                     return true;
                 else
                     return false;
+            case NULL:
+                return false;
         }
     }
-    #if !mobile
     public function AimAtCusor()
         {
             var Mouse:FlxPoint = FlxG.mouse.getPosition();
@@ -120,10 +116,4 @@ class Aimer extends FlxSprite {
             else
                 this.flipY = false;
         }
-    #else
-    //TODO: IMPLEMENT MOBILE SUPPORT FOR THE AIMER
-    #end
 }
-#else
-//TODO: android aim system, joystick maybe?
-#end

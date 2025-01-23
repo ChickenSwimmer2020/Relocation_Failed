@@ -24,11 +24,8 @@ class Playstate extends FlxTransitionableState {
 
 	// we have to create the player in a stupid way thanks to my ideas.
 	public var Player:Player;
-	#if !mobile
 	public var Player2:Aimer;
 	public var AimerGroup:FlxSpriteGroup = new FlxSpriteGroup();
-	#else
-	#end
 	public var Hud:HUD;
 	public var Level:Level;
 	public var colliders:Array<FlxSprite> = [];
@@ -42,10 +39,8 @@ class Playstate extends FlxTransitionableState {
 	public var saveSlot:Int = 1;
 
 	public var BulletGroup:FlxGroup;
-	#if !mobile
 	#if debug
 	public var DebuggerHelper = new backend.DEBUGKEYS();
-	#end
 	#end
 	override public function new(levelToLoad:String = 'level1', ?PlayerPosition:Array<Float> = null, ?save:SaveState, ?saveSlot:Int = 1) {
 		super();
@@ -199,6 +194,10 @@ class Playstate extends FlxTransitionableState {
 			Player.SMGAmmoRemaining = state.smgremain;
 			// other.
 			// Player.hasSuit =;
+			Player.hasPistol = state.haspistol;
+			Player.hasShotgun = state.hasshotgun;
+			Player.hasSMG = state.hassmg;
+			Player.hasRifle = state.hasrifle;
 		}
     }
 
@@ -222,10 +221,7 @@ class Playstate extends FlxTransitionableState {
 		Hud = new HUD(this);
 		// if(!Player.HasSuit) Hud.visible = false; // make the hud invsible if the player doesnt have the suit
 		Hud.cameras = [HUDCAM];
-		#if !mobile
 		Player2 = new Aimer();
-		#else
-		#end
 		Level = new Level(LevelLoader.ParseLevelData(Assets.asset('$_LEVEL.json')));
 		Level.EditorMode = false;
 		Level.loadLevel();
@@ -237,11 +233,8 @@ class Playstate extends FlxTransitionableState {
 
 		add(Level);
 		add(Player);
-		#if !mobile
 		add(Player2);
 		add(AimerGroup);
-		#else
-		#end
 		add(BulletGroup);
 		add(Hud);
 	}
@@ -290,12 +283,9 @@ class Playstate extends FlxTransitionableState {
 
 		Player.CurRoom = Level.LevelID;
 
-		#if !mobile
         AimerGroup.update(elapsed); //you know, this might cause issues with animations :facepalm:
 		AimerGroup.setPosition(Player2.x, Player2.y);
 		Playstate.instance.AimerGroup.angle = Player2.angle + 1;
-		#else
-		#end
 		super.update(elapsed);
 	}
 

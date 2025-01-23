@@ -39,13 +39,11 @@ class PauseMenuSubState extends FlxSubState {
 
     override public function update(elapsed:Float) {
         super.update(elapsed);
-        #if !mobile
         if(FlxG.keys.anyJustPressed([ESCAPE])) {
             close();
             PauseJustClosed = true;
             if(FlxG.sound.music != null && !FlxG.sound.music.playing)
                 FlxG.sound.music.resume();
         }
-        #end
     }
 }

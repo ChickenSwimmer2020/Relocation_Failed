@@ -154,8 +154,17 @@ class Level extends FlxGroup
                     BEHAVIOR = _RIFLEROUNDSBOX;
                 case '_RIFLEROUNDSMAG':
                     BEHAVIOR = _RIFLEROUNDSMAG;
+                case '_PISTOL':
+                    BEHAVIOR = _PISTOL;
+                case '_SHOTGUN':
+                    BEHAVIOR = _SHOTGUN;
+                case '_RIFLE':
+                    BEHAVIOR = _RIFLE;
+                case '_SMG':
+                    BEHAVIOR = _SMG;
                 default:
                     BEHAVIOR = null;
+                    trace('Unknown item behavior modifier!');
             }
             var itm = cast(new Item(item.X, item.Y, Assets.image(item.texture), BEHAVIOR, EditorMode));
             items.set(item.Name, itm); //should work?

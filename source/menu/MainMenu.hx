@@ -209,7 +209,6 @@ class MainMenu extends FlxTransitionableState {
                 add(star);
             }
             shipCam.shake(0.001, 1);
-            #if !mobile
             if(FlxG.mouse.overlaps(Button_Play))
                 {
                     FlxTween.cancelTweensOf(Button_Play.DaButton);
@@ -316,6 +315,5 @@ class MainMenu extends FlxTransitionableState {
                         ease: FlxEase.circOut
                     });
                 }
-            #end
     }
 }
