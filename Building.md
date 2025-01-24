@@ -1,6 +1,6 @@
 # building
 
-this file will outline how to build Relocation Failed for any platform that you may need!
+this file will outline how to build Relocation Failed for any platform that you may need! -mac because FUCK apple, and also if you try to port it i will personally come and shut your project down. my game will NOT, be on apple. repeat ***NOT***. ***ON***. ***APPLE***.
 
 ## part 1
 
