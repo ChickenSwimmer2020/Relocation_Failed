@@ -114,7 +114,7 @@ class HUD extends FlxSpriteGroup {
                 ammocounter_AMMOSPR3.animation.play('10MM');
                 ammocounter_AMMOSPR4.animation.play('10MM');
             default:
-                ammocounter_AMMOTEXT.x = 0;
+                ammocounter_AMMOTEXT.x = 980;
                 CurAmmoName = 'None';
                 CurAmmoCap = 0;
                 CurAmmoNum = 0;

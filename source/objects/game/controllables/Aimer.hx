@@ -1,5 +1,6 @@
 package objects.game.controllables;
 
+import flixel.tweens.FlxEase;
 import flixel.math.FlxPoint;
 import flixel.math.FlxAngle;
 import flixel.effects.FlxFlicker;
@@ -53,7 +54,7 @@ class Aimer extends FlxSprite {
                             trace('Shotgun Fired!');
                             gun.shotgunShoot();
                             shotgunPumping = true;
-                            wait(0.2, ()->{ trace('shotgun pumping...'); });
+                            wait(0.2, ()->{ trace('shotgun pumping...'); Playstate.instance.AimerGroup.members[0].animation.play('Cock', true); });
                             wait(0.5, ()->{ shotgunPumping = false; trace('shotgun pumped!'); }); //shotgun pumping!
                             Playstate.instance.FGCAM.shake(0.005, 0.1);
                             Playstate.instance.HUDCAM.shake(0.005, 0.1);

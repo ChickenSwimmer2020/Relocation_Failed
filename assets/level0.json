@@ -116,6 +116,14 @@
             "SCL": 1,
             "X": 900,
             "Y": 200
+        },
+        {
+            "Name": "TestWEAPON02",
+            "behavior": "_SHOTGUN",
+            "texture": "itm_s",
+            "SCL": 1,
+            "X": 900,
+            "Y": 200
         }
     ],
     "doors":[

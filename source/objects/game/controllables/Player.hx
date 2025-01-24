@@ -181,7 +181,7 @@ class Player extends FlxSprite {
             case 'Pistol':
                 if(hasPistol) {
                     CurWeaponChoice = PISTOLROUNDS;
-                    gun.changeTexture(15, 15, 'W_pistol', 64, 64);
+                    gun.changeTexture(15, 15, 'W_pistol', false, 64, 64);
                     gun.theGunTexture.alpha = 1;
                 }else{
                     trace('You do not have the pistol!');
@@ -190,6 +190,7 @@ class Player extends FlxSprite {
             case 'Shotgun':
                 if(hasShotgun) {
                     CurWeaponChoice = SHOTGUNSHELL;
+                    gun.changeTexture(15, 15, 'W_shotgun', true, 128, 64);
                     gun.theGunTexture.alpha = 1;
                 }else{
                     trace('You do not have the shotgun!');
