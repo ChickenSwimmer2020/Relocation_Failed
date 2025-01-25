@@ -51,6 +51,12 @@ class Player extends FlxSprite {
     public var ShotgunAmmoCap:Int = 75;
     public var SMGAmmoCap:Int = 900;
 
+    //guns and current availability storage
+    public var hasPistol:Bool = false;
+    public var hasRifle:Bool = false;
+    public var hasShotgun:Bool = false;
+    public var hasSMG:Bool = false;
+
 	public var isMoving:Bool = false;
     public var stamina:Int = 100;
     #if (flixel >= "6.0.0")
@@ -97,8 +103,9 @@ class Player extends FlxSprite {
 
 		animation.play('idle');
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-        CurWeaponChoice = PISTOLROUNDS; //prevent a crash from the hud trying to read the curweaponchoice as null
-        gun.changeTexture(15, 15, 'W_pistol', 64, 64); //do this so the texture automatically loads.
+        CurWeaponChoice = NULL; //prevent a crash from the hud trying to read the curweaponchoice as null
+        gun.changeTexture(1, 1, 'W_pistol', false, 64, 64); //placeholder, dont want a gaphic but want at minimum for the sprite to exist to prevent null access.
+        gun.theGunTexture.alpha = 0;
 	}
 
     public function collide():Bool {
@@ -123,16 +130,11 @@ class Player extends FlxSprite {
     }
 
 	function checkForPauseMenu() {
-        #if !mobile
 		if (FlxG.keys.anyPressed([ESCAPE]) && !PauseMenuSubState.PauseJustClosed) { //so the pause menu can be closed with the escape key and not instantly reopen
 			FlxG.state.openSubState(new substates.PauseMenuSubState());
             if(FlxG.sound.music != null)
                 FlxG.sound.music.pause();
         }
-        #else
-        if (HUD.virtualPad.buttonC.pressed)
-            FlxG.state.openSubState(new substates.PauseMenuSubState()); //support for mobile pausing
-        #end
 	}
 
     function forceCaps() {
@@ -140,6 +142,8 @@ class Player extends FlxSprite {
             Playstate.instance.Player.health -= 10; //SHUT UP ABOUT BEING REMOVED SOON :sob:
 
         //insert the suit/armor stuff here.
+        if(Playstate.instance.Player.battery > Playstate.instance.Player.maxBattery)
+            Playstate.instance.Player.battery = Playstate.instance.Player.maxBattery;
 
         if(Playstate.instance.Player.ShotgunAmmoRemaining > Playstate.instance.Player.ShotgunAmmoCap)
             Playstate.instance.Player.ShotgunAmmoRemaining = Playstate.instance.Player.ShotgunAmmoCap;
@@ -175,19 +179,43 @@ class Player extends FlxSprite {
         FlxFlicker.stopFlickering(Playstate.instance.Hud.ammocounter_AMMONUMTWO);
         switch(weapons[currentWeaponIndex]) {
             case 'Pistol':
-                CurWeaponChoice = PISTOLROUNDS;
-                gun.changeTexture(15, 15, 'W_pistol', 64, 64);
+                if(hasPistol) {
+                    CurWeaponChoice = PISTOLROUNDS;
+                    gun.changeTexture(15, 15, 'W_pistol', false, 64, 64);
+                    gun.theGunTexture.alpha = 1;
+                }else{
+                    trace('You do not have the pistol!');
+                    gun.theGunTexture.alpha = 0;
+                }
             case 'Shotgun':
-                CurWeaponChoice = SHOTGUNSHELL;
+                if(hasShotgun) {
+                    CurWeaponChoice = SHOTGUNSHELL;
+                    gun.changeTexture(15, 15, 'W_shotgun', true, 128, 64);
+                    gun.theGunTexture.alpha = 1;
+                }else{
+                    trace('You do not have the shotgun!');
+                    gun.theGunTexture.alpha = 0;
+                }
             case 'Rifle':
-                CurWeaponChoice = RIFLEROUNDS;
+                if(hasRifle) {
+                    CurWeaponChoice = RIFLEROUNDS;
+                    gun.theGunTexture.alpha = 1;
+                }else{
+                    trace('You do not have the rifle!');
+                    gun.theGunTexture.alpha = 0;
+                }
             case 'Smg':
-                CurWeaponChoice = SMGROUNDS;
+                if(hasSMG) {
+                    CurWeaponChoice = SMGROUNDS;
+                    gun.theGunTexture.alpha = 1;
+                }else{
+                    trace('You do not have the SMG!');
+                    gun.theGunTexture.alpha = 0;
+                }
         }
     }
 
 	function movement() {
-        #if !mobile
 		if (FlxG.keys.anyPressed([SHIFT]) && stamina > 0 && isMoving){
 			curPhysProperties = sprintPhysProps;
             stamina--;
@@ -196,18 +224,7 @@ class Player extends FlxSprite {
             if(stamina < 100 && !FlxG.keys.anyPressed([SHIFT]))
                 stamina++;
         }
-        #else
-		if (HUD.virtualPad.buttonX.pressed && stamina > 0 && isMoving){ //mobile gamepad support
-			curPhysProperties = sprintPhysProps;
-            stamina--;
-        }else{
-			curPhysProperties = nonSprintPhysProps;
-            if(stamina < 100 && !HUD.virtualPad.buttonX.pressed)
-                stamina++;
-        }
-        #end
 
-        #if !mobile
         if (FlxG.keys.anyPressed([LEFT, A]))
             curMovementDir = left;
         else if (FlxG.keys.anyPressed([RIGHT, D]))
@@ -218,28 +235,12 @@ class Player extends FlxSprite {
             curMovementDir = down;
         else
             curMovementDir = none;
-        #else
-        if (HUD.virtualPad.buttonLeft.pressed)
-            curMovementDir = left;
-        else if (HUD.virtualPad.buttonRight.pressed)
-            curMovementDir = right;
-        else if (HUD.virtualPad.buttonUp.pressed)
-            curMovementDir = up;
-        else if (HUD.virtualPad.buttonRight.pressed)
-            curMovementDir = down;
-        else
-            curMovementDir = none;
-        #end
 
 		animation.play(curMovementDir);
 		isMoving = curMovementDir != none;
         //if (isMoving) gun.moveCallback();
 
-        #if !mobile
         var movementDirs = [FlxG.keys.anyPressed([LEFT, A]), FlxG.keys.anyPressed([RIGHT, D]), FlxG.keys.anyPressed([UP, W]), FlxG.keys.anyPressed([DOWN, S])];
-        #else
-        var movementDirs = [HUD.virtualPad.buttonLeft.pressed, HUD.virtualPad.buttonRight.pressed, HUD.virtualPad.buttonUp.pressed, HUD.virtualPad.buttonRight.pressed];
-        #end
         var count = 0;
         var allOn = false;
         for (dir in movementDirs) if (dir) count++;
@@ -292,31 +293,26 @@ class Player extends FlxSprite {
     		checkForPauseMenu();
             resetPauseMenu();
             forceCaps(); //so variables such as health and ammo dont go above 100
-            #if !mobile
             AimerPOSx = this.getGraphicMidpoint().x - 15;
             AimerPOSy = this.getGraphicMidpoint().y - 15;
             gun.update(elapsed);
             gun.updateTexturePosition(AimerPOSx, AimerPOSy);
-            #else
-            #end
     		#if debug
     		FlxG.watch.addQuick('Stamina', stamina);
     		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
     		#end
-            //#if !debug
-                if (FlxG.keys.anyJustPressed([ONE, TWO, THREE, FOUR])) {
-                    if (FlxG.keys.anyJustPressed([ONE])) {
-                        currentWeaponIndex = 0;
-                    } else if (FlxG.keys.anyJustPressed([TWO])) {
-                        currentWeaponIndex = 1;
-                    } else if (FlxG.keys.anyJustPressed([THREE])) {
-                        currentWeaponIndex = 2;
-                    } else if (FlxG.keys.anyJustPressed([FOUR])) {
-                        currentWeaponIndex = 3;
-                    }
-                    updateWeapon();
+            if (FlxG.keys.anyJustPressed([ONE, TWO, THREE, FOUR])) {
+                if (FlxG.keys.anyJustPressed([ONE])) {
+                    currentWeaponIndex = 0;
+                } else if (FlxG.keys.anyJustPressed([TWO])) {
+                    currentWeaponIndex = 1;
+                } else if (FlxG.keys.anyJustPressed([THREE])) {
+                    currentWeaponIndex = 2;
+                } else if (FlxG.keys.anyJustPressed([FOUR])) {
+                    currentWeaponIndex = 3;
                 }
-            //#end
+                updateWeapon();
+            }
         }
 	}
     override function destroy() {

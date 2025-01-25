@@ -37,6 +37,8 @@ class Gun extends FlxSpriteGroup{
 
     public var ContainsAnimation:Bool = false;
 
+    public var ShotgunPassthrough:Bool = false;
+
     public function new() {
         super();
         //moveCallback = () -> { ratio = 0; }; //this is causing problems somehow
@@ -70,6 +72,11 @@ class Gun extends FlxSpriteGroup{
                 trace("Animation object is null!");
                 return;
             }
+
+            if(isShotgun)
+                ShotgunPassthrough = true;
+            else
+                ShotgunPassthrough = false;
         
             loadInitialAnimationData();
             
@@ -98,12 +105,17 @@ class Gun extends FlxSpriteGroup{
         // Add animations and verify they were added
         theGunTexture.animation.add('Idle', [0], 24, false, false, false);         
         theGunTexture.animation.add('Pew', [1,2,3,4,5], 12, false, false, false);
+        if(ShotgunPassthrough) {
+            theGunTexture.animation.add('Cock', [6,7,8,9,10,11,12,13], 12, false, false, false);
+        }
     }
 
     public function loadRealAnimationData() {
         // Add animations and verify they were added
         Playstate.instance.AimerGroup.members[0].animation.add('Idle', [0], 24, false, false, false);         
         Playstate.instance.AimerGroup.members[0].animation.add('Pew', [1,2,3,4,5], 12, false, false, false);
+        if(ShotgunPassthrough)
+            Playstate.instance.AimerGroup.members[0].animation.add('Cock', [6,7,8,9,10,11,12,13], 12, false, false, false);
     }
 
     public function shoot() {
@@ -117,6 +129,7 @@ class Gun extends FlxSpriteGroup{
     }
 
     public function shotgunShoot() {
+        Playstate.instance.AimerGroup.members[0].animation.play('Pew', true);
         var Spread:Array<FlxPoint> = getShotgunSpread(FlxG.mouse.getPosition(), Playstate.instance.Player2.angle, 240, 9, 100);
         for (spread in 0...8)
             Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[spread], SHOTGUNSHELL, true));

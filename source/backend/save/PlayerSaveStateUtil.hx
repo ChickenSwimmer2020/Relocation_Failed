@@ -101,6 +101,10 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
             {name: 'rifremain', type: 0, value: Playstate.instance.Player.RifleAmmoRemaining},
             {name: 'smgcap', type: 0, value: Playstate.instance.Player.SMGAmmoCap},
             {name: 'smgremain', type: 0, value: Playstate.instance.Player.SMGAmmoRemaining},
+            {name: 'haspistol', type: false, value: Playstate.instance.Player.hasPistol},
+            {name: 'hasrifle', type: false, value: Playstate.instance.Player.hasRifle},
+            {name: 'hasshotgun', type: false, value: Playstate.instance.Player.hasShotgun},
+            {name: 'hassmg', type: false, value: Playstate.instance.Player.hasSMG},
         ];
 
 		SaveDir = '$GameFolderNormalized/saves/sv${Playstate.instance.saveSlot}/';
