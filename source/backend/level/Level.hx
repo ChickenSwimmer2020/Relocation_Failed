@@ -31,6 +31,9 @@ class Level extends FlxGroup
     public var CameraLerp:Float;
     public var CameraFollowStyle:String;
 
+    public var isBeatStage:Bool = false;
+    public var FrameTime:Float = 0;
+
     public var EditorMode:Bool;
 
     override public function new(levelData:LevelData, ?inEditor:Bool = false) {
@@ -86,6 +89,9 @@ class Level extends FlxGroup
 
         CameraLerp = levelHeader.CameraFollowLerp;
         CameraFollowStyle = levelHeader.CameraFollowStyle;
+
+        isBeatStage = levelHeader.isBeatState;
+        FrameTime = levelHeader.beatstateframetime;
 
         for (object in levelData.objects){
             var obj:LevelSprite = cast(new LevelSprite(object.X, object.Y).loadGraphic(Assets.image(object.IMG)));

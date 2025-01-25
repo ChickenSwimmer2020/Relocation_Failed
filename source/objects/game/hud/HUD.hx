@@ -134,6 +134,25 @@ class HUD extends FlxSpriteGroup {
             debugControls.alpha = 1;
             FlxTween.tween(debugControls, {"alpha": 0}, 2, { ease: FlxEase.expoIn});
         }
+        if(FlxG.keys.anyJustPressed([NUMPADONE, NUMPADTWO, NUMPADTHREE, NUMPADFOUR, NUMPADFIVE])) {
+            
+            if(FlxG.keys.anyJustPressed([NUMPADONE])) {
+                Playstate.instance.Player.health = 100;
+            }
+            if(FlxG.keys.anyJustPressed([NUMPADTWO])) {
+                Playstate.instance.Player.health = 75;
+            }
+            if(FlxG.keys.anyJustPressed([NUMPADTHREE])) {
+                Playstate.instance.Player.health = 50;
+            }
+            if(FlxG.keys.anyJustPressed([NUMPADFOUR])) {
+                Playstate.instance.Player.health = 25;
+            }
+            if(FlxG.keys.anyJustPressed([NUMPADFIVE])) {
+                Playstate.instance.Player.health = 0;
+            }
+
+        }
         #end
     }
 

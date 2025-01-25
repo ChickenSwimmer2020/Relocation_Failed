@@ -15,15 +15,15 @@ class DEBUGKEYS{
     public var pressed:Array<Bool> = [false, false];
     public var numberKeys:Array<Array<FlxKey>> = 
     [
-        [ONE, NUMPADONE],
-        [TWO, NUMPADTWO],
-        [THREE, NUMPADTHREE],
-        [FOUR, NUMPADFOUR],
-        [FIVE, NUMPADFIVE],
-        [SIX, NUMPADSIX],
-        [SEVEN, NUMPADSEVEN],
-        [EIGHT, NUMPADEIGHT],
-        [NINE, NUMPADNINE]
+        [ONE], //no, numpad keys will do their own things solar
+        [TWO],
+        [THREE],
+        [FOUR],
+        [FIVE],
+        [SIX],
+        [SEVEN],
+        [EIGHT],
+        [NINE]
     ];
     public var keyResponses:Array<() -> Void> = 
     [

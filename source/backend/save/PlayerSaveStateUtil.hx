@@ -49,7 +49,7 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 	 * ---
 	 * @since RF_DEV_0.3.5
 	 */
-	public static function LoadPlayerSaveState(slot:Int) {
+	public static function LoadPlayerSaveState(slot:Int, ?ForceLevel:String = '') {
 		var SaveDir:String;
 		var SaveName:String = 'SAVE.rfs'; // rfsave file
 		var ExecPath:String = Sys.programPath();
@@ -61,7 +61,10 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 		} else {
 			var playerstatus:SaveState = new SaveState();
             playerstatus.loadSaveFieldsFromString(File.getContent(SaveDir));
-			loadPlayerState(playerstatus);
+			if(ForceLevel != '')
+				loadPlayerState(playerstatus);
+			else
+				loadPlayerState(playerstatus, ForceLevel);
 		}
 	}
 	/**
@@ -69,8 +72,11 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 	 * ---
 	 * @since RF_DEV_0.3.5
 	 */
-	static function loadPlayerState(Stats:SaveState) {
-		FlxG.switchState(new Playstate(Stats.cur_lvl, Stats));
+	static function loadPlayerState(Stats:SaveState, ?OverrideLevel:String = '') {
+		if(OverrideLevel != '')
+			FlxG.switchState(new Playstate(OverrideLevel, Stats));
+		else
+			FlxG.switchState(new Playstate(Stats.cur_lvl, Stats));
 	}
 
 	/**

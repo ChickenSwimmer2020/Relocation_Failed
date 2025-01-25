@@ -14,7 +14,7 @@ once you install that, you should proceed to install [Haxe](https://haxe.org). s
 for this game to be buildable, you need some different dependencies for the game to be buildable, thankfully, we have a command set you can paste in your console for easy installation of the dependencies.
 
 ```powershell
-haxelib install openfl; haxelib install lime; haxelib install flixel; haxelib install flixel-addons; haxelib install flixel-ui; haxelib install svg; haxelib install flxsvg; haxelib install hlwnative; haxelib install hscript; haxelib install hxcpp; haxelib install hxdiscord_rpc;
+haxelib install openfl; haxelib install lime; haxelib install flixel; haxelib install flixel-addons; haxelib install flixel-ui; haxelib install svg; haxelib install flxsvg; haxelib install hlwnative; haxelib install hscript; haxelib install hxcpp; haxelib install hxdiscord_rpc; haxelib install lunarps;
 ```
 
 #### part 3 building

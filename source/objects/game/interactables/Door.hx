@@ -8,7 +8,7 @@ class Door extends FlxSpriteGroup {
     var SPR:FlxSprite;
 
     var WaitTime:Float = 0;
-    var Level:String;
+    var LVL:String;
     var PlayerPos:Array<Float>;
     var hasAnim:Bool;
 
@@ -29,7 +29,7 @@ class Door extends FlxSpriteGroup {
         SPR = new FlxSprite(X,Y).loadGraphic(Assets.image(Graphic), isAnimated, Frame[0], Frame[1]);
         add(SPR);
         WaitTime = openAnimLength;
-        Level = LevelToLoad;
+        LVL = LevelToLoad;
         if(!EditorMode)
             PlayerPos = PlayerPosition;
         if(isAnimated) {
@@ -80,7 +80,7 @@ class Door extends FlxSpriteGroup {
 
                     wait(WaitTime, ()->{
                         FlxTween.tween(Fade, {alpha: 1}, 0.7, { type: FlxTweenType.PINGPONG, ease: FlxEase.smootherStepInOut, onComplete: function(twn:FlxTween){
-                            FlxG.switchState(new Playstate(Level, PlayerPos));
+                            FlxG.switchState(new Playstate(LVL, PlayerPos));
                         }});
                     });
                 }

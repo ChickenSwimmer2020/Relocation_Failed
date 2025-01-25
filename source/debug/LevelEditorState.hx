@@ -35,7 +35,7 @@ class LevelEditorState extends FlxState {
     var objectGroup:FlxSpriteGroup;
     var uiGroup:FlxSpriteGroup;
 
-    var LevelCamera:FlxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1);
+    var LevelCamera:FlxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 2);
     var UICamera:FlxCamera;
 
     //! DO NOT TOUCH
@@ -72,6 +72,8 @@ class LevelEditorState extends FlxState {
         var CameraLockerBox:FlxUICheckBox;
         var CameraFollowStyleDropdown:FlxUIDropDownMenu;
         var CameraFollowLerp:FlxUINumericStepper;
+        var isBeatstate:FlxUICheckBox;
+        var FTSlider:FlxUISlider;
     //* GROUP 2 [OBJECTS]
         var OBJ_name:FlxUIInputText;
         var name_text:FlxUIText; 
@@ -112,18 +114,21 @@ class LevelEditorState extends FlxState {
     var CameraLocked:Bool = false;
     var CameraFollowType:String = '';
     var CameraFollowLerpN:Float = 0;
+    var BeatState:Bool = false;
+    var Frametime:Float = 0;
     public function new() {
         super();
 
         //LevelCamera;
-		//FlxG.cameras.add(LevelCamera, false);
-		//LevelCamera.bgColor = 0x00000000;
+		////FlxG.cameras.add(LevelCamera, false);
+		////LevelCamera.bgColor = 0x00000000;
 
         CameraFollow = new FlxObject(1280/20, 720/2, 0, 0);
         add(CameraFollow);
 
         levelGroup = new FlxGroup();
         add(levelGroup);
+        ////levelGroup.camera = LevelCamera;
         objectGroup = new FlxSpriteGroup();
         add(objectGroup);
         uiGroup = new FlxSpriteGroup();
@@ -184,6 +189,10 @@ class LevelEditorState extends FlxState {
 
             CameraLockerBox = new FlxUICheckBox(5, 51.75, null, null, 'Lock Camera', null, null, ()->{ CameraLocked = CameraLockerBox.checked; });
 
+            isBeatstate = new FlxUICheckBox(200, 51.75, null, null, 'is Beatstate?', null, null, ()->{ BeatState = isBeatstate.checked; });
+            FTSlider = new FlxUISlider(this, 'Frametime', 200, 10, 0, 100, 150, 15, 5, FlxColor.WHITE, FlxColor.BLACK);
+            FTSlider.nameLabel.text = 'F\nr\na\nm\ne\nt\ni\nm\ne\n';
+
             CameraFollowStyleDropdown = new FlxUIDropDownMenu(5, 70, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(pressed:String) {
                 switch(pressed) {
                     case '0': //! string but int??? wtf???
@@ -228,6 +237,8 @@ class LevelEditorState extends FlxState {
             tab_group_1.add(CameraLockerBox);
             tab_group_1.add(CameraFollowStyleDropdown);
             tab_group_1.add(CameraFollowLerp);
+            tab_group_1.add(isBeatstate);
+            tab_group_1.add(FTSlider);
             TabGroups.addGroup(tab_group_1);
         //* tab group 2 -- objects [the object data]
             OBJ_name = new FlxUIInputText(5, 5, 100);
@@ -493,7 +504,9 @@ class LevelEditorState extends FlxState {
             Boundries: Boundries,
             CameraLocked: CameraLocked,
             CameraFollowStyle: CameraFollowType,
-            CameraFollowLerp: CameraFollowLerpN
+            CameraFollowLerp: CameraFollowLerpN,
+            isBeatState: BeatState,
+            beatstateframetime: Frametime
         }
         var level:LevelData = {
             header: header,

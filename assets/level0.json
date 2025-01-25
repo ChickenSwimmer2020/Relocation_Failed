@@ -6,7 +6,9 @@
             "Boundries": [1280, 720],
             "CameraLocked": false,
             "CameraFollowStyle": "LOCKON",
-            "CameraFollowLerp": 15
+            "CameraFollowLerp": 15,
+            "isBeatState": true,
+            "beatstateframetime": 64
     },
     "objects":[
         {

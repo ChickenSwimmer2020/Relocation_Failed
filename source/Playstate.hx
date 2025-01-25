@@ -1,16 +1,13 @@
 package;
 
+import flixel.math.FlxMath;
 import lime.system.Clipboard;
 import backend.dialogue.DialogueTypedefs.Dialogue;
 import menu.MainMenu;
 import tjson.TJSON;
 import backend.save.PlayerSaveStateUtil;
-import backend.save.PlayerSaveStateUtil.PlayerSaveStatus;
 import flixel.tweens.FlxEase;
 import backend.save.SaveState;
-import backend.level.LevelLoader.LevelHeader;
-import flixel.math.FlxMath;
-import flixel.math.FlxAngle;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.group.FlxGroup;
@@ -38,10 +35,19 @@ class Playstate extends FlxTransitionableState {
 	public var _LEVEL:String;
 	public var saveSlot:Int = 1;
 
+	public var LevelTransitionFadeSprite:FlxSprite = new FlxSprite(0, 0);
+
 	public var BulletGroup:FlxGroup;
 	#if debug
 	public var DebuggerHelper = new backend.DEBUGKEYS();
 	#end
+
+	public var isBeatStateType:Bool = false; //should camera bop
+	public var curStep:Int = 0; //goes up every frame for the proper bopping
+	public var FrameTime:Float = 0;
+	public var defaultCamZoom:Float = 1;
+	public var FgCamDefaultZoom:Float = 1;
+
 	override public function new(levelToLoad:String = 'level1', ?PlayerPosition:Array<Float> = null, ?save:SaveState, ?saveSlot:Int = 1) {
 		super();
 		instance = this;
@@ -201,6 +207,18 @@ class Playstate extends FlxTransitionableState {
 		}
     }
 
+	public function onItemPickup(?Item:String, ?Extra:Dynamic, ?Function:Void -> Void) {
+		#if debug
+		if(Item != null)
+			trace('Item was picked up: $Item');
+		else
+			trace('Item was picked up: [NAME NOT PROVIDED]');
+		#end
+		if(Function != null) {
+			Function();
+		}
+	}
+
 	override public function create() {
 		super.create();
 
@@ -237,6 +255,9 @@ class Playstate extends FlxTransitionableState {
 		add(AimerGroup);
 		add(BulletGroup);
 		add(Hud);
+
+		isBeatStateType = Level.isBeatStage;
+		FrameTime = Level.FrameTime;
 	}
 
 	override public function update(elapsed:Float) {
@@ -263,23 +284,23 @@ class Playstate extends FlxTransitionableState {
 			FlxG.camera.follow(Player, followStyle, Level.CameraLerp * elapsed);
 			FGCAM.follow(Player, followStyle, Level.CameraLerp * elapsed);
 		}
-		if (FlxG.keys.anyPressed([PAGEUP]) && FlxG.camera.zoom < 2) {
-			FlxG.camera.zoom += 0.05;
-			FGCAM.zoom += 0.05;
+		if (FlxG.keys.anyPressed([PAGEUP]) && defaultCamZoom < 2) {
+			defaultCamZoom += 0.05;
+			FgCamDefaultZoom += 0.05;
 		}
-		if (FlxG.keys.anyPressed([PAGEDOWN]) && FlxG.camera.zoom > 1) {
-			FlxG.camera.zoom -= 0.05;
-			FGCAM.zoom -= 0.05;
+		if (FlxG.keys.anyPressed([PAGEDOWN]) && defaultCamZoom > 1) {
+			defaultCamZoom -= 0.05;
+			FgCamDefaultZoom -= 0.05;
 		}
-		if (FlxG.camera.zoom > 2)
-			FlxG.camera.zoom = 2;
-		if (FGCAM.zoom > 2)
-			FGCAM.zoom = 2;
+		if (defaultCamZoom > 2)
+			defaultCamZoom = 2;
+		if (FgCamDefaultZoom > 2)
+			FgCamDefaultZoom = 2;
 
-		if (FlxG.camera.zoom < 1)
-			FlxG.camera.zoom = 1;
-		if (FGCAM.zoom < 1)
-			FGCAM.zoom = 1;
+		if (defaultCamZoom < 1)
+			defaultCamZoom = 1;
+		if (FgCamDefaultZoom < 1)
+			FgCamDefaultZoom = 1;
 
 		Player.CurRoom = Level.LevelID;
 
@@ -287,6 +308,20 @@ class Playstate extends FlxTransitionableState {
 		AimerGroup.setPosition(Player2.x, Player2.y);
 		Playstate.instance.AimerGroup.angle = Player2.angle + 1;
 		super.update(elapsed);
+		FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
+		FGCAM.zoom = FlxMath.lerp(FgCamDefaultZoom, FGCAM.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
+		HUDCAM.zoom = FlxMath.lerp(1, HUDCAM.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
+		//*health stuff
+
+		//* camera bop stuff for the cool stages with bopping music
+		if(isBeatStateType) {
+			curStep++; //curStep is the current frame.
+			if(curStep % FrameTime == 0) {
+				FlxG.camera.zoom += 0.02;
+				FGCAM.zoom += 0.02;
+				HUDCAM.zoom += 0.01;
+			}
+		}
 	}
 
 	override public function destroy() {
