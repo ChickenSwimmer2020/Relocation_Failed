@@ -1,6 +1,5 @@
 package debug;
 
-import lunarps.haxe.Copy;
 import flixel.math.FlxPoint;
 import backend.level.LevelExceptions.LevelNullException;
 import openfl.Assets;
@@ -190,9 +189,9 @@ class LevelEditorState extends FlxState {
             CameraLockerBox = new FlxUICheckBox(5, 51.75, null, null, 'Lock Camera', null, null, ()->{ CameraLocked = CameraLockerBox.checked; });
 
             isBeatstate = new FlxUICheckBox(200, 51.75, null, null, 'is Beatstate?', null, null, ()->{ BeatState = isBeatstate.checked; });
-            FTSlider = new FlxUISlider(this, 'Frametime', 200, 10, 0, 100, 150, 15, 5, FlxColor.WHITE, FlxColor.BLACK);
-            FTSlider.nameLabel.text = 'F\nr\na\nm\ne\nt\ni\nm\ne\n';
-
+            FTSlider = new FlxUISlider(this, 'Frametime', 130, 80, 0, 100, 150, 15, 5, FlxColor.WHITE, FlxColor.BLACK);
+            FTSlider.nameLabel.text = '      Frametime';
+            
             CameraFollowStyleDropdown = new FlxUIDropDownMenu(5, 70, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(pressed:String) {
                 switch(pressed) {
                     case '0': //! string but int??? wtf???
@@ -570,6 +569,9 @@ class LevelEditorState extends FlxState {
         LevelID = Std.int(LevelIDStepper.value);
         CameraLocked = CameraLockerBox.checked;
         CameraFollowLerpN = CameraFollowLerp.value;
+        BeatState = Json.header.isBeatState;
+        isBeatstate.checked = BeatState;
+        Frametime = Json.header.beatstateframetime;
     }
     private function CreateLevel(Json:String) {
         Level = new Level(LevelLoader.ParseLevelData((backend.Assets.asset(Json))), true);
