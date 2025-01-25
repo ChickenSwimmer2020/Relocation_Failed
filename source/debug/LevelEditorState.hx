@@ -1,5 +1,7 @@
 package debug;
 
+import lunarps.haxe.Copy;
+import flixel.math.FlxPoint;
 import backend.level.LevelExceptions.LevelNullException;
 import openfl.Assets;
 import haxe.Json;
@@ -33,7 +35,7 @@ class LevelEditorState extends FlxState {
     var objectGroup:FlxSpriteGroup;
     var uiGroup:FlxSpriteGroup;
 
-    var LevelCamera:FlxCamera;
+    var LevelCamera:FlxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1);
     var UICamera:FlxCamera;
 
     //! DO NOT TOUCH
@@ -113,27 +115,21 @@ class LevelEditorState extends FlxState {
     public function new() {
         super();
 
-        LevelCamera = new FlxCamera();
-		FlxG.cameras.add(LevelCamera, false);
-		LevelCamera.bgColor = 0x0011FF00;
-
-		UICamera = new FlxCamera();
-		FlxG.cameras.add(UICamera, false);
-		UICamera.bgColor = 0x0011FF00;
+        //LevelCamera;
+		//FlxG.cameras.add(LevelCamera, false);
+		//LevelCamera.bgColor = 0x00000000;
 
         CameraFollow = new FlxObject(1280/20, 720/2, 0, 0);
         add(CameraFollow);
 
         levelGroup = new FlxGroup();
         add(levelGroup);
-        levelGroup.cameras = [LevelCamera];
         objectGroup = new FlxSpriteGroup();
         add(objectGroup);
-        objectGroup.cameras = [LevelCamera];
         uiGroup = new FlxSpriteGroup();
+        //uiGroup.camera = Copy.copy(FlxG.camera);
         add(uiGroup);
         uiGroup.scrollFactor.set(0, 0);
-        uiGroup.cameras = [UICamera];
 
         closeButton = new FlxSquareButton(1260, 0, 'X', ()->{ FlxG.switchState(new menu.MainMenu()); });
         uiGroup.add(closeButton);
@@ -153,6 +149,7 @@ class LevelEditorState extends FlxState {
 
         CreateUI();
         FlxG.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+        //loadLevel();
     }
 
     public function CreateUI() {
@@ -329,6 +326,8 @@ class LevelEditorState extends FlxState {
     }
 
     override public function update(elapsed:Float) {
+        if (uiGroup.camera.scroll == null)
+            uiGroup.camera.scroll = FlxPoint.get();
         super.update(elapsed);
 
         if(FlxG.mouse.overlaps(name_text) || OBJ_name.text != '') {
@@ -506,17 +505,22 @@ class LevelEditorState extends FlxState {
 	}
 
     public function loadLevel() {
-        var SaveDir = '$LevelLoad';
-
-        var jsonContent = File.getContent('assets/$LevelLoad');
+        var SaveDir = backend.Assets.asset(LevelLoad);
+        var jsonContent:String = '';
+        try{
+            jsonContent = File.getContent(SaveDir);
+        } catch(e) {
+            trace(new LevelNullException(e.message, e.stack.toString()).toString());
+            return;
+        }
         var Data = tjson.TJSON.parse(jsonContent);
         //trace(Data);
         ActuallyLoadLevelDataIntoTheUI(Data); //* (HEADER) load the level directly into the ui.
         try{
-            if (FileSystem.exists(backend.Assets.asset(SaveDir)))
+            if (FileSystem.exists(SaveDir))
                 CreateLevel(LevelLoad);
             else
-                trace("Level doesn't exist! Looked in directory: " + backend.Assets.asset(SaveDir));
+                trace("Level doesn't exist! Looked in directory: " + SaveDir);
         } catch(e) {
             ////trace(e.message, e.stack);
             trace(new LevelNullException(e.message, e.stack.toString()).toString());
@@ -555,10 +559,12 @@ class LevelEditorState extends FlxState {
         CameraFollowLerpN = CameraFollowLerp.value;
     }
     private function CreateLevel(Json:String) {
-        Level = new Level(LevelLoader.ParseLevelData(('assets/' + Json)), true); //* I FUCKING HATE CODING :sob:
+        Level = new Level(LevelLoader.ParseLevelData((backend.Assets.asset(Json))), true);
 		Level.loadLevel();
         levelGroup.add(Level);
+        Level.camera = levelGroup.camera;
         for(object in Level.objects) {
+            object.camera = levelGroup.camera;
             DefaultObjectData.push({
                 Name: object.name,
                 Alpha: object.alpha,

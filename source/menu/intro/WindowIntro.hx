@@ -16,23 +16,14 @@ class WindowIntro extends FlxState
     {
         super.create();
         Thread.create(() -> {
-            var logoCache:FlxSprite = new FlxSprite(0, 0, Assets.image("StudioLogo")); //cache the studio logos so it doesnt lag when doing stuff.
-            var logoCache2:FlxSprite = new FlxSprite(0, 0, Assets.image("studiotext"));
-            logoCache.setGraphicSize(6000,6000);
-            logoCache2.setGraphicSize(6000,6000);
-            add(logoCache);
-            add(logoCache2);
-            wait(0.1, () -> {
-                logoCache.alpha = 0.00001;
-                logoCache2.alpha = 0.00001;
-            });
+            Assets.image("StudioLogo"); //cache the studio logos so it doesnt lag when doing stuff.
+            Assets.image("studiotext");
         });
-        #if hl
         HLNativeWindow.setWindowLayered();
         HLNativeWindow.setWindowDarkMode(true); // It just looks cleaner
         window = Application.current.window;
         window.focus();
-        @:privateAccess // I found out that this caused the glitch where it appeared below my taskbar. I was wondering why that was happening.
+        @:privateAccess
             window.__attributes.alwaysOnTop = true; //keep the window on top so you cant accidently click off during the fade and break the illusion
         setWindowAlpha(0);
         oldWindowDimensions = new Vector2(window.width, window.height);
@@ -47,11 +38,11 @@ class WindowIntro extends FlxState
         wait(2, () -> {
             fadingIn = true;
         });
-        #end
     }
+
     function setWindowAlpha(alpha:Int)
     {
-        #if hl HLNativeWindow.setWindowAlpha(alpha); #end
+        HLNativeWindow.setWindowAlpha(alpha);
     }
 
     var alpha:Int = 0;
