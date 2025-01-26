@@ -15,16 +15,15 @@
     <window if="html5" width="0" height="0" resizeable="false"/>
 
     <set name="BUILD_DIR" value="export"/>
-    <define name="CRASH_HANDLER" if="desktop" />
-
-    <define name="debug" if="debug"/>
 
     <!--IF YOUR MAKING A MOD, UNCOMMENT THIS-->
     <!--    <define name="modded" if=""/>   -->
     
     <source path="source"/>
     <assets path="assets"/>
-    <assets path="assets/fonts" />
+
+    <undefine name="openfl-disable-handle-error"/>
+    <define name="openfl_enable_handle_error"/>
 
 	<haxelib name="flixel" />
     <haxelib name="away3d" />

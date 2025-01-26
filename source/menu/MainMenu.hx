@@ -45,6 +45,7 @@ class MainMenu extends FlxTransitionableState {
     }
 
     override public function create() {
+        super.create();
         //determin the outro message now.
         RandomNumber = new FlxRandom().int(0, OutroText.length - 1);
 
