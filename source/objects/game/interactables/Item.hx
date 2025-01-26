@@ -54,7 +54,7 @@ class Item extends FlxSpriteGroup{
                         doItemShtuff(whatdoido);
                         this.kill();
                     } catch(e) {
-                        trace('error was caught, be more careful!');
+                        trace('error was caught, be more careful!\n\n\n' + e.message + '\n\n\n' + e.stack);
                     }
                 }
             }
@@ -103,8 +103,8 @@ class Item extends FlxSpriteGroup{
                     Playstate.instance.Player.RifleAmmoRemaining += 25;
                     Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Rifle Ammo +25!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
                 case _SUIT:
-                    //do something here, implement soon.
-                    //Playstate.instance.Hud.StatMSGContainer.doCoolSuitIntro(TODO: vars);
+                    Playstate.instance.Player.GotSuitFirstTime = true;
+                    wait(10, ()->{ Playstate.instance.Player.hasSuit = true; Playstate.instance.Player.GotSuitFirstTime = false; });
                 case _SUITBATTERY:
                     Playstate.instance.onItemPickup('Battery', null, () -> { GameState.saveState([Playstate.instance.Player.health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
                     Playstate.instance.Player.battery += 15;

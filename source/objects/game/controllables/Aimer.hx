@@ -72,11 +72,13 @@ class Aimer extends FlxSprite {
                 }
             }
             else {
-                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMONE, 2, 0.1, true, false);
-                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMOSLASH, 2, 0.1, true, false);
-                FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMTWO, 2, 0.1, true, false);
-                trace('selected ammo type is empty!');
-                //play empty ammo noise
+                if(Playstate.instance.Hud.ammocounter_AMMONUMONE != null && Playstate.instance.Hud.ammocounter_AMMOSLASH != null && Playstate.instance.Hud.ammocounter_AMMONUMTWO != null) {
+                    FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMONE, 2, 0.1, true, false);
+                    FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMOSLASH, 2, 0.1, true, false);
+                    FlxFlicker.flicker(Playstate.instance.Hud.ammocounter_AMMONUMTWO, 2, 0.1, true, false);
+                    trace('selected ammo type is empty!');
+                    //play empty ammo noise
+                }
             }
         }
     }
