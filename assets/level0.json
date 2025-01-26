@@ -126,6 +126,14 @@
             "SCL": 1,
             "X": 1000,
             "Y": 200
+        },
+        {
+            "Name": "SUITTEST",
+            "behavior": "_SUIT",
+            "texture": "battery",
+            "SCL": 1,
+            "X": 600,
+            "Y": 300
         }
     ],
     "doors":[

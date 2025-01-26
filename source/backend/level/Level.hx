@@ -168,6 +168,8 @@ class Level extends FlxGroup
                     BEHAVIOR = _RIFLE;
                 case '_SMG':
                     BEHAVIOR = _SMG;
+                case '_SUIT': //THIS WAS WHAT WAS CAUSING THE CRASH HOW DID I FORGET THIS
+                    BEHAVIOR = _SUIT;
                 default:
                     BEHAVIOR = null;
                     trace('Unknown item behavior modifier!');

@@ -38,6 +38,9 @@ class HUD extends FlxSpriteGroup {
 
     public var damageind:FlxSprite;
 
+    public var hudCreateAnimRunning:Bool = false;
+    public var hudCreated:Bool = false;
+
     #if debug
     public var debugControls:FlxText;
     public static var pressforcontrols:FlxText;
@@ -49,8 +52,6 @@ class HUD extends FlxSpriteGroup {
         this.playstate = playstate;
 
         scrollFactor.set(0, 0);
-
-        createHud(); //i dont wanna clutter the new function, so imma just move all that to a seperate function
 
         #if debug
         pressforcontrols = new FlxText(0, 700, 0, "Press HOME For Debug Controls", 12, false);
@@ -68,64 +69,85 @@ class HUD extends FlxSpriteGroup {
     override public function update(elapsed:Float) {
         super.update(elapsed); //we forgot this-
 
-        healthBar.setRange(0, playstate.Player.maxHealth);
-        stamBar.setRange(0, playstate.Player.maxStamina);
-        oxyBar.setRange(0, playstate.Player.maxOxygen);
-        healthBar.value = playstate.Player.health;
-        stamBar.value = playstate.Player.stamina;
-        oxyBar.value = playstate.Player.oxygen;
-        btrBar.value = playstate.Player.battery;
+        if(!hudCreated) {
+            if(Playstate.instance.Player.hasSuit) {
+                createHud(); //i dont wanna clutter the new function, so imma just move all that to a seperate function
+                hudCreated = true;
+            } else if(Playstate.instance.Player.GotSuitFirstTime) {
+                createHudFirstStartupAnim();
+                hudCreated = true;
+            }
+        }
 
-        switch(Playstate.instance.Player.CurWeaponChoice) {
-            case SHOTGUNSHELL:
-                CurAmmoName = '12 Gauge BuckShells';
-                ammocounter_AMMOTEXT.x = 980;
-                CurAmmoCap = Playstate.instance.Player.ShotgunAmmoCap;
-                CurAmmoNum = Playstate.instance.Player.ShotgunAmmoRemaining;
-                ammocounter_AMMOSPR1.animation.play('BS');
-                ammocounter_AMMOSPR2.animation.play('BS');
-                ammocounter_AMMOSPR3.animation.play('BS');
-                ammocounter_AMMOSPR4.animation.play('BS');
-            case PISTOLROUNDS:
-                CurAmmoName = '9MM';
-                ammocounter_AMMOTEXT.x = 980;
-                CurAmmoCap = Playstate.instance.Player.PistolAmmoCap;
-                CurAmmoNum = Playstate.instance.Player.PistolAmmoRemaining;
-                ammocounter_AMMOSPR1.animation.play('9MM');
-                ammocounter_AMMOSPR2.animation.play('9MM');
-                ammocounter_AMMOSPR3.animation.play('9MM');
-                ammocounter_AMMOSPR4.animation.play('9MM');
-            case RIFLEROUNDS:
-                CurAmmoName = '7.62x51MM NATO';
-                ammocounter_AMMOTEXT.x = 980;
-                CurAmmoCap = Playstate.instance.Player.RifleAmmoCap;
-                CurAmmoNum = Playstate.instance.Player.RifleAmmoRemaining;
-                ammocounter_AMMOSPR1.animation.play('NATO');
-                ammocounter_AMMOSPR2.animation.play('NATO');
-                ammocounter_AMMOSPR3.animation.play('NATO');
-                ammocounter_AMMOSPR4.animation.play('NATO');
-            case SMGROUNDS:
-                CurAmmoName = '10MM AUTO';
-                ammocounter_AMMOTEXT.x = 980;
-                CurAmmoCap = Playstate.instance.Player.SMGAmmoCap;
-                CurAmmoNum = Playstate.instance.Player.SMGAmmoRemaining;
-                ammocounter_AMMOSPR1.animation.play('10MM');
-                ammocounter_AMMOSPR2.animation.play('10MM');
-                ammocounter_AMMOSPR3.animation.play('10MM');
-                ammocounter_AMMOSPR4.animation.play('10MM');
-            default:
-                ammocounter_AMMOTEXT.x = 980;
-                CurAmmoName = 'None';
-                CurAmmoCap = 0;
-                CurAmmoNum = 0;
-        };
+        if(healthBar != null)
+            healthBar.setRange(0, playstate.Player.maxHealth);
+        if(stamBar != null)
+            stamBar.setRange(0, playstate.Player.maxStamina);
+        if(oxyBar != null)
+            oxyBar.setRange(0, playstate.Player.maxOxygen);
 
-        ammocounter_AMMOTEXT.text = CurAmmoName;
-        ammocounter_AMMONUMONE.text = '' + CurAmmoNum;
-        ammocounter_AMMONUMTWO.text = '' + CurAmmoCap;
+        if(!hudCreateAnimRunning) {
+            if(healthBar != null)
+                healthBar.value = playstate.Player.health;
+            if(stamBar != null)
+                stamBar.value = playstate.Player.stamina;
+            if(oxyBar != null)
+                oxyBar.value = playstate.Player.oxygen;
+            if(btrBar != null)
+                btrBar.value = playstate.Player.battery;
+        }
 
-        ammocounter_AMMOSLASH.x = ammocounter_AMMONUMONE.frameWidth + 1050 - 20;
-        ammocounter_AMMONUMTWO.x = ammocounter_AMMONUMONE.frameWidth + 1065 - 20;
+        if(ammocounter_AMMONUMONE != null && ammocounter_AMMONUMTWO != null && ammocounter_AMMOSLASH != null && ammocounter_AMMOSPR1 != null && ammocounter_AMMOSPR2 != null && ammocounter_AMMOSPR3 != null && ammocounter_AMMOSPR4 != null && ammocounter_AMMOTEXT != null) {
+            ammocounter_AMMOTEXT.text = CurAmmoName;
+            ammocounter_AMMONUMONE.text = '' + CurAmmoNum;
+            ammocounter_AMMONUMTWO.text = '' + CurAmmoCap;
+    
+            ammocounter_AMMOSLASH.x = ammocounter_AMMONUMONE.frameWidth + 1050 - 20;
+            ammocounter_AMMONUMTWO.x = ammocounter_AMMONUMONE.frameWidth + 1065 - 20;
+            switch(Playstate.instance.Player.CurWeaponChoice) {
+                case SHOTGUNSHELL:
+                    CurAmmoName = '12 Gauge BuckShells';
+                    ammocounter_AMMOTEXT.x = 980;
+                    CurAmmoCap = Playstate.instance.Player.ShotgunAmmoCap;
+                    CurAmmoNum = Playstate.instance.Player.ShotgunAmmoRemaining;
+                    ammocounter_AMMOSPR1.animation.play('BS');
+                    ammocounter_AMMOSPR2.animation.play('BS');
+                    ammocounter_AMMOSPR3.animation.play('BS');
+                    ammocounter_AMMOSPR4.animation.play('BS');
+                case PISTOLROUNDS:
+                    CurAmmoName = '9MM';
+                    ammocounter_AMMOTEXT.x = 980;
+                    CurAmmoCap = Playstate.instance.Player.PistolAmmoCap;
+                    CurAmmoNum = Playstate.instance.Player.PistolAmmoRemaining;
+                    ammocounter_AMMOSPR1.animation.play('9MM');
+                    ammocounter_AMMOSPR2.animation.play('9MM');
+                    ammocounter_AMMOSPR3.animation.play('9MM');
+                    ammocounter_AMMOSPR4.animation.play('9MM');
+                case RIFLEROUNDS:
+                    CurAmmoName = '7.62x51MM NATO';
+                    ammocounter_AMMOTEXT.x = 980;
+                    CurAmmoCap = Playstate.instance.Player.RifleAmmoCap;
+                    CurAmmoNum = Playstate.instance.Player.RifleAmmoRemaining;
+                    ammocounter_AMMOSPR1.animation.play('NATO');
+                    ammocounter_AMMOSPR2.animation.play('NATO');
+                    ammocounter_AMMOSPR3.animation.play('NATO');
+                    ammocounter_AMMOSPR4.animation.play('NATO');
+                case SMGROUNDS:
+                    CurAmmoName = '10MM AUTO';
+                    ammocounter_AMMOTEXT.x = 980;
+                    CurAmmoCap = Playstate.instance.Player.SMGAmmoCap;
+                    CurAmmoNum = Playstate.instance.Player.SMGAmmoRemaining;
+                    ammocounter_AMMOSPR1.animation.play('10MM');
+                    ammocounter_AMMOSPR2.animation.play('10MM');
+                    ammocounter_AMMOSPR3.animation.play('10MM');
+                    ammocounter_AMMOSPR4.animation.play('10MM');
+                default:
+                    ammocounter_AMMOTEXT.x = 980;
+                    CurAmmoName = 'None';
+                    CurAmmoCap = 0;
+                    CurAmmoNum = 0;
+            };
+        }
 
         #if debug
         var fps:Float = elapsed;
@@ -158,6 +180,7 @@ class HUD extends FlxSpriteGroup {
 
     function createHud():Void {
         StatMSGContainer = new StatusMessageHolder(200, 300, #if debug true #else false #end);
+        hudCreateAnimRunning = false;
 
         healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, playstate.Player, 'health');
         healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
@@ -271,6 +294,54 @@ class HUD extends FlxSpriteGroup {
         add(ammocounter_AMMOSPR4);
         add(damageind);
         add(StatMSGContainer);
+    }
+
+    function createHudFirstStartupAnim():Void {
+        hudCreateAnimRunning = true;
+
+        HUDBG = new FlxSprite(0, 0).makeGraphic(FlxG.width, 60, FlxColor.TRANSPARENT);
+        var HUDBGPOINTS:Array<FlxPoint> = 
+        [
+            new FlxPoint(0, 0),
+            new FlxPoint(1280, 0),
+            new FlxPoint(1280, 60),
+            new FlxPoint(1032, 60),
+            new FlxPoint(932, 10),
+            new FlxPoint(350, 10),
+            new FlxPoint(250, 60),
+            new FlxPoint(0, 60),
+            new FlxPoint(0, 0)
+        ];
+        HUDBG.drawPolygon(HUDBGPOINTS, FlxColor.BLACK);
+        HUDBG.y = -60;
+
+        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, playstate.Player, 'health');
+        healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
+        healthBar.alpha = 0;
+        healthBar.updateHitbox();
+        healthBar.value = 0;
+
+        HPTXT = new FlxText(52, healthBar.y + 14, 8);
+        HPTXT.scale.set(1.2,1.2);
+        HPTXT.alignment = LEFT;
+        HPTXT.wordWrap = false;
+        HPTXT.text = "Health";
+        HPTXT.alpha = 0;
+        
+        FlxTween.tween(HUDBG, {y: 0}, 1, { ease: FlxEase.cubeOut });
+        wait(1, ()->{
+            FlxTween.tween(healthBar, {alpha: 1}, 1, { ease: FlxEase.expoOut, onComplete: function(Twn:FlxTween) {
+                FlxTween.tween(healthBar, {value: 100}, 1, { ease: FlxEase.sineInOut, onComplete: function(Twn:FlxTween) {
+                    FlxTween.tween(HPTXT, {alpha: 1}, 0.2, { ease: FlxEase.sineOut });
+                    FlxTween.tween(HPTXT, {fieldWidth: 50}, 1, { ease: FlxEase.sineOut });
+                }});
+            }});
+        });
+
+
+        add(HUDBG);
+        add(healthBar);
+        add(HPTXT);
     }
 
 }

@@ -52,6 +52,8 @@ class Player extends FlxSprite {
     public var SMGAmmoCap:Int = 900;
 
     //guns and current availability storage
+    public var hasSuit:Bool = false;
+    public var GotSuitFirstTime:Bool = false;
     public var hasPistol:Bool = false;
     public var hasRifle:Bool = false;
     public var hasShotgun:Bool = false;

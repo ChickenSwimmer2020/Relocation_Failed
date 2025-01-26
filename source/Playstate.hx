@@ -236,8 +236,7 @@ class Playstate extends FlxTransitionableState {
 		FlxG.cameras.add(HUDCAM, false);
 		HUDCAM.bgColor = 0x0011FF00;
 
-		Hud = new HUD(this);
-		// if(!Player.HasSuit) Hud.visible = false; // make the hud invsible if the player doesnt have the suit
+		Hud = new HUD(this); //hud does get init, BUT doesnt actually show anything until you pickup the suit.
 		Hud.cameras = [HUDCAM];
 		Player2 = new Aimer();
 		Level = new Level(LevelLoader.ParseLevelData(Assets.asset('$_LEVEL.json')));
