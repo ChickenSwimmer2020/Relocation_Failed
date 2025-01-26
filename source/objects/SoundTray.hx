@@ -1,5 +1,7 @@
 package objects;
 
+import openfl.events.Event;
+import openfl.events.NativeWindowBoundsEvent;
 import flixel.sound.FlxSound;
 import flixel.system.ui.FlxSoundTray;
 import openfl.display.Bitmap;
@@ -59,8 +61,7 @@ class SoundTray extends FlxSoundTray {
 			_bars.push(bar);
 		}
 
-		y += 90;
-        
+        y += 90;
 	}
 
 	override public function update(MS:Float):Void {
@@ -85,6 +86,16 @@ class SoundTray extends FlxSoundTray {
 			visible = false;
 			active = false;
 		}
+		FlxG.stage.addEventListener(NativeWindowBoundsEvent.RESIZE, onResize);
+	}
+
+	function onResize(event:Event):Void {
+		if(stage.stageHeight == 720)
+			y = 640
+		else
+			y = stage.stageHeight - height / 2;
+			x = stage.stageWidth - width / 2;
+		trace(stage.stageHeight);
 	}
 
     function lerpFunc(base:Float, target:Float, ratio:Float):Float
