@@ -18,6 +18,7 @@ import openfl.display.*;
 // Lime | you misspelled this, solar. -ChickenSwimmer2020
 // wait, what? what did I misspell? If I misspelled the import it would cause an error.. -ZSolarDev
 // Hello?? You there? -ZSolarDev
+// dude i fixed this a WHILE ago, you do realize that you can also see what the import was misspelled to if you look back through the commit history. -ChickenSwimmer2020
 import lime.app.*;
 
 // Custom Stuff
