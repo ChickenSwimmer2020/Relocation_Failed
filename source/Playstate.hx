@@ -167,7 +167,8 @@ class Playstate extends FlxTransitionableState {
             },
             hscriptPath: ''
         };
-        Clipboard.text = TJSON.encode(dialogue, 'fancy');
+        //Clipboard.text = TJSON.encode(dialogue, 'fancy'); //! SOLAR CAN YOU LIKE, NOT?!
+								//* sorry, i was angry from a bug. but writing to my clipboard is annoying when i have code stored, because it overwrites the last result in clipboard history.
         trace('JSON DIALOGUE: \n${TJSON.encode(dialogue, 'fancy')}');
 
 		if (PlayerPosition == null)

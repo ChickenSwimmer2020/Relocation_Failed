@@ -60,17 +60,19 @@ class Player extends FlxSprite {
     public var hasSMG:Bool = false;
 
 	public var isMoving:Bool = false;
-    public var stamina:Int = 100;
+    public var stamina:Float = 100; //* so we used int for all of these... why?
     #if (flixel >= "6.0.0")
-        public var health:Int = 100;
+        public var health:Float = 100;
     #end
-    public var oxygen:Int = 200;
-    public var battery:Int = 500;
+    public var displayHealth:Float = 100;
+    public var useDisplayHealthAsRealHealth:Bool = false; //used for the hud intro animation since we cant lower health actually.
+    public var oxygen:Float = 200;
+    public var battery:Float = 500;
 
-    public var maxStamina:Int = 100;
-    public var maxHealth:Int = 100;
-    public var maxOxygen:Int = 200;
-    public var maxBattery:Int = 500;
+    public var maxStamina:Float = 100;
+    public var maxHealth:Float = 100;
+    public var maxOxygen:Float = 200;
+    public var maxBattery:Float = 500;
 
 	public var playstate:Playstate;
     public var colliders:Array<FlxSprite> = [];
@@ -299,6 +301,8 @@ class Player extends FlxSprite {
             AimerPOSy = this.getGraphicMidpoint().y - 15;
             gun.update(elapsed);
             gun.updateTexturePosition(AimerPOSx, AimerPOSy);
+            if(useDisplayHealthAsRealHealth)
+                displayHealth = health; //so we can get actual health values for the healthbar
     		#if debug
     		FlxG.watch.addQuick('Stamina', stamina);
     		FlxG.watch.addQuick('Speed', curPhysProperties.speed);

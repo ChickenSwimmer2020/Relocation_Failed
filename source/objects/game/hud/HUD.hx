@@ -39,7 +39,9 @@ class HUD extends FlxSpriteGroup {
     public var damageind:FlxSprite;
 
     public var hudCreateAnimRunning:Bool = false;
+    public var healthTweening:Bool = false;
     public var hudCreated:Bool = false;
+    public var healthreset:Bool = false;
 
     #if debug
     public var debugControls:FlxText;
@@ -87,7 +89,7 @@ class HUD extends FlxSpriteGroup {
             oxyBar.setRange(0, playstate.Player.maxOxygen);
 
         if(!hudCreateAnimRunning) {
-            if(healthBar != null)
+            if(healthBar != null && !healthTweening && !hudCreateAnimRunning)
                 healthBar.value = playstate.Player.health;
             if(stamBar != null)
                 stamBar.value = playstate.Player.stamina;
@@ -176,13 +178,29 @@ class HUD extends FlxSpriteGroup {
 
         }
         #end
+        if(healthTweening) {     
+            if(healthBar != null) {
+                if(!healthreset) {
+                    playstate.Player.displayHealth = 0;
+                    healthreset = true;
+                }       
+                if(healthTweening) {
+                    playstate.Player.displayHealth++; // TODO: find a way to use tweens on this so we can do a cool like, expoOut tween on it.
+                    healthBar.value = playstate.Player.displayHealth;
+                }
+            } else if(playstate.Player.displayHealth == 100) {
+                healthTweening = false;
+                Playstate.instance.Player.useDisplayHealthAsRealHealth = true;
+                playstate.Player.displayHealth = 100;
+            }
+        }
     }
 
     function createHud():Void {
         StatMSGContainer = new StatusMessageHolder(200, 300, #if debug true #else false #end);
         hudCreateAnimRunning = false;
 
-        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, playstate.Player, 'health');
+        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, playstate.Player, 'displayHealth');
         healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
         
 
@@ -296,6 +314,41 @@ class HUD extends FlxSpriteGroup {
         add(StatMSGContainer);
     }
 
+    function healthAppear(V:Float) {
+        wait(V, ()->{HPTXT.text = "H";});
+        wait(V+0.1, ()->{HPTXT.text = "He";});
+        wait(V+0.2, ()->{HPTXT.text = "Hea";});
+        wait(V+0.3, ()->{HPTXT.text = "Heal";});
+        wait(V+0.4, ()->{HPTXT.text = "Healt";});
+        wait(V+0.5, ()->{HPTXT.text = "Health";});
+    }
+    function staminaAppear(V:Float) {
+        wait(V, ()->{SMTXT.text = "S";});
+        wait(V+0.1, ()->{SMTXT.text = "St";});
+        wait(V+0.2, ()->{SMTXT.text = "Sta";});
+        wait(V+0.3, ()->{SMTXT.text = "Stam";});
+        wait(V+0.4, ()->{SMTXT.text = "Stami";});
+        wait(V+0.5, ()->{SMTXT.text = "Stamin";});
+        wait(V+0.6, ()->{SMTXT.text = "Stamina";});
+    }
+    function oxygenAppear(V:Float) {
+        wait(V, ()->{OXTXT.text = "O";});
+        wait(V+0.1, ()->{OXTXT.text = "OX";});
+        wait(V+0.2, ()->{OXTXT.text = "OXY";});
+        wait(V+0.3, ()->{OXTXT.text = "OXYG";});
+        wait(V+0.4, ()->{OXTXT.text = "OXYGE";});
+        wait(V+0.5, ()->{OXTXT.text = "OXYGEN";});
+    }
+    function batteryAppear(V:Float) {
+        wait(V, ()->{BTRTXT.text = "B";});
+        wait(V+0.1, ()->{BTRTXT.text = "BA";});
+        wait(V+0.2, ()->{BTRTXT.text = "BAT";});
+        wait(V+0.3, ()->{BTRTXT.text = "BATT";});
+        wait(V+0.4, ()->{BTRTXT.text = "BATTE";});
+        wait(V+0.5, ()->{BTRTXT.text = "BATTER";});
+        wait(V+0.6, ()->{BTRTXT.text = "BATTERY";});
+    }
+
     function createHudFirstStartupAnim():Void {
         hudCreateAnimRunning = true;
 
@@ -315,33 +368,146 @@ class HUD extends FlxSpriteGroup {
         HUDBG.drawPolygon(HUDBGPOINTS, FlxColor.BLACK);
         HUDBG.y = -60;
 
-        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, playstate.Player, 'health');
+        healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, playstate.Player, 'displayHealth');
         healthBar.createFilledBar(0xFF830000, 0xFFFF0000);
         healthBar.alpha = 0;
+        playstate.Player.displayHealth = 0;
         healthBar.updateHitbox();
-        healthBar.value = 0;
 
-        HPTXT = new FlxText(52, healthBar.y + 14, 8);
+        HPTXT = new FlxText(52, healthBar.y + 14, 0);
         HPTXT.scale.set(1.2,1.2);
         HPTXT.alignment = LEFT;
         HPTXT.wordWrap = false;
-        HPTXT.text = "Health";
+        HPTXT.text = "";
         HPTXT.alpha = 0;
+
+        stamBar = new FlxBar(healthBar.x, healthBar.y + 25, LEFT_TO_RIGHT, 200, 25, playstate.Player, 'stamina');
+        stamBar.createFilledBar(0xFF0083A0, 0xFF00B7FF);
+        stamBar.alpha = 0;
+        
+
+        SMTXT = new FlxText(HPTXT.x, HPTXT.y + 25);
+        SMTXT.scale.set(1.2,1.2);
+        SMTXT.alignment = LEFT;
+        SMTXT.text = "";
+        SMTXT.alpha = 0;
+
+        OXTXT = new FlxText(350, -1.5);
+        OXTXT.alignment = CENTER;
+        OXTXT.text = "";
+        OXTXT.alpha = 0;
+
+        BTRTXT = new FlxText(885, -1.5);
+        BTRTXT.alignment = CENTER;
+        BTRTXT.text = "";
+        BTRTXT.alpha = 0;
+
+        oxyBar = new FlxBar(350, 2.5, LEFT_TO_RIGHT, 300, 5, playstate.Player, 'oxygen');
+        oxyBar.createFilledBar(0xFF003DA0, 0xFF001AFF);
+        oxyBar.alpha = 0;
+        
+        btrBar = new FlxBar(650, 2.5, RIGHT_TO_LEFT, 280, 5, playstate.Player, 'battery');
+        btrBar.createFilledBar(0xFF007816, 0xFF07D700);
+        btrBar.alpha = 0;
+
+        FACEBG = new FlxSprite(0,5).makeGraphic(50, 50, FlxColor.WHITE);
+        FACEBG.alpha = 0;
+
+        ammocounter_LINE = new FlxSprite(980, 28).makeGraphic(250, 5, FlxColor.WHITE);
+        ammocounter_LINE.scale.x = 0.0001;
+        ammocounter_LINE.updateHitbox();
+
+        ammocounter_AMMOTEXT = new FlxText(1050, 0, 0, '', 24, true);
+        ammocounter_AMMOTEXT.alignment = CENTER;
+        ammocounter_AMMOTEXT.alpha = 0;
+
+
+        ammocounter_AMMONUMONE = new FlxText(1032, 30, '', 24, true);
+        ammocounter_AMMONUMONE.alpha = 0;
+        ammocounter_AMMOSLASH = new FlxText(0, 30, 0, '/', 24, true);
+        ammocounter_AMMOSLASH.alpha = 0;
+        ammocounter_AMMONUMTWO = new FlxText(0, 30, 0, '', 24, true);
+        ammocounter_AMMONUMTWO.alpha = 0;
+
+
+        ammocounter_AMMOSPR1 = new FlxSprite(1241, 25).loadGraphic(Assets.image('HUD_Bullets'), true, 9, 31);
+        ammocounter_AMMOSPR1.animation.add('9MM', [0], 1, false, false, false);
+        ammocounter_AMMOSPR1.animation.add('10MM', [1], 1, false, false, false);
+        ammocounter_AMMOSPR1.animation.add('BS', [2], 1, false, false, false);
+        ammocounter_AMMOSPR1.animation.add('NATO', [3], 1, false, false, false);
+        ammocounter_AMMOSPR1.animation.play('9MM');
+        ammocounter_AMMOSPR2 = new FlxSprite(1250, 25).loadGraphic(Assets.image('HUD_Bullets'), true, 9, 31);
+        ammocounter_AMMOSPR2.animation.add('9MM', [0], 1, false, false, false);
+        ammocounter_AMMOSPR2.animation.add('10MM', [1], 1, false, false, false);
+        ammocounter_AMMOSPR2.animation.add('BS', [2], 1, false, false, false);
+        ammocounter_AMMOSPR2.animation.add('NATO', [3], 1, false, false, false);
+        ammocounter_AMMOSPR2.animation.play('9MM');
+        ammocounter_AMMOSPR3 = new FlxSprite(1259, 25).loadGraphic(Assets.image('HUD_Bullets'), true, 9, 31);
+        ammocounter_AMMOSPR3.animation.add('9MM', [0], 1, false, false, false);
+        ammocounter_AMMOSPR3.animation.add('10MM', [1], 1, false, false, false);
+        ammocounter_AMMOSPR3.animation.add('BS', [2], 1, false, false, false);
+        ammocounter_AMMOSPR3.animation.add('NATO', [3], 1, false, false, false);
+        ammocounter_AMMOSPR3.animation.play('9MM');
+        ammocounter_AMMOSPR4 = new FlxSprite(1268, 25).loadGraphic(Assets.image('HUD_Bullets'), true, 9, 31);
+        ammocounter_AMMOSPR4.animation.add('9MM', [0], 1, false, false, false);
+        ammocounter_AMMOSPR4.animation.add('10MM', [1], 1, false, false, false);
+        ammocounter_AMMOSPR4.animation.add('BS', [2], 1, false, false, false);
+        ammocounter_AMMOSPR4.animation.add('NATO', [3], 1, false, false, false);
+        ammocounter_AMMOSPR4.animation.play('9MM');
+
+        ammocounter_AMMOSPR1.alpha = 0;
+        ammocounter_AMMOSPR2.alpha = 0;
+        ammocounter_AMMOSPR3.alpha = 0;
+        ammocounter_AMMOSPR4.alpha = 0;
         
         FlxTween.tween(HUDBG, {y: 0}, 1, { ease: FlxEase.cubeOut });
+
         wait(1, ()->{
+            playstate.Player.displayHealth = 0;
+            playstate.Player.stamina = 0;
             FlxTween.tween(healthBar, {alpha: 1}, 1, { ease: FlxEase.expoOut, onComplete: function(Twn:FlxTween) {
-                FlxTween.tween(healthBar, {value: 100}, 1, { ease: FlxEase.sineInOut, onComplete: function(Twn:FlxTween) {
+                    playstate.Player.displayHealth = 0;
+                    healthTweening = true;
                     FlxTween.tween(HPTXT, {alpha: 1}, 0.2, { ease: FlxEase.sineOut });
-                    FlxTween.tween(HPTXT, {fieldWidth: 50}, 1, { ease: FlxEase.sineOut });
-                }});
+                    wait(0.2, ()->{ healthAppear(0.2); });
             }});
+            FlxTween.tween(stamBar, {alpha: 1}, 1, { ease: FlxEase.expoOut, onUpdate: function(Twn3:FlxTween) { playstate.Player.stamina = 0; }, onComplete: function(Twn2:FlxTween) {
+                playstate.Player.stamina = 0;
+                FlxTween.tween(SMTXT, {alpha: 1}, 0.2, { ease: FlxEase.sineOut });
+                wait(0.2, ()->{ staminaAppear(0.2); });
+            }});
+            FlxTween.tween(oxyBar, {alpha: 1}, 1, { ease: FlxEase.expoOut, onComplete: function(Twn4:FlxTween) {
+                FlxTween.tween(OXTXT, {alpha: 1}, 0.2, { ease: FlxEase.sineOut });
+                wait(0.2, ()->{ oxygenAppear(0.2); });
+            }});
+            FlxTween.tween(btrBar, {alpha: 1}, 1, { ease: FlxEase.expoOut, onComplete: function(Twn5:FlxTween) {
+                FlxTween.tween(BTRTXT, {alpha: 1}, 0.2, { ease: FlxEase.sineOut });
+                wait(0.2, ()->{ batteryAppear(0.2); });
+            }});
+            FlxTween.tween(FACEBG, {alpha: 1}, 0.2, { ease: FlxEase.expoOut });
+            wait(1, ()->{ FlxTween.tween(ammocounter_LINE, {"scale.x": 1}, 2.2, { ease: FlxEase.cubeOut, onUpdate: function(Twn6:FlxTween) { ammocounter_LINE.updateHitbox(); }}); });
         });
 
 
         add(HUDBG);
         add(healthBar);
         add(HPTXT);
+        add(stamBar);
+        add(SMTXT);
+        add(oxyBar);
+        add(OXTXT);
+        add(btrBar);
+        add(BTRTXT);
+        add(FACEBG);
+        add(ammocounter_LINE);
+        add(ammocounter_AMMOTEXT);
+        add(ammocounter_AMMONUMONE);
+        add(ammocounter_AMMOSLASH);
+        add(ammocounter_AMMONUMTWO);
+        add(ammocounter_AMMOSPR1);
+        add(ammocounter_AMMOSPR2);
+        add(ammocounter_AMMOSPR3);
+        add(ammocounter_AMMOSPR4);
     }
 
 }
