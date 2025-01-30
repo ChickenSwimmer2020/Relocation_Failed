@@ -215,6 +215,34 @@ class Playstate extends FlxTransitionableState {
 		else
 			trace('Item was picked up: [NAME NOT PROVIDED]');
 		#end
+		if(Item != null) {
+			if(Item == 'Pistol' || Item == 'Shotgun' || (Item == 'SMG' || Item == 'Rifle')) {
+				#if debug
+					trace('Item is a Weapon, Fixing weapon select alphas...');
+				#end
+				if(Playstate.instance.Hud.ammocounter_AMMONUMONE.alpha == 0)
+					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMONUMONE, {alpha: 1}, { ease: FlxEase.cubeInOut });
+
+				if(Playstate.instance.Hud.ammocounter_AMMONUMTWO.alpha == 0)
+					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMONUMTWO, {alpha: 1}, { ease: FlxEase.cubeInOut });
+
+				if(Playstate.instance.Hud.ammocounter_AMMOSLASH.alpha == 0)
+					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSLASH, {alpha: 1}, { ease: FlxEase.cubeInOut });
+
+				if(Playstate.instance.Hud.ammocounter_AMMOSPR1.alpha == 0)
+					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR1, {alpha: 1}, { ease: FlxEase.cubeInOut });
+				if(Playstate.instance.Hud.ammocounter_AMMOSPR2.alpha == 0)
+					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR2, {alpha: 1}, { ease: FlxEase.cubeInOut });
+				if(Playstate.instance.Hud.ammocounter_AMMOSPR3.alpha == 0)
+					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR3, {alpha: 1}, { ease: FlxEase.cubeInOut });
+				if(Playstate.instance.Hud.ammocounter_AMMOSPR4.alpha == 0)
+					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR4, {alpha: 1}, { ease: FlxEase.cubeInOut });
+
+				if(Playstate.instance.Hud.ammocounter_AMMOTEXT.alpha == 0)
+					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOTEXT, {alpha: 1}, { ease: FlxEase.cubeInOut });
+
+			}
+		}
 		if(Function != null) {
 			Function();
 		}

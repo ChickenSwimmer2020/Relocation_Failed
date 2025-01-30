@@ -131,6 +131,7 @@ class Item extends FlxSpriteGroup{
                     Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Shotgun Acquired!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
                     if(Playstate.instance.Player.gun.theGunTexture.alpha == 0)
                         Playstate.instance.Player.gun.theGunTexture.alpha = 1;
+                    Playstate.instance.Player.CurWeaponChoice = SHOTGUNSHELL;
                     Playstate.instance.Player.updateWeapon();
                 case _RIFLE:
                     if (!Playstate.instance.Player.hasSuit) return 1;

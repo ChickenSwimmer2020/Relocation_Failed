@@ -118,21 +118,42 @@ class Gun extends FlxSpriteGroup{
             Playstate.instance.AimerGroup.members[0].animation.add('Cock', [6,7,8,9,10,11,12,13], 12, false, false, false);
     }
 
-    public function shoot() {
+    public function shoot(WeaponType:Bullet.BulletType) {
+        var OffsetX:Float;
+        var OffsetY:Float;
+        switch(WeaponType) {
+            case PISTOLROUNDS:
+                OffsetX = 30;
+                OffsetY = 30;
+            case SHOTGUNSHELL:
+                OffsetX = 0; //not needed, offsets for the shotgun are forced since its a single weapon type, just kept to prevent errors.
+                OffsetY = 0;
+            case SMGROUNDS:
+                OffsetX = 0;
+                OffsetY = 0;
+            case RIFLEROUNDS:
+                OffsetX = 0;
+                OffsetY = 0;
+            default: //default the bullet fire offsets.
+                OffsetX = 0;
+                OffsetY = 0;
+        }
         var mousePos = FlxG.mouse.getPosition();
-        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, mousePos, Playstate.instance.Player.CurWeaponChoice, Preferences.save.bulletTracers));
+        Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.x + OffsetX, Playstate.instance.Player2.y + OffsetY, mousePos, Playstate.instance.Player.CurWeaponChoice, Preferences.save.bulletTracers));
         Playstate.instance.AimerGroup.members[0].x -= 10;
-        Playstate.instance.AimerGroup.members[0].angle -= 15;
+        ////Playstate.instance.AimerGroup.members[0].angle -= 15;
         theGunTexture.x = -15;
-        theGunTexture.angle = -15;
+        ////theGunTexture.angle = -15;
         Playstate.instance.AimerGroup.members[0].animation.play('Pew', true);
     }
 
     public function shotgunShoot() {
+        var OffsetX:Float = 15;
+        var OffsetY:Float = 15;
         Playstate.instance.AimerGroup.members[0].animation.play('Pew', true);
         var Spread:Array<FlxPoint> = getShotgunSpread(FlxG.mouse.getPosition(), Playstate.instance.Player2.angle, 240, 9, 100);
         for (spread in 0...8)
-            Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.getGraphicMidpoint().x, Playstate.instance.Player2.getGraphicMidpoint().y, Spread[spread], SHOTGUNSHELL, true));
+            Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.x + OffsetX, Playstate.instance.Player2.y + OffsetY, Spread[spread], SHOTGUNSHELL, true));
     }
 
     public function getShotgunSpread(center:FlxPoint, facingAngle:Float, fov:Float, numBullets:Int, range:Float):Array<FlxPoint> {
@@ -164,6 +185,6 @@ class Gun extends FlxSpriteGroup{
         if (ratio < 1)
             ratio += 0.0001;
         Playstate.instance.AimerGroup.members[0].x = RFInterp.easedInterp(Playstate.instance.Player2.x + 15, realGunXPOS, ratio, 'smootherStepInOut');
-        Playstate.instance.AimerGroup.members[0].angle = RFInterp.easedInterp(Playstate.instance.Player2.angle, 0, ratio, 'smootherStepInOut');
+        ////Playstate.instance.AimerGroup.members[0].angle = RFInterp.easedInterp(Playstate.instance.Player2.angle, 0, ratio, 'smootherStepInOut');
     }
 }

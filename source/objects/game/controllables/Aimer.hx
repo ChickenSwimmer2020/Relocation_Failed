@@ -33,7 +33,7 @@ class Aimer extends FlxSprite {
                         if(FlxG.mouse.justPressed) {
                             Playstate.instance.Player.PistolAmmoRemaining--;
                             trace('Pistol Bullet Shot!');
-                            gun.shoot();
+                            gun.shoot(PISTOLROUNDS);
                             Playstate.instance.FGCAM.shake(0.001, 0.1);
                             Playstate.instance.HUDCAM.shake(0.001, 0.1);
                             Playstate.instance.camera.shake(0.001, 0.1);
@@ -42,7 +42,7 @@ class Aimer extends FlxSprite {
                         if (RIFLEfireTimer >= RIFLEfireRate) {
                             Playstate.instance.Player.RifleAmmoRemaining--;
                             trace('Rifle Bullet Shot!');
-                            gun.shoot();
+                            gun.shoot(RIFLEROUNDS);
                             RIFLEfireTimer = 0; // Reset the timer after firing
                             Playstate.instance.FGCAM.shake(0.002, 0.1);
                             Playstate.instance.HUDCAM.shake(0.002, 0.1);
@@ -63,7 +63,7 @@ class Aimer extends FlxSprite {
                     case SMGROUNDS:
                         Playstate.instance.Player.SMGAmmoRemaining--;
                         trace('SMG Bullet Shot!');
-                        gun.shoot();
+                        gun.shoot(SMGROUNDS);
                         Playstate.instance.FGCAM.shake(0.001, 0.1);
                         Playstate.instance.HUDCAM.shake(0.001, 0.1);
                         Playstate.instance.camera.shake(0.001, 0.1);
