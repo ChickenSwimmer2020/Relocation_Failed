@@ -203,6 +203,8 @@ class MainMenu extends FlxTransitionableState {
     override public function update(elapsed:Float) {
             super.update(elapsed);
             _++; _ %= 2; //let me guess, spawn stars on every other frame? --CS2020
+            //yeah, you got it. --ZSolarDev
+            FlxG.mouse.visible = true;
             if (_ == 0){
                 var star:Star = cast new Star(Std.int(FlxG.width/2), Std.int(FlxG.height/2) - 30, null, false, 2).makeGraphic(10, 10);
                 star.cameras = [starCam];

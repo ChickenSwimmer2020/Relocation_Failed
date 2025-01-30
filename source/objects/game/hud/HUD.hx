@@ -100,12 +100,6 @@ class HUD extends FlxSpriteGroup {
         }
 
         if(ammocounter_AMMONUMONE != null && ammocounter_AMMONUMTWO != null && ammocounter_AMMOSLASH != null && ammocounter_AMMOSPR1 != null && ammocounter_AMMOSPR2 != null && ammocounter_AMMOSPR3 != null && ammocounter_AMMOSPR4 != null && ammocounter_AMMOTEXT != null) {
-            ammocounter_AMMOTEXT.text = CurAmmoName;
-            ammocounter_AMMONUMONE.text = '' + CurAmmoNum;
-            ammocounter_AMMONUMTWO.text = '' + CurAmmoCap;
-    
-            ammocounter_AMMOSLASH.x = ammocounter_AMMONUMONE.frameWidth + 1050 - 20;
-            ammocounter_AMMONUMTWO.x = ammocounter_AMMONUMONE.frameWidth + 1065 - 20;
             switch(Playstate.instance.Player.CurWeaponChoice) {
                 case SHOTGUNSHELL:
                     CurAmmoName = '12 Gauge BuckShells';
@@ -149,6 +143,12 @@ class HUD extends FlxSpriteGroup {
                     CurAmmoCap = 0;
                     CurAmmoNum = 0;
             };
+            ammocounter_AMMOTEXT.text = CurAmmoName;
+            ammocounter_AMMONUMONE.text = '' + CurAmmoNum;
+            ammocounter_AMMONUMTWO.text = '' + CurAmmoCap;
+    
+            ammocounter_AMMOSLASH.x = ammocounter_AMMONUMONE.frameWidth + 1050 - 20;
+            ammocounter_AMMONUMTWO.x = ammocounter_AMMONUMONE.frameWidth + 1065 - 20;
         }
 
         #if debug
@@ -350,6 +350,7 @@ class HUD extends FlxSpriteGroup {
     }
 
     function createHudFirstStartupAnim():Void {
+        StatMSGContainer = new StatusMessageHolder(200, 300, #if debug true #else false #end);
         hudCreateAnimRunning = true;
 
         HUDBG = new FlxSprite(0, 0).makeGraphic(FlxG.width, 60, FlxColor.TRANSPARENT);

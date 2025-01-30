@@ -44,7 +44,7 @@ class CrashState extends FlxState
 		addToBuffer(errorData.split('|||')[0] + '\n'); // error
 		addToBuffer(errorData.split('|||')[1]); // stack
 		addToBuffer('\n\n\n\n');
-		addToBuffer("We're sorry! The game has crashed. Please report this issue in our discord server, and press Enter to restart the game and copy the error to your clipboard to report. Thank you!");
+		addToBuffer("We're sorry! The game has crashed. Please report this issue in our discord server, and press Enter to restart the game, and use space to copy the error to your clipboard to report. Thank you!");
 		errorTxt = new FlxTypeText(0, 0, 1000, buffer.toString(), 12);
 		errorTxt.font = 'assets/terminus.ttf';
 		errorTxt.color = 0xFF00FF00;
@@ -87,9 +87,11 @@ class CrashState extends FlxState
 		errorTxt.start();
 		errorTxt.txtPerFrame = 10;
         if (FlxG.keys.justPressed.ENTER){
-            Clipboard.text = '${errorData.split('|||')[0]}\n\n${errorData.split('|||')[1]}';
             Main.crashTxt = '';
-            FlxG.switchState(new WaterMarks());
+            Sys.command('start "" "./Relocation Failed.exe"');
+            Sys.exit(0);
         }
+        if (FlxG.keys.justPressed.SPACE)
+            Clipboard.text = '${errorData.split('|||')[0]}\n\n${errorData.split('|||')[1]}';
 	}
 }

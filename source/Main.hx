@@ -1,5 +1,7 @@
 package;
 
+import openfl.events.ErrorEvent;
+import openfl.errors.Error;
 import sys.io.File;
 import sys.FileSystem;
 import crash.CrashState;
@@ -22,17 +24,14 @@ class Main extends Sprite{
     function start()
     {
         var fromCrash = FileSystem.exists('crash.txt');
-        var game:FlxGame = new FlxGame(0, 0, WindowIntro, 60, 60, false, false);
+        var game:FlxGame = new FlxGame(0, 0, WindowIntro, 60, 60, true, false);
         Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, handleCrash);
         if (fromCrash){
             crashTxt = File.getContent('crash.txt');
             game = new FlxGame(0, 0, CrashState, 60, 60, true, false);
             FileSystem.deleteFile('crash.txt');
         }
-        @:privateAccess(
-            game._customSoundTray = objects.SoundTray,
-            game._skipSplash = true
-        )
+        @:privateAccess game._customSoundTray = objects.SoundTray;
         addChild(game);
         loadGameSaveData();
     }
@@ -54,10 +53,18 @@ class Main extends Sprite{
         }
 
     function handleCrash(event:UncaughtErrorEvent):Void {
-        var lastError:String = event.error;
+        var lastError:String;
+        if (Std.isOfType(event.error, Error)) {
+            lastError = cast(event.error, Error).message;
+        } else if (Std.isOfType(event.error, ErrorEvent)) {
+            lastError = cast(event.error, ErrorEvent).text;
+        } else {
+            lastError = Std.string(event.error);
+        }
         var lastStack:String = stackToString(CallStack.exceptionStack(true));
         var file = '${lastError}|||${lastStack}';
         File.saveContent('./crash.txt', file);
+        trace('${lastError}\n\n${lastStack}');
         Sys.command('start "" "./Relocation Failed.exe"');
         Sys.exit(1);
     }

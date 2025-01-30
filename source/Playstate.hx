@@ -264,6 +264,7 @@ class Playstate extends FlxTransitionableState {
 		#if debug
 		DebuggerHelper.update(elapsed);
 		#end
+        FlxG.mouse.visible = true;
 		switch (Level.CameraFollowStyle) {
 			case 'LOCKON':
 				followStyle = LOCKON;

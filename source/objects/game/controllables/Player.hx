@@ -175,7 +175,7 @@ class Player extends FlxSprite {
     }
 
     // Update the weapon
-    private function updateWeapon():Void {
+    public function updateWeapon():Void {
         trace("Selected weapon: " + weapons[currentWeaponIndex]);
         flickering = false;
         FlxFlicker.stopFlickering(Playstate.instance.Hud.ammocounter_AMMONUMONE);

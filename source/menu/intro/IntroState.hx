@@ -17,6 +17,14 @@ class IntroState extends FlxState
     var lerpWindow:Bool = false;
     var planet:FlxSprite;
     var pIndex:Int = 0;
+    var fromWindowIntro:Bool = false;
+    
+    override public function new(?fromWindowIntro:Bool = false)
+    {
+        super();
+        this.fromWindowIntro = fromWindowIntro;
+    }
+
     override public function create()
     {
         super.create();
@@ -114,18 +122,20 @@ class IntroState extends FlxState
         super.update(elapsed);
         if (FlxG.keys.justPressed.SPACE)
         {
-            var window = Application.current.window;
-            window.borderless = false;
-            window.x = Std.int(WindowIntro.oldWindowPosition.x);
-            window.y = Std.int(WindowIntro.oldWindowPosition.y);
-            window.width = Std.int(WindowIntro.oldWindowDimensions.x);
-            window.height = Std.int(WindowIntro.oldWindowDimensions.y);
+            if (fromWindowIntro){
+                var window = Application.current.window;
+                window.borderless = false;
+                window.x = Std.int(WindowIntro.oldWindowPosition.x);
+                window.y = Std.int(WindowIntro.oldWindowPosition.y);
+                window.width = Std.int(WindowIntro.oldWindowDimensions.x);
+                window.height = Std.int(WindowIntro.oldWindowDimensions.y);
+            }
             FlxG.camera.zoom = 0;
             FlxG.sound.music.stop();
             FlxG.mouse.visible = true;
             FlxG.switchState(new WaterMarks());
         }
-        if (lerpWindow)
+        if (lerpWindow && fromWindowIntro)
         {
             val += 0.02;
             var window = Application.current.window;
