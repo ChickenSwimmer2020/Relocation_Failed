@@ -32,8 +32,6 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="flixel-addons" />
     <haxelib name="hxdiscord_rpc"/>
-    <haxelib name="svg" />
-    <haxelib name="flxsvg"/>
 
     <haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
     <haxedef name="FLX_NO_MOUSE" if="mobile"/>
