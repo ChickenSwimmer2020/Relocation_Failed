@@ -55,7 +55,7 @@ class IntroState extends FlxState
         overlayWhite.alpha = 0;
         overlayWhite.cameras = [overlayCam];
         add(overlayWhite);
-        var skipTxt = new FlxText(20, 665, 0, 'Press SPACE To skip.', 30);
+        var skipTxt = new FlxText(20, 665, 0, 'Press SPACE/ENTER/ESCAPE To skip.', 30);
         skipTxt.alpha = 0.4;
         skipTxt.camera = overlayCam;
         add(skipTxt);
@@ -120,7 +120,7 @@ class IntroState extends FlxState
     var val = 0.0;
     override public function update(elapsed:Float) {
         super.update(elapsed);
-        if (FlxG.keys.justPressed.SPACE)
+        if (FlxG.keys.anyJustPressed([SPACE, ENTER, ESCAPE]))
         {
             if (fromWindowIntro){
                 var window = Application.current.window;
