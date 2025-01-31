@@ -10,7 +10,6 @@ import away3d.library.assets.Asset3DType;
 import away3d.materials.lightpickers.StaticLightPicker;
 
 import openfl.Assets;
-import flxsvg.FlxSvgSprite;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;

@@ -129,7 +129,7 @@ class HUD extends FlxSpriteGroup {
                     ammocounter_AMMOSPR3.animation.play('NATO');
                     ammocounter_AMMOSPR4.animation.play('NATO');
                 case SMGROUNDS:
-                    CurAmmoName = '10MM AUTO';
+                    CurAmmoName = 'FN 5.7×28mm NATO';
                     ammocounter_AMMOTEXT.x = 980;
                     CurAmmoCap = Playstate.instance.Player.SMGAmmoCap;
                     CurAmmoNum = Playstate.instance.Player.SMGAmmoRemaining;
