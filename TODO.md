@@ -19,3 +19,7 @@
  - [ ] make damage indicators work
  - [ ] npcs
  - [ ] health display value tweens
+
+### ***NEEDS TO BE IMPLEMENTED***
+
+ - [ ] Find out how to run functions directly from an JSON file

@@ -4,6 +4,7 @@ import debug.LevelEditorState;
 import objects.game.interactables.Door;
 import objects.game.interactables.Item;
 import objects.game.interactables.Item.ItemType;
+import objects.game.interactables.Trigger;
 import objects.game.controllables.Player;
 import flixel.math.FlxRect;
 import backend.level.LevelLoader.LevelHeader;
@@ -21,6 +22,7 @@ class Level extends FlxGroup
     public var objects:Map<String, LevelSprite> = new Map();
     public var items:Map<String, FlxSpriteGroup> = new Map();
     public var doors:Map<String, FlxSpriteGroup> = new Map();
+    public var triggers:Map<String, FlxSprite> = new Map();
     public var colliders:Array<LevelSprite> = [];
 
     public var LevelID:String;
@@ -50,6 +52,7 @@ class Level extends FlxGroup
         objects.clear();
         items.clear();
         doors.clear();
+        triggers.clear();
         
         colliders.clearArray((collider) -> {
             collider.destroy();
@@ -190,6 +193,12 @@ class Level extends FlxGroup
             doors.set(door.Name, drr);
             add(drr);
             trace('new door added!\n\n$drr');
+        }
+        for (trigger in levelData.triggers) {
+            var Trg:Trigger = cast(new Trigger(trigger.X, trigger.Y, trigger.Width, trigger.Height, trigger.Visible, trigger.Function));
+            triggers.set(trigger.Name, Trg);
+            add(Trg);
+            trace('New Trigger Created\n\n$Trg');
         }
     }
 }

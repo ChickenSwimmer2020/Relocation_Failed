@@ -149,5 +149,16 @@
             "X": 150,
             "Y": 150
         }
+    ],
+    "triggers":[
+        {
+            "Name": "TestTrigger",
+            "Function": "()->{}",
+            "Visible": true,
+            "X": 1000,
+            "Y": 1000,
+            "Width": 500,
+            "Height": 500
+        }
     ]
 }

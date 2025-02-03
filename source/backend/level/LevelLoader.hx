@@ -74,6 +74,21 @@ typedef LevelDoor =
 }
 
 /**
+ *  An trigger in a level.
+ * @since RF_DEV_0.3.8
+**/
+typedef LevelTrigger =
+{
+    var Name:String; //internal name.
+    var Function:Void->Void; //what to do when triggered.
+    var ?Visible:Bool; //is the trigger visible to the camera.
+    var X:Float; //x position.
+    var Y:Float; //y position.
+    var Width:Float; //width.
+    var Height:Float; //height.
+} 
+
+/**
  * An item in a level.
  * @since RF_DEV_0.1.4
  */
@@ -109,6 +124,11 @@ typedef LevelData =
      * @since RF_DEV_0.3.7
      */
     var doors:Array<LevelDoor>;
+    /**
+     *  the triggers of a level
+     * @since RF_DEV_0.3.8
+    **/
+    var triggers:Array<LevelTrigger>;
 }
 
 class LevelLoader
