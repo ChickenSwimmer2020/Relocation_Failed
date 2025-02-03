@@ -10,7 +10,7 @@ class DialogueSubState extends FlxSubState {
         super();
         var jsonData = Json.parse(Assets.getText(jsonPath));
         // cast my beloved
-        dialogue = cast jsonData;
+        dialogue = cast jsonData; //* wait wait, werent we doing xml dialouge? or did we switch to json
 
         trace(jsonData);
         close();

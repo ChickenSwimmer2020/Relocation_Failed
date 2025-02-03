@@ -8,6 +8,7 @@ class StatusMessageHolder extends FlxSpriteGroup {
     var msgGroup:FlxSpriteGroup;
     var MSGGROUP_INDEX:Int;
     public var currentYOffset:Float = 0;
+    public var doingCoolIntro:Bool = false;
     public function new(X:Float, Y:Float, createInDebugMode:Bool = false) {
         super(0, 0);
         msgGroup = new FlxSpriteGroup();
@@ -18,7 +19,7 @@ class StatusMessageHolder extends FlxSpriteGroup {
         }else{
             BGBox.alpha = 0.25;
         }
-        add(BGBox);
+        add(BGBox); //* box can hold a total of 9 messages, find a way to delete the first one for every new one created?
         add(msgGroup);
         #if debug
             trace('StatusMessageGroup area created successfully.');
@@ -45,6 +46,33 @@ class StatusMessageHolder extends FlxSpriteGroup {
             currentYOffset = 0;
             clearStatusMessages();
         }
+        if (msgGroup.countLiving() > 9) {
+            msgGroup.group.members[0].kill();
+            currentYOffset -= 10;
+        }
+        if(doingCoolIntro) {
+            BGBox.updateHitbox();
+        }
+    }
+
+    function DoCoolIntro() {
+        doingCoolIntro = true;
+        BGBox.scale.set(0.1,0.1);
+        FlxTween.tween(BGBox, {"scale.x": 1}, 1, { ease: FlxEase.cubeOut });
+        wait(1, ()->{ FlxTween.tween(BGBox, {"scale.y": 1}, 1, { ease: FlxEase.cubeOut }); });
+        wait(2, ()->{
+            CreateStatusMessage('running init file...', 1, 1, 10);
+            wait(0.5, ()->{
+                CreateStatusMessage('initilizing...', 1, 1, 10);
+                wait(0.5, ()->{
+                    CreateStatusMessage('insert startup dialouge here', 1, 1, 10);
+                });
+            });
+            wait(5, ()->{
+                CreateStatusMessage('System Online!', 1, 1, 10);
+                doingCoolIntro = false;  
+            });
+        });
     }
 }
 

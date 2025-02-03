@@ -345,7 +345,7 @@ class Playstate extends FlxTransitionableState {
 		//* camera bop stuff for the cool stages with bopping music
 		if(isBeatStateType) {
 			curStep++; //curStep is the current frame.
-			if(curStep % FrameTime == 0) {
+			if(curStep % FrameTime == 0) { //TODO: make an acutal BPM system since framerates are unreliable for this sorta thing.
 				FlxG.camera.zoom += 0.02;
 				FGCAM.zoom += 0.02;
 				HUDCAM.zoom += 0.01;
@@ -367,6 +367,7 @@ class DeathState extends FlxState {
 	var bg:FlxSprite; // remember to make this into a semi-transparent version of whereever you are in the main playstate somehow.
 	var deathanim:FlxSprite;
     var saveSlot:Int = 1;
+	var deathAnimFinished:Bool = false;
 
 	public function new(saveSlot:Int = 1) {
 		super();
@@ -399,11 +400,13 @@ class DeathState extends FlxState {
 
     override public function update(elapsed:Float):Void {
         super.update(elapsed);
-        if (FlxG.keys.anyPressed([ESCAPE])) {
-            FlxG.switchState(new MainMenu());
-        }
-        if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
-            PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
-        }
+		if(deathAnimFinished) {
+        	if (FlxG.keys.anyPressed([ESCAPE])) {
+        	    FlxG.switchState(new MainMenu());
+        	}
+        	if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
+        	    PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
+        	}
+		}
     }
 }

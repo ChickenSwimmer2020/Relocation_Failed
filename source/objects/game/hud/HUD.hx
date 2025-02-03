@@ -129,7 +129,7 @@ class HUD extends FlxSpriteGroup {
                     ammocounter_AMMOSPR3.animation.play('NATO');
                     ammocounter_AMMOSPR4.animation.play('NATO');
                 case SMGROUNDS:
-                    CurAmmoName = 'FN 5.7×28mm NATO';
+                    CurAmmoName = 'FN 5.7×28mm NATO'; //we're making it a P90 smg.
                     ammocounter_AMMOTEXT.x = 980;
                     CurAmmoCap = Playstate.instance.Player.SMGAmmoCap;
                     CurAmmoNum = Playstate.instance.Player.SMGAmmoRemaining;
@@ -350,7 +350,7 @@ class HUD extends FlxSpriteGroup {
     }
 
     function createHudFirstStartupAnim():Void {
-        StatMSGContainer = new StatusMessageHolder(200, 300, #if debug true #else false #end);
+        StatMSGContainer = new StatusMessageHolder(0, 60, #if debug true #else false #end);
         hudCreateAnimRunning = true;
 
         HUDBG = new FlxSprite(0, 0).makeGraphic(FlxG.width, 60, FlxColor.TRANSPARENT);
@@ -509,6 +509,10 @@ class HUD extends FlxSpriteGroup {
         add(ammocounter_AMMOSPR2);
         add(ammocounter_AMMOSPR3);
         add(ammocounter_AMMOSPR4);
+        add(StatMSGContainer);
+        StatMSGContainer.alpha = 0;
+        @:privateAccess
+        wait(3, ()->{ StatMSGContainer.alpha = 1; StatMSGContainer.DoCoolIntro(); });
     }
 
 }

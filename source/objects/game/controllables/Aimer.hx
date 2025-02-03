@@ -6,7 +6,7 @@ import flixel.math.FlxAngle;
 import flixel.effects.FlxFlicker;
 class Aimer extends FlxSprite {
     static public var curAngle:Float;
-    var shotgunPumping:Bool = false; //so we can make sure that you cant fire while the shotgun is pumping
+    public var shotgunPumping:Bool = false; //so we can make sure that you cant fire while the shotgun is pumping
     public var gun:Gun = new Gun();
     public var GunGroup:FlxSpriteGroup = new FlxSpriteGroup();
 

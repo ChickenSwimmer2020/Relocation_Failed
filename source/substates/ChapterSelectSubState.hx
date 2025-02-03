@@ -13,6 +13,8 @@ import rf_flixel.ui.FlxSquareButton;
 
 using flixel.util.FlxSpriteUtil;
 
+//TODO: REWRITE THIS, WE NEED TO DO THAT.
+
 class ChapterSelectSubState extends FlxSubState {
 	var BG:FlxUI9SliceSprite;
 	var BG2:FlxUI9SliceSprite;
