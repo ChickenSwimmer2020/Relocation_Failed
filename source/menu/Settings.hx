@@ -43,11 +43,10 @@ class Settings extends FlxState{
     override public function update(elapsed:Float) {
         super.update(elapsed);
 
-        if(Tracers_Check.checked) {
-            Preferences.save.bulletTracers = true;
-            if(!Saved) {
+        if(Tracers_Check != null) {
+            Preferences.save.bulletTracers = Tracers_Check.checked; //* solar tf were you thinking, or was this me, i forgor..
+            if(Preferences.save.bulletTracers != Tracers_Check.checked) { //only update if the save value is different from the checkbox state
                 Preferences.saveSettings();
-                Saved = true;
             }
         }
     }

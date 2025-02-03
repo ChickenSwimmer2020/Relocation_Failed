@@ -82,7 +82,7 @@ class WaterMarks extends FlxState
 
         //SPM = new FlxSprite(0, 0, 'assets/SP-Mascot.png');
         //SPM.scale.set(0.8, 0.8);
-        //SPM.updateHitbox(); //TODO: make a mascot for studio not found
+        //SPM.updateHitbox(); //TODO: make a logo for this
         //SPM.screenCenter();
         //SPM.alpha = 0;
         //add(SPM);

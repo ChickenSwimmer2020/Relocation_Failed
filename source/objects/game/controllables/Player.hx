@@ -302,7 +302,7 @@ class Player extends FlxSprite {
             gun.update(elapsed);
             gun.updateTexturePosition(AimerPOSx, AimerPOSy);
             if(useDisplayHealthAsRealHealth)
-                displayHealth = health; //so we can get actual health values for the healthbar
+                Playstate.instance.Player.displayHealth = Playstate.instance.Player.health; //so we can get actual health values for the healthbar
     		#if debug
     		FlxG.watch.addQuick('Stamina', stamina);
     		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
