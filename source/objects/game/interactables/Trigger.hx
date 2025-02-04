@@ -1,11 +1,11 @@
 package objects.game.interactables;
 
 class Trigger extends FlxSprite {
-    public var Function:Void->Void;
+    public var Function:String;
     public var Width:Float;
     public var Height:Float;
 
-    public function new(X:Float, Y:Float, Width:Float, Height:Float, ?IsVisible:Bool = false, Func:Void->Void) {
+    public function new(X:Float, Y:Float, Width:Float, Height:Float, ?IsVisible:Bool = false, Func:String) {
         super(X, Y);
         if(IsVisible != null && IsVisible == true) {
             this.loadGraphic(Assets.image('Trigger'));
@@ -19,7 +19,7 @@ class Trigger extends FlxSprite {
         if(Playstate.instance.Player != null) {
             if(Playstate.instance.Player.overlaps(this)) {
                 if(Function != null)
-                    Function();
+                    trace(Function);
             }
         }
     }

@@ -511,7 +511,8 @@ class LevelEditorState extends FlxState {
             header: header,
             objects: DefaultObjectData,
             doors: [],
-            items: []
+            items: [],
+            triggers: []
         };
         File.saveContent('$SaveDir/level${LevelIDStepper.value}.json', tjson.TJSON.encode(level, 'fancy'));
 	}

@@ -80,7 +80,7 @@ typedef LevelDoor =
 typedef LevelTrigger =
 {
     var Name:String; //internal name.
-    var Function:Void->Void; //what to do when triggered.
+    var Function:String; //what to do when triggered.
     var ?Visible:Bool; //is the trigger visible to the camera.
     var X:Float; //x position.
     var Y:Float; //y position.
