@@ -1,7 +1,7 @@
 # TODO
 
  - [ ] dialouge
- - [ ] chapter select system
+ - [x] chapter select system
  - [ ] melee weapons
  - [ ] object interaction system
  - [x] level transition system(transitioning between different level jsons)
@@ -19,7 +19,13 @@
  - [ ] make damage indicators work
  - [ ] npcs
  - [ ] health display value tweens
+ - [x] optimize crash handler
 
 ### ***NEEDS TO BE IMPLEMENTED***
 
- - [ ] Find out how to run functions directly from an JSON file
+---
+
+ - [ ] levels file being stored as a .RFL (renamed .7z [very good text compression!])
+    - [ ] level triggers stored in an internal XML file within the .RFL
+    - [ ] level jsons stored within the .RFL as well
+    - [ ] store assets that will only be used once within the .RFL as well.
