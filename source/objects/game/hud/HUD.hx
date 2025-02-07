@@ -90,7 +90,7 @@ class HUD extends FlxSpriteGroup {
 
         if(!hudCreateAnimRunning) {
             if(healthBar != null && !healthTweening && !hudCreateAnimRunning)
-                healthBar.value = playstate.Player.health;
+                healthBar.value = playstate.Player.Health;
             if(stamBar != null)
                 stamBar.value = playstate.Player.stamina;
             if(oxyBar != null)
@@ -161,19 +161,19 @@ class HUD extends FlxSpriteGroup {
         if(FlxG.keys.anyJustPressed([NUMPADONE, NUMPADTWO, NUMPADTHREE, NUMPADFOUR, NUMPADFIVE])) {
             
             if(FlxG.keys.anyJustPressed([NUMPADONE])) {
-                Playstate.instance.Player.health = 100;
+                Playstate.instance.Player.Health = 100;
             }
             if(FlxG.keys.anyJustPressed([NUMPADTWO])) {
-                Playstate.instance.Player.health = 75;
+                Playstate.instance.Player.Health = 75;
             }
             if(FlxG.keys.anyJustPressed([NUMPADTHREE])) {
-                Playstate.instance.Player.health = 50;
+                Playstate.instance.Player.Health = 50;
             }
             if(FlxG.keys.anyJustPressed([NUMPADFOUR])) {
-                Playstate.instance.Player.health = 25;
+                Playstate.instance.Player.Health = 25;
             }
             if(FlxG.keys.anyJustPressed([NUMPADFIVE])) {
-                Playstate.instance.Player.health = 0;
+                Playstate.instance.Player.Health = 0;
             }
 
         }

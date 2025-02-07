@@ -25,7 +25,7 @@
     <undefine name="openfl-disable-handle-error"/>
     <define name="openfl_enable_handle_error"/>
 
-	<haxelib name="flixel" />
+	<haxelib name="flixel"/>
     <haxelib name="away3d" />
     <haxelib name="lunarps" />
     <haxelib name="hlwnative" if="hl" />

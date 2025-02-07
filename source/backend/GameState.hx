@@ -38,7 +38,7 @@ class GameState {
         dataArray = [State[0], State[1], State[2], State[3], State[4], State[5], State[6], State[7], State[8], State[9], State[10], State[11], State[12]];
     };
     public static function loadState(State:Array<Dynamic>) {
-        Playstate.instance.Player.health = State[0];
+        Playstate.instance.Player.Health = State[0];
         Playstate.instance.Player.oxygen = State[1];
         Playstate.instance.Player.battery = State[2];
         Playstate.instance.Player.stamina = State[3];

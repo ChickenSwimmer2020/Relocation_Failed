@@ -12,7 +12,7 @@ import haxe.io.Path;
  */
 typedef PlayerSaveStatus = {
 	var curLvl:String; // last level player was on during save.
-	var curHealth:Int; // last health value during save.
+	var curHealth:Int; // last Health value during save.
 	var curStamina:Int; // last stamina value during save.
 	var curBattery:Int; // last battery value during save.
 	var playerX:Float; // last x position during save.
@@ -38,7 +38,7 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 	 * - Sprinting should be disabled
 	 * - Weapons should be disabled
 	 * - HUD should be disabled
-	 *   - health will regen quickly, shown by a red vingget on the sides of the screen,
+	 *   - Health will regen quickly, shown by a red vingget on the sides of the screen,
 	 *   - stamina will be tracked by a heavy breathing sound that gets louder the lower your stamina
 	 * @since RF_DEV_0.3.5
 	 */
@@ -74,9 +74,9 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 	 */
 	static function loadPlayerState(Stats:SaveState, ?OverrideLevel:String = '') {
 		if(OverrideLevel != '')
-			FlxG.switchState(new Playstate(OverrideLevel, Stats));
+			FlxG.switchState(()->new Playstate(OverrideLevel, Stats));
 		else
-			FlxG.switchState(new Playstate(Stats.cur_lvl, Stats));
+			FlxG.switchState(()->new Playstate(Stats.cur_lvl, Stats));
 	}
 
 	/**
@@ -94,7 +94,7 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
         var saveData:Array<Save> = [
             {name: 'save_ver', type: '', value: '${Application.current.meta.get('version')}'}, //so you didnt just use the current game version, why?
             {name: 'cur_lvl', type: '', value: Playstate.instance._LEVEL},
-            {name: 'cur_health', type: 0.0, value: Playstate.instance.Player.health},
+            {name: 'cur_health', type: 0.0, value: Playstate.instance.Player.Health},
             {name: 'cur_stamina', type: 0.0, value: Playstate.instance.Player.stamina},
 			{name: 'cur_battery', type: 0.0, value: Playstate.instance.Player.battery},
             {name: 'player_x', type: 0.0, value: Playstate.instance.Player.x},

@@ -184,7 +184,7 @@ class Playstate extends FlxTransitionableState {
     function loadSaveState(?state:SaveState) {
         if (state != null) {
 			// health and stamina
-			Player.health = state.cur_health;
+			Player.Health = state.cur_health;
 			Player.stamina = state.cur_stamina;
 			Player.battery = state.cur_battery;
 			// positioning
@@ -402,7 +402,7 @@ class DeathState extends FlxState {
         super.update(elapsed);
 		if(deathAnimFinished) {
         	if (FlxG.keys.anyPressed([ESCAPE])) {
-        	    FlxG.switchState(new MainMenu());
+        	    FlxG.switchState(()->new MainMenu());
         	}
         	if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
         	    PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);

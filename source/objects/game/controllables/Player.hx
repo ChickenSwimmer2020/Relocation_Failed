@@ -62,10 +62,10 @@ class Player extends FlxSprite {
 	public var isMoving:Bool = false;
     public var stamina:Float = 100; //* so we used int for all of these... why?
     #if (flixel >= "6.0.0")
-        public var health:Float = 100;
+        public var Health:Float = 100;
     #end
     public var displayHealth:Float = 100;
-    public var useDisplayHealthAsRealHealth:Bool = false; //used for the hud intro animation since we cant lower health actually.
+    public var useDisplayHealthAsRealHealth:Bool = false; //used for the hud intro animation since we cant lower Health actually.
     public var oxygen:Float = 200;
     public var battery:Float = 500;
 
@@ -87,7 +87,7 @@ class Player extends FlxSprite {
 
 	public function new(xPos:Float, yPos:Float, playstate:Playstate) {
 		super(xPos, yPos);
-        health = 100;
+        Health = 100;
         this.playstate = playstate;
         curPhysProperties = nonSprintPhysProps;		
         loadGraphic(Assets.image('Player_LEGS'), true, 51, 51, true);
@@ -142,8 +142,8 @@ class Player extends FlxSprite {
 	}
 
     function forceCaps() {
-        if(Playstate.instance.Player.health > Playstate.instance.Player.maxHealth) //we dont want our health to go above 100, this should work for now until we get a better system in
-            Playstate.instance.Player.health -= 10; //SHUT UP ABOUT BEING REMOVED SOON :sob:
+        if(Playstate.instance.Player.Health > Playstate.instance.Player.maxHealth) //we dont want our Health to go above 100, this should work for now until we get a better system in
+            Playstate.instance.Player.Health -= 10; //SHUT UP ABOUT BEING REMOVED SOON :sob:
 
         //insert the suit/armor stuff here.
         if(Playstate.instance.Player.battery > Playstate.instance.Player.maxBattery)
@@ -296,13 +296,13 @@ class Player extends FlxSprite {
 
     		checkForPauseMenu();
             resetPauseMenu();
-            forceCaps(); //so variables such as health and ammo dont go above 100
+            forceCaps(); //so variables such as Health and ammo dont go above 100
             AimerPOSx = this.getGraphicMidpoint().x - 15;
             AimerPOSy = this.getGraphicMidpoint().y - 15;
             gun.update(elapsed);
             gun.updateTexturePosition(AimerPOSx, AimerPOSy);
             if(useDisplayHealthAsRealHealth)
-                Playstate.instance.Player.displayHealth = Playstate.instance.Player.health; //so we can get actual health values for the healthbar
+                Playstate.instance.Player.displayHealth = Playstate.instance.Player.Health; //so we can get actual Health values for the Healthbar
     		#if debug
     		FlxG.watch.addQuick('Stamina', stamina);
     		FlxG.watch.addQuick('Speed', curPhysProperties.speed);
