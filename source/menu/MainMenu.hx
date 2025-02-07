@@ -34,7 +34,16 @@ class MainMenu extends FlxTransitionableState {
     var shipGlow:FlxSprite;
     var shipGlow2:FlxSprite;
 
-    public var OutroText:Array<String> = ["Goodbye...", "Until our paths cross again", "Your fate is in your hands"];
+    public var OutroText:Array<String> = [
+        "", //* blank (DONT TOUCH ITS FOR THE SECRET MESSAGE)
+        "\"I should rest for a while...\"", 
+        "\"I need to sit down...\"", 
+        "\"Maybe I can sleep...\"",
+        "\"A safe place at last...\"",
+        "\"What I wouldnt do for some BurritoAlarm...\"",
+        "\"What I wouldnt do for some McGunalds...\"",
+    ];
+    public var SecretOutro:String = "HotDog Water";
     public var RandomNumber:Int;
 
     public static var instance:MainMenu; //because of variable instancing needing to be done for button disabling when in the chapter substate
@@ -151,13 +160,23 @@ class MainMenu extends FlxTransitionableState {
             black.makeGraphic(FlxG.width, FlxG.height, 0xff000000);
             black.alpha = 0;
             add(black);
-            var goodbye:FlxText = new FlxText(0, 0, 0, OutroText[RandomNumber], 24, true);
+            var TheOutero:String = '';
+            var FadeOutTime:Int = 1;
+
+            if(RandomNumber == 0)   {
+                TheOutero = SecretOutro;
+                FadeOutTime = 5;
+            }else{
+                TheOutero = OutroText[RandomNumber];
+                FadeOutTime = 1;
+            }
+            
+            var goodbye:FlxText = new FlxText(0, 0, 0, TheOutero, 24, true);
             goodbye.screenCenter(XY);
             add(goodbye);
-            FlxTween.tween(black, {alpha: 1}, 1, {ease: FlxEase.smootherStepInOut});
-            FlxTween.tween(goodbye, {alpha: 0}, 1, {ease: FlxEase.smootherStepInOut});
-            FlxG.sound.music.fadeOut(1);
-            wait(1, function() {
+            FlxTween.tween(black, {alpha: 1}, FadeOutTime, {ease: FlxEase.smootherStepInOut});
+            FlxG.sound.music.fadeOut(FadeOutTime);
+            wait(FadeOutTime, function() {
                 Sys.exit(0); 
             });
         }, 1, false);
