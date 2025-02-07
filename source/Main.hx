@@ -23,7 +23,9 @@ class Main extends Sprite{
     
     function start()
     {
-        hl.UI.closeConsole(); // It appears after a crash on release builds and looks ugly so im closing it
+        #if !debug //* only on release builds
+            hl.UI.closeConsole(); // It appears after a crash on release builds and looks ugly so im closing it
+        #end
         var fromCrash = FileSystem.exists('crash.txt');
         var game:FlxGame = new FlxGame(0, 0, WindowIntro, 60, 60, true, false);
         Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, handleCrash);

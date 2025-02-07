@@ -1,5 +1,6 @@
 package menu.intro;
 
+import openfl.errors.Error;
 import math.RFInterp;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
@@ -100,7 +101,7 @@ class IntroState extends FlxState
                                     FlxG.camera.zoom = 0;
                                     FlxG.sound.music.stop();
                                     FlxG.mouse.visible = true;
-                                    FlxG.switchState(new WaterMarks());
+                                    FlxG.switchState(WaterMarks.new);
                                 });
                             });
                         });
@@ -133,7 +134,7 @@ class IntroState extends FlxState
             FlxG.camera.zoom = 0;
             FlxG.sound.music.stop();
             FlxG.mouse.visible = true;
-            FlxG.switchState(new WaterMarks());
+            FlxG.switchState(WaterMarks.new);
         }
         if (lerpWindow && fromWindowIntro)
         {

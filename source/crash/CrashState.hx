@@ -30,7 +30,8 @@ class CrashState extends FlxState
         FlxG.autoPause = false;
 		errorData = Main.crashTxt;
 		if (errorData == '')
-			FlxG.switchState(()->new IntroState()); // There wasn't a crash ig 🤷
+			FlxG.switchState(()->new IntroState()); //* so this acts weird and wont let me just do IntroState.new??? this update is weird af.
+													// There wasn't a crash ig 🤷
 		super.create();
 		var gradient = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0x0000000, 0x4400FF00], 1, 0);
 		add(gradient);
@@ -50,6 +51,8 @@ class CrashState extends FlxState
 		errorTxt.color = 0xFF00FF00;
 		add(errorTxt);
         FlxG.mouse.visible = true;
+		errorTxt.start();
+		errorTxt.txtPerFrame = 10;
 	}
 
 	function makeParticles()
@@ -84,8 +87,6 @@ class CrashState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		errorTxt.start();
-		errorTxt.txtPerFrame = 10;
         if (FlxG.keys.justPressed.ENTER){
             Main.crashTxt = '';
             Sys.command('start "" "./Relocation Failed.exe"');

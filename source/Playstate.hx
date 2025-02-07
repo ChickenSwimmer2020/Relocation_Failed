@@ -402,7 +402,7 @@ class DeathState extends FlxState {
         super.update(elapsed);
 		if(deathAnimFinished) {
         	if (FlxG.keys.anyPressed([ESCAPE])) {
-        	    FlxG.switchState(()->new MainMenu());
+        	    FlxG.switchState(MainMenu.new);
         	}
         	if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
         	    PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);

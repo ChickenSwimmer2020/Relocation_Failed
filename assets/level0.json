@@ -155,10 +155,11 @@
             "Name": "TestTrigger",
             "Function": "()->{}",
             "Visible": true,
+            "isOneShot": false,
             "X": 1000,
             "Y": 1000,
             "Width": 500,
-            "Height": 500
+            "Height": 200
         }
     ]
 }

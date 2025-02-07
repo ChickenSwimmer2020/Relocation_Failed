@@ -33,7 +33,7 @@ class Settings extends FlxState{
         tab_group_1.add(Tracers_Check);
         TabGroups.addGroup(tab_group_1);
 
-        Back = new FlxButton(0, 0, "Back", function() {FlxG.switchState(new menu.MainMenu());});
+        Back = new FlxButton(0, 0, "Back", function() {FlxG.switchState(menu.MainMenu.new);});
         Back.screenCenter(X);
 
         add(TabGroups);

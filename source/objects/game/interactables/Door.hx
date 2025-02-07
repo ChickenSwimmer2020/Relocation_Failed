@@ -80,7 +80,7 @@ class Door extends FlxSpriteGroup {
 
                     wait(WaitTime, ()->{
                         FlxTween.tween(Fade, {alpha: 1}, 0.7, { type: FlxTweenType.PINGPONG, ease: FlxEase.smootherStepInOut, onComplete: function(twn:FlxTween){
-                            FlxG.switchState(new Playstate(LVL, PlayerPos));
+                            FlxG.switchState(()->new Playstate(LVL, PlayerPos)); //* varible passthrough, so we have to use ()->new Playstate.
                         }});
                     });
                 }

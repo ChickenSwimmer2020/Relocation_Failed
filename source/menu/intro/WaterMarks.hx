@@ -126,7 +126,7 @@ class WaterMarks extends FlxState
             FlxTween.tween(overlayWhite, {alpha: 1}, 3, {ease: FlxEase.circIn});
             wait(3, () -> {
                 FlxG.sound.music.stop();
-                FlxG.switchState(new MainMenu());
+                FlxG.switchState(MainMenu.new);
             });
         });
     };
@@ -165,7 +165,7 @@ class WaterMarks extends FlxState
         }
         if(FlxG.keys.anyJustPressed([SPACE, ENTER, ESCAPE])) {
             FlxG.sound.music.stop();
-            FlxG.switchState(new MainMenu());
+            FlxG.switchState(MainMenu.new);
         }
     }
 }

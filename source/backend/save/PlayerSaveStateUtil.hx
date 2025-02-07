@@ -74,7 +74,7 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 	 */
 	static function loadPlayerState(Stats:SaveState, ?OverrideLevel:String = '') {
 		if(OverrideLevel != '')
-			FlxG.switchState(()->new Playstate(OverrideLevel, Stats));
+			FlxG.switchState(()->new Playstate(OverrideLevel, Stats)); //* we have to use the ()-> method here because of varible passthrough. annoying.
 		else
 			FlxG.switchState(()->new Playstate(Stats.cur_lvl, Stats));
 	}

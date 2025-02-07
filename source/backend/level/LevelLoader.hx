@@ -82,6 +82,7 @@ typedef LevelTrigger =
     var Name:String; //internal name.
     var Function:String; //what to do when triggered.
     var ?Visible:Bool; //is the trigger visible to the camera.
+    var isOneShot:Bool; //does the trigger kill itself after being triggered.
     var X:Float; //x position.
     var Y:Float; //y position.
     var Width:Float; //width.

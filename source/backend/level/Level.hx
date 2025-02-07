@@ -195,7 +195,7 @@ class Level extends FlxGroup
             trace('new door added!\n\n$drr');
         }
         for (trigger in levelData.triggers) {
-            var Trg:Trigger = cast(new Trigger(trigger.X, trigger.Y, trigger.Width, trigger.Height, trigger.Visible, trigger.Function));
+            var Trg:Trigger = cast(new Trigger(trigger.X, trigger.Y, trigger.Width, trigger.Height, trigger.Visible, trigger.Function, trigger.isOneShot, EditorMode));
             triggers.set(trigger.Name, Trg);
             add(Trg);
             trace('New Trigger Created\n\n$Trg');

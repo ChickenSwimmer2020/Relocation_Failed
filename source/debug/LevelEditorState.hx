@@ -135,7 +135,7 @@ class LevelEditorState extends FlxState {
         add(uiGroup);
         uiGroup.scrollFactor.set(0, 0);
 
-        closeButton = new FlxSquareButton(1260, 0, 'X', ()->{ FlxG.switchState(()->new menu.MainMenu()); });
+        closeButton = new FlxSquareButton(1260, 0, 'X', ()->{ FlxG.switchState(menu.MainMenu.new); });
         uiGroup.add(closeButton);
         saveButton = new FlxButton(1180, 0, 'Save', ()->{ saveLevel(); });
         uiGroup.add(saveButton);

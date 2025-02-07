@@ -97,10 +97,10 @@ class ChapterSelecterGroup extends FlxSpriteGroup {
             trace("Selected: " + chapterNames[index]);
             switch(index) {
                 case 0: // Chapter 1
-                    FlxG.switchState(new Playstate('level0'));
+                    FlxG.switchState(()->new Playstate('level0')); //* level name passthrough, so we have to use ()->new Playstate
                     FlxG.sound.music.stop();
                 case 1: // Chapter 2
-                    FlxG.switchState(new Playstate('level3'));
+                    FlxG.switchState(()->new Playstate('level3'));
                     FlxG.sound.music.stop();
                 case 2: // Chapter 3
                     // Handle Chapter 3 click

@@ -32,7 +32,7 @@ class PauseMenuSubState extends FlxSubState {
         button_saveGame.camera = pauseCAM;
         add(button_saveGame);
 
-        button_mainMenu = new FlxButton(0, button_saveGame.y + 20, "Main Menu", () -> {close(); FlxG.switchState(new menu.MainMenu()); pauseCAM.destroy();});
+        button_mainMenu = new FlxButton(0, button_saveGame.y + 20, "Main Menu", () -> {close(); FlxG.switchState(menu.MainMenu.new); pauseCAM.destroy();});
         button_mainMenu.camera = pauseCAM;
         add(button_mainMenu);
     }

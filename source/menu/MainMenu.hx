@@ -139,7 +139,7 @@ class MainMenu extends FlxTransitionableState {
         add(Button_Load);
 
         Button_Settings = new Button('Settings', Button_Load.DaButton.x + 250, Button_Load.DaButton.y + 10, Assets.image('ButtonTEST'),
-        ()->{ FlxG.switchState(()->new menu.Settings()); }, 1, false);
+        ()->{ FlxG.switchState(menu.Settings.new); }, 1, false);
         //Button_Settings.DaButton.updateHitbox();
         Button_Settings.updateTextPosition();
         Button_Settings.camera = shipCam;
@@ -186,7 +186,7 @@ class MainMenu extends FlxTransitionableState {
         add(versiontext);
 
         #if (debug || modded)
-        var LevelEditorButton:FlxButton = new FlxButton(0, 0, 'Level Editor', ()->{ FlxG.switchState(()->new debug.LevelEditorState() ); });
+        var LevelEditorButton:FlxButton = new FlxButton(0, 0, 'Level Editor', ()->{ FlxG.switchState(debug.LevelEditorState.new); });
         add(LevelEditorButton);
         #end
     }
