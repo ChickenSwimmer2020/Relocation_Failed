@@ -30,7 +30,7 @@ class CrashState extends FlxState
         FlxG.autoPause = false;
 		errorData = Main.crashTxt;
 		if (errorData == '')
-			FlxG.switchState(new IntroState()); // There wasn't a crash ig 🤷
+			FlxG.switchState(()->new IntroState()); // There wasn't a crash ig 🤷
 		super.create();
 		var gradient = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0x0000000, 0x4400FF00], 1, 0);
 		add(gradient);
