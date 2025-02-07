@@ -1,5 +1,7 @@
 package;
 
+import Xml.XmlType;
+import sys.io.File;
 import flixel.math.FlxMath;
 import lime.system.Clipboard;
 import backend.dialogue.DialogueTypedefs.Dialogue;
@@ -250,6 +252,13 @@ class Playstate extends FlxTransitionableState {
 
 	override public function create() {
 		super.create();
+
+		//TODO: make xml reading works.
+		//var xmltest:Xml = Xml.parse(File.getContent(Assets.asset('Test.xml'))).firstElement();
+		//trace(xmltest.get('name'));
+		//for(element in xmltest.elements)	{
+		//	var XmlElement = cast element;
+		//}
 
         if(!FlxG.sound.music.playing) {
             FlxG.sound.playMusic(Assets.music('IDLE.ogg'), 1, true);
