@@ -9,3 +9,4 @@
 
 - studio not found secondary logo text
 - [controller vector image](https://www.vexels.com/vectors/preview/68390/game-controller-set-vector)
+- Main Logo Design idea - ZsolarDev's Brother
