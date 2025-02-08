@@ -61,9 +61,7 @@ class Player extends FlxSprite {
 
 	public var isMoving:Bool = false;
     public var stamina:Float = 100; //* so we used int for all of these... why?
-    #if (flixel >= "6.0.0")
-        public var Health:Float = 100;
-    #end
+    public var Health:Float = 100;
     public var displayHealth:Float = 100;
     public var useDisplayHealthAsRealHealth:Bool = false; //used for the hud intro animation since we cant lower Health actually.
     public var oxygen:Float = 200;

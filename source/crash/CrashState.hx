@@ -1,5 +1,7 @@
 package crash;
 
+import flixel.tweens.FlxEase;
+import flixel.math.FlxMath;
 import menu.intro.WaterMarks;
 import menu.intro.WindowIntro;
 import menu.intro.IntroState;
@@ -16,6 +18,7 @@ import lunarps.LunarShape.LunarRect;
 import lunarps.particles.LunarParticleEmitter;
 import lunarps.particles.behaviors.*;
 import lunarps.renderer.LunarRenderer;
+import backend.Assets;
 
 using StringTools;
 
@@ -24,19 +27,23 @@ class CrashState extends FlxState
 	var buffer:StringBuf = new StringBuf();
 	var errorTxt:FlxTypeText;
 	var errorData:String;
+	var gradient:FlxSprite;
 
 	override public function create()
 	{
+		Application.current.window.title = "Relocation Failed -- Crash handler V1";
+		FlxG.sound.playMusic(Assets.music('ConnectionFailure.ogg'));
         FlxG.autoPause = false;
 		errorData = Main.crashTxt;
 		if (errorData == '')
 			FlxG.switchState(()->new IntroState()); //* so this acts weird and wont let me just do IntroState.new??? this update is weird af.
 													// There wasn't a crash ig 🤷
 		super.create();
-		var gradient = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0x0000000, 0x4400FF00], 1, 0);
+		gradient = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0x0000000, 0x4400FF00], 1, 0);
 		add(gradient);
 		makeParticles();
 		makeText();
+		FlxTween.tween(gradient, {x: 100}, 5, { type: PINGPONG, ease: FlxEase.sineInOut });
 	}
 
 	function makeText()
@@ -84,9 +91,13 @@ class CrashState extends FlxState
 		buffer.add('\n');
 	}
 
+	var nextTriggerTime:Float = 0;
+	var interval:Float = (60 / 150 * 4000);
+
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		FlxG.camera.zoom = FlxMath.lerp(1, FlxG.camera.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
         if (FlxG.keys.justPressed.ENTER){
             Main.crashTxt = '';
             Sys.command('start "" "./Relocation Failed.exe"');
@@ -94,5 +105,15 @@ class CrashState extends FlxState
         }
         if (FlxG.keys.justPressed.SPACE)
             Clipboard.text = '${errorData.split('|||')[0]}\n\n${errorData.split('|||')[1]}';
+
+		if(FlxG.sound.music != null) {
+			if(FlxG.sound.music.time == 0){
+				nextTriggerTime = 0;
+			}
+			if(FlxG.sound.music.time >= nextTriggerTime) {
+				FlxG.camera.zoom += 0.005;
+				nextTriggerTime += interval;
+			}
+		}
 	}
 }

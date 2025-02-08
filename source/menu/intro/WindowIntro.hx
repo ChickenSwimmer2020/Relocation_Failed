@@ -1,5 +1,6 @@
 package menu.intro;
 
+import haxe.io.Error;
 import flixel.tweens.FlxEase;
 import flixel.math.FlxMath;
 import sys.thread.Thread;

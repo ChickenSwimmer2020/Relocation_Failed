@@ -24,6 +24,7 @@ class IntroState extends FlxState
     {
         super();
         this.fromWindowIntro = fromWindowIntro;
+        Application.current.window.title = "Relocation Failed";
     }
 
     override public function create()

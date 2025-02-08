@@ -162,7 +162,7 @@ class Playstate extends FlxTransitionableState {
                 songs: [
                     {
                         volume: 1,
-                        path: 'assets/sound/mus/IDLE.ogg',
+                        path: 'assets/sound/mus/WeightLess.ogg',
                         looped: false
                     }
                 ],
@@ -261,7 +261,7 @@ class Playstate extends FlxTransitionableState {
 		//}
 
         if(!FlxG.sound.music.playing) {
-            FlxG.sound.playMusic(Assets.music('IDLE.ogg'), 1, true);
+            FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true);
         }
 
 		BulletGroup = new FlxGroup();

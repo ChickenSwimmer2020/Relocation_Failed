@@ -76,7 +76,7 @@ class MainMenu extends FlxTransitionableState {
 
         shipCam.flash();
         if (!FlxG.sound.music.playing)
-            FlxG.sound.playMusic(Assets.music('MENU.ogg'));
+            FlxG.sound.playMusic(Assets.music('ConnectEstablished.ogg'));
         //background
         planet = new FlxSprite(0, 200, 'assets/planet.png');
         planet.camera = planetCam;
@@ -141,7 +141,7 @@ class MainMenu extends FlxTransitionableState {
         Button_Play.camera = shipCam;
         add(Button_Play);
 
-        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); FlxG.sound.music.stop(); FlxG.sound.playMusic(Assets.music('IDLE.ogg'), 1, true); }, 1, false);
+        Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); FlxG.sound.music.stop(); FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true); }, 1, false);
         //Button_Load.DaButton.updateHitbox();
         Button_Load.updateTextPosition();
         Button_Load.camera = shipCam;
