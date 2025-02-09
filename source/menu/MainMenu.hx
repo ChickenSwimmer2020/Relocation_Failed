@@ -11,8 +11,7 @@ import backend.save.PlayerSaveStateUtil;
 import objects.menu.Button;
 
 class MainMenu extends FlxTransitionableState {
-    var Title:FlxText;
-    var Title2:FlxText;
+    var Title:FlxSprite;
     var Suffix:FlxText;
 
     var versiontext:FlxText;
@@ -33,6 +32,8 @@ class MainMenu extends FlxTransitionableState {
     var planet:FlxSprite;
     var shipGlow:FlxSprite;
     var shipGlow2:FlxSprite;
+
+    public var hasSeenWarning:Bool = false;
 
     public var OutroText:Array<String> = [
         "", //* blank (DONT TOUCH ITS FOR THE SECRET MESSAGE)
@@ -55,6 +56,12 @@ class MainMenu extends FlxTransitionableState {
 
     override public function create() {
         super.create();
+        if(!hasSeenWarning) {
+            FlashWarn();
+            hasSeenWarning = true;
+        }else{
+            trace('Player has seen flash warning. not showing');
+        }
         //determin the outro message now.
         RandomNumber = new FlxRandom().int(0, OutroText.length - 1);
 
@@ -76,7 +83,7 @@ class MainMenu extends FlxTransitionableState {
 
         shipCam.flash();
         if (!FlxG.sound.music.playing)
-            FlxG.sound.playMusic(Assets.music('ConnectEstablished.ogg'));
+            FlxG.sound.playMusic(Assets.music('ConnectionEstablished.ogg'));
         //background
         planet = new FlxSprite(0, 200, 'assets/planet.png');
         planet.camera = planetCam;
@@ -92,21 +99,17 @@ class MainMenu extends FlxTransitionableState {
         ship.camera = shipCam;
         add(ship);
 
-        //menu title stuff.
-        Title2 = new FlxText(0, 170, 0, "", 8, true);
-        Title2.setFormat(null, 48, FlxColor.RED, CENTER, NONE, FlxColor.BLACK, true);
-        Title2.text = "FAILED";
-        Title2.screenCenter(X);
-        Title2.x = Title2.x + 35;
-        Title2.camera = shipCam;
-        Title2.antialiasing = false;
-        add(Title2);
+        var vingette = new FlxSprite(0, 0, 'assets/Vingette.png'); //* shouldnt be infront of things that glow, should it?
+        vingette.alpha = 0.4;
+        vingette.camera = shipCam;
+        add(vingette);
 
-        Title = new FlxText(0, 150, 0, "", 8, true);
-        Title.setFormat(null, 48, FlxColor.BLUE, CENTER, NONE, FlxColor.BLACK, true);
-        Title.text = "RELOCATION";
+        //menu title stuff.
+        Title = new FlxSprite(0, 100).loadGraphic(Assets.image('logo'));
+        Title.scale.set(0.5,0.5);
+        Title.updateHitbox();
         Title.screenCenter(X);
-        Title.x = Title.x + 35;
+        Title.x = Title.x += 33;
         Title.camera = shipCam;
         Title.antialiasing = false;
         add(Title);
@@ -115,7 +118,7 @@ class MainMenu extends FlxTransitionableState {
         Suffix.setFormat(null, 24, FlxColor.YELLOW, CENTER, NONE, FlxColor.TRANSPARENT, true);
         Suffix.text = "TESTING VERSION";
         Suffix.camera = shipCam;
-        Suffix.setPosition(Title.x + 250, Title.y - 10);
+        Suffix.setPosition(Title.x + 250, Title.y + 100);
         Suffix.antialiasing = false;
         add(Suffix);
 
@@ -185,11 +188,6 @@ class MainMenu extends FlxTransitionableState {
         Button_exit.camera = shipCam;
         add(Button_exit);
 
-        var vingette = new FlxSprite(0, 0, 'assets/Vingette.png');
-        vingette.alpha = 0.4;
-        vingette.camera = shipCam;
-        add(vingette);
-
         platformText = new FlxText(0, 690, 0, "", 8, true);
         platformText.setFormat(null, 24, FlxColor.WHITE, LEFT, NONE, FlxColor.TRANSPARENT, true);
         platformText.text = Functions.GetPlatform();
@@ -216,6 +214,43 @@ class MainMenu extends FlxTransitionableState {
         FlxG.cameras.remove(starCam);
         FlxG.cameras.remove(shipCam);
         FlxG.cameras.remove(planetCam);
+    }
+
+    public function FlashWarn() { //* we use this to create the falshing lights warning, since we're obviously going to want to add a feature to disable them, so we can get more players and accessibility!
+        var WarnGroup:FlxSpriteGroup = new FlxSpriteGroup(0, 0, 0);
+        add(WarnGroup);
+        var BlackBox:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width + 50, FlxG.height + 50, FlxColor.BLACK);
+        WarnGroup.add(BlackBox);
+
+        var WarningText:FlxText = new FlxText(0, 0, 0, "", 24, true);
+        WarningText.setFormat(null, 24, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        WarningText.text = 'This game has flashing lights.\nif you are: epileptic, or photosensative.\nplease navigate to the settings menu and disable them.\nthank you for enjoying our game!';
+        WarningText.screenCenter(XY);
+        WarnGroup.add(WarningText);
+        
+        var Warn:FlxText = new FlxText(0, 0, 0, "", 24, true);
+        Warn.setFormat(null, 24, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        Warn.text = 'Warning';
+        Warn.screenCenter(X);
+        Warn.y += 50;
+        WarnGroup.add(Warn);
+
+        var CloseButton:FlxButton = new FlxButton(1200, 700, "Ok", ()->{
+            FlxTween.tween(WarnGroup, {alpha: 0}, 1, { ease: FlxEase.sineInOut, onComplete: function(twn:FlxTween){
+                WarnGroup.kill();
+            }});
+        });
+        CloseButton.alpha = 0;
+        WarnGroup.add(CloseButton);
+
+        var SettingsButt:FlxButton = new FlxButton(CloseButton.x - 80, CloseButton.y, "Settings", ()->{ FlxG.switchState(menu.Settings.new); });
+        SettingsButt.alpha = 0;
+        WarnGroup.add(SettingsButt);
+
+        wait(5, ()->{
+            FlxTween.tween(CloseButton, {alpha: 1}, 1, { ease: FlxEase.sineInOut });
+            FlxTween.tween(SettingsButt, {alpha: 1}, 1, { ease: FlxEase.sineInOut });
+        });
     }
 
     var _:Int = 0;
