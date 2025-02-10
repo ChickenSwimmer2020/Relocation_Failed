@@ -8,7 +8,7 @@
             "CameraFollowStyle": "LOCKON",
             "CameraFollowLerp": 15,
             "isBeatState": true,
-            "beatstateframetime": 64
+            "beatstateframetime": 172
     },
     "objects":[
         {

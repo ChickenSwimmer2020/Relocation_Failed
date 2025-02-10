@@ -1,5 +1,6 @@
 package;
 
+import haxe.io.BytesData;
 import haxe.io.BytesInput;
 import openfl.Assets;
 import haxe.zip.Reader;
@@ -49,8 +50,12 @@ class Playstate extends FlxTransitionableState {
 	#end
 
 	public var isBeatStateType:Bool = false; //should camera bop
-	public var curStep:Int = 0; //goes up every frame for the proper bopping
-	public var FrameTime:Float = 0;
+	public var BPM:Float = 150;
+	public var BopsPerNumOfBeats:Int = 4000;
+
+	public var nextTriggerTime:Float = 0;
+	public var interval:Float;
+
 	public var defaultCamZoom:Float = 1;
 	public var FgCamDefaultZoom:Float = 1;
 
@@ -257,23 +262,7 @@ class Playstate extends FlxTransitionableState {
 	override public function create() {
 		super.create();
 
-		//* this is a test area for trying to read the .7z file as a .RFL for easier level loading.
-		var RFLBytes = File.getBytes("TestRFL.RFL");
-
-		var input = new BytesInput(RFLBytes);
-		var zip = new Reader(input);
-
-		var entries = zip.read();
-
-		for(file in entries){
-			if(file.fileName == "TestRFL.json"){
-				var jsonBytes = file.data.getData();
-				var jsonString = Std.string(jsonBytes);
-
-				var jsonData:Dynamic = TJSON.parse(jsonString);
-				trace("It worked! got: " + jsonData);
-			}
-		}
+		RFLParser.LoadRFLData('TestRFL', '', 'TestFile');
 
         if(!FlxG.sound.music.playing) {
             FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true);
@@ -309,13 +298,20 @@ class Playstate extends FlxTransitionableState {
 		add(Hud);
 
 		isBeatStateType = Level.isBeatStage;
-		FrameTime = Level.FrameTime;
+		BPM = Level.FrameTime;
+
+		interval = (60 / BPM * BopsPerNumOfBeats);
 	}
 
 	override public function update(elapsed:Float) {
 		#if debug
 		DebuggerHelper.update(elapsed);
+
+		FlxG.watch.addQuick('BPM', BPM);
+		FlxG.watch.addQuick('interval', interval);
+		FlxG.watch.addQuick('TriggerTime', nextTriggerTime);
 		#end
+
         FlxG.mouse.visible = true;
 		switch (Level.CameraFollowStyle) {
 			case 'LOCKON':
@@ -368,11 +364,16 @@ class Playstate extends FlxTransitionableState {
 
 		//* camera bop stuff for the cool stages with bopping music
 		if(isBeatStateType) {
-			curStep++; //curStep is the current frame.
-			if(curStep % FrameTime == 0) { //TODO: make an acutal BPM system since framerates are unreliable for this sorta thing.
-				FlxG.camera.zoom += 0.02;
-				FGCAM.zoom += 0.02;
-				HUDCAM.zoom += 0.01;
+			if(FlxG.sound.music != null) {
+				FlxG.sound.music.onComplete = ()->{
+					nextTriggerTime = 0;
+				};
+				if(FlxG.sound.music.time >= nextTriggerTime) {
+					FlxG.camera.zoom += 0.01;
+					FGCAM.zoom += 0.01;
+					HUDCAM.zoom += 0.005;
+					nextTriggerTime += interval;
+				}
 			}
 		}
 	}

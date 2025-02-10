@@ -16,7 +16,7 @@ typedef LevelHeader =
     var CameraFollowStyle:String; //how should the camera follow the player?
     var CameraFollowLerp:Float; //what is the ratio of the lerp the camera uses to follow the player?
     var isBeatState:Bool; //is this a beat state level?
-    var beatstateframetime:Float; //how many frames between the camera bops
+    var beatstateframetime:Float; //how many frames between the camera bops //* THIS IS THE BPM OF THE SONG, NOT THE FRAME INTERVAL
 }
 
 /**
