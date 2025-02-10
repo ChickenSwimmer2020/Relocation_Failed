@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-    <test>
-        <name>name test</name>
-        <var1>5.23</var1>
-        <var2>2</var2>
-        <var3>a line of text\nwhich is multiline</var3>
-    </test>
-</root>

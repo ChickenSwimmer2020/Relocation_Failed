@@ -1,5 +1,9 @@
 package;
 
+import haxe.io.BytesInput;
+import openfl.Assets;
+import haxe.zip.Reader;
+import haxe.zip.Entry;
 import Xml.XmlType;
 import sys.io.File;
 import flixel.math.FlxMath;
@@ -253,12 +257,23 @@ class Playstate extends FlxTransitionableState {
 	override public function create() {
 		super.create();
 
-		//TODO: make xml reading works.
-		//var xmltest:Xml = Xml.parse(File.getContent(Assets.asset('Test.xml'))).firstElement();
-		//trace(xmltest.get('name'));
-		//for(element in xmltest.elements)	{
-		//	var XmlElement = cast element;
-		//}
+		//* this is a test area for trying to read the .7z file as a .RFL for easier level loading.
+		var RFLBytes = File.getBytes("TestRFL.RFL");
+
+		var input = new BytesInput(RFLBytes);
+		var zip = new Reader(input);
+
+		var entries = zip.read();
+
+		for(file in entries){
+			if(file.fileName == "TestRFL.json"){
+				var jsonBytes = file.data.getData();
+				var jsonString = Std.string(jsonBytes);
+
+				var jsonData:Dynamic = TJSON.parse(jsonString);
+				trace("It worked! got: " + jsonData);
+			}
+		}
 
         if(!FlxG.sound.music.playing) {
             FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true);
