@@ -114,8 +114,9 @@ class Gun extends FlxSpriteGroup{
         // Add animations and verify they were added
         Playstate.instance.AimerGroup.members[0].animation.add('Idle', [0], 24, false, false, false);         
         Playstate.instance.AimerGroup.members[0].animation.add('Pew', [1,2,3,4,5], 12, false, false, false);
-        if(ShotgunPassthrough)
+        if(ShotgunPassthrough) {
             Playstate.instance.AimerGroup.members[0].animation.add('Cock', [6,7,8,9,10,11,12,13], 12, false, false, false);
+        }
     }
 
     public function shoot(WeaponType:Bullet.BulletType) {

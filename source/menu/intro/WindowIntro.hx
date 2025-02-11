@@ -35,7 +35,7 @@ class WindowIntro extends FlxState
         FlxG.autoPause = false;
         FlxG.mouse.visible = false;
         wait(2, () -> {
-            FlxTween.tween(window, {y: 0}, 2, {ease: FlxEase.circOut, onComplete: (_) -> {
+            FlxTween.tween(window, {y: 1}, 2, {ease: FlxEase.circOut, onComplete: (_) -> { //keep the 0 to a 1 so that my laptop doesnt have an anerysm
                 FlxG.switchState(()->new IntroState(true)); //* varible passthrough, so we have to use ()->new IntroState.
             }});
         });

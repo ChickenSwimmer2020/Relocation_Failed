@@ -26,7 +26,7 @@
 
 ---
 
- - [ ] levels file being stored as a .RFL (renamed .7z [very good text compression!])
+ - [ ] levels file being stored as a .RFL (renamed .7z{switched to zip sadly.} [very good text compression!])
     - [ ] level triggers stored in an internal Hscript file within the .RFL
-    - [ ] level jsons stored within the .RFL as well
+    - [x] level jsons stored within the .RFL as well
     - [ ] store assets that will only be used once within the .RFL as well.
