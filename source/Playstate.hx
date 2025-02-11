@@ -262,7 +262,7 @@ class Playstate extends FlxTransitionableState {
 	override public function create() {
 		super.create();
 
-		RFLParser.LoadRFLData('TestRFL', '', 'TestFile');
+		////RFLParser.LoadRFLData('TestRFL', '', 'TestFile');
 
         if(!FlxG.sound.music.playing) {
             FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true);
@@ -281,7 +281,7 @@ class Playstate extends FlxTransitionableState {
 		Hud = new HUD(this); //hud does get init, BUT doesnt actually show anything until you pickup the suit.
 		Hud.cameras = [HUDCAM];
 		Player2 = new Aimer();
-		Level = new Level(LevelLoader.ParseLevelData(Assets.asset('$_LEVEL.json')));
+		Level = new Level(LevelLoader.ParseLevelData(_LEVEL));
 		Level.EditorMode = false;
 		Level.loadLevel();
 

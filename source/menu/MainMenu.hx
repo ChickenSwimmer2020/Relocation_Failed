@@ -224,7 +224,7 @@ class MainMenu extends FlxTransitionableState {
 
         var WarningText:FlxText = new FlxText(0, 0, 0, "", 24, true);
         WarningText.setFormat(null, 24, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
-        WarningText.text = 'This game has flashing lights.\nif you are: epileptic, or photosensative.\nplease navigate to the settings menu and disable them.\nthank you for enjoying our game!';
+        WarningText.text = 'This game has flashing lights.\nif you are: epileptic, or photosensitive.\nplease navigate to the settings menu and disable them.\nthank you for enjoying our game!';
         WarningText.screenCenter(XY);
         WarnGroup.add(WarningText);
         

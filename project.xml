@@ -31,7 +31,7 @@
     <haxelib name="hlwnative" if="hl" />
 	<haxelib name="flixel-ui" />
 	<haxelib name="flixel-addons" />
-    <haxelib name="hxdiscord_rpc"/>
+    <haxelib name="hxdiscord"/>
 
     <haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
     <haxedef name="FLX_NO_MOUSE" if="mobile"/>

@@ -9,6 +9,7 @@
  - [ ] optimize everything we possibly can
  - [ ] level editor
  - [ ] ***M U L T I  P L A Y E R  S U P P O R T***
+ - [ ] Discord Rich Presence Integration
 
 ## ***NEEDS TO BE FIXED***
 
@@ -28,5 +29,5 @@
 
  - [ ] levels file being stored as a .RFL (renamed .7z{switched to zip sadly.} [very good text compression!])
     - [ ] level triggers stored in an internal Hscript file within the .RFL
-    - [x] level jsons stored within the .RFL as well
+    - [x] level jsons stored within the .RFL as well (readable now!)
     - [ ] store assets that will only be used once within the .RFL as well.

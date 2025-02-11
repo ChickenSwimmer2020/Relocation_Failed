@@ -141,7 +141,7 @@ class LevelLoader
      */
     inline static public function ParseLevelData(file:String):LevelData
         try{
-            return TJSON.parse(File.getContent(file), null);
+            return TJSON.parse(RFLParser.LoadRFLData(file, '', 'Level'), null);
         }catch(e){
             trace(new LevelExceptions.LevelParseErrorException(e.message, e.stack.toString()).toString());
             return null;

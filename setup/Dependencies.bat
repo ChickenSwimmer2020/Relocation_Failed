@@ -18,7 +18,7 @@ haxelib install lunarps
 haxelib install hlwnative
 haxelib install flixel-ui
 haxelib install flixel-addons
-haxelib install hxdiscord_rpc
+haxelib install hxdiscord
 
 :: Test lime command
 echo Running lime command as a test...
