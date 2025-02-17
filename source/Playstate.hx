@@ -1,5 +1,6 @@
 package;
 
+import objects.game.controllables.Aimer.InteractionBox;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;
 import openfl.Assets;
@@ -30,6 +31,8 @@ class Playstate extends FlxTransitionableState {
 	public var Player:Player;
 	public var Player2:Aimer;
 	public var AimerGroup:FlxSpriteGroup = new FlxSpriteGroup();
+	public var Player3:InteractionBox; //for interactions since i cant attach the sprite to the aimer itself :/
+
 	public var Hud:HUD;
 	public var Level:Level;
 	public var colliders:Array<FlxSprite> = [];
@@ -293,6 +296,7 @@ class Playstate extends FlxTransitionableState {
 		add(Level);
 		add(Player);
 		add(Player2);
+		add(Player3);
 		add(AimerGroup);
 		add(BulletGroup);
 		add(Hud);
@@ -355,6 +359,8 @@ class Playstate extends FlxTransitionableState {
 
         AimerGroup.update(elapsed); //you know, this might cause issues with animations :facepalm:
 		AimerGroup.setPosition(Player2.x, Player2.y);
+		Player3.angle = Player2.angle;
+
 		Playstate.instance.AimerGroup.angle = Player2.angle + 1;
 		super.update(elapsed);
 		FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));

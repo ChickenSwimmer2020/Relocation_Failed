@@ -1,6 +1,5 @@
 package objects.game.controllables;
 
-import flixel.tweens.FlxEase;
 import flixel.math.FlxPoint;
 import flixel.math.FlxAngle;
 import flixel.effects.FlxFlicker;
@@ -119,4 +118,10 @@ class Aimer extends FlxSprite {
             else
                 this.flipY = false;
         }
+}
+class InteractionBox extends FlxSprite {
+    public function new() {
+        super();
+        makeGraphic(15, 32, FlxColor.WHITE);
+    }
 }
