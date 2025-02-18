@@ -11,6 +11,7 @@ class IntroState extends FlxState
     var stars:Array<Star> = [];
     public var starCam:FlxCamera;
     public var shipCam:FlxCamera;
+    public var overlayCam:FlxCamera;
     var ship:FlxSprite;
     var overlay:FlxSprite;
     var dur:Float = 0.8;
@@ -36,7 +37,7 @@ class IntroState extends FlxState
         shipCam = new FlxCamera(0, 0, 1280, 720, 1.2);
         shipCam.bgColor = 0x00000000;
         FlxG.cameras.add(shipCam, false);
-        var overlayCam = new FlxCamera(0, 0, 1280, 720, 0);
+        overlayCam = new FlxCamera(0, 0, 1280, 720, 0);
         overlayCam.bgColor = 0x00000000;
         FlxG.cameras.add(overlayCam, false);
         ship = new FlxSprite(-120, -30, 'assets/ship-off.png');
@@ -117,6 +118,7 @@ class IntroState extends FlxState
         super.destroy();
         FlxG.cameras.remove(starCam);
         FlxG.cameras.remove(shipCam);
+        FlxG.cameras.remove(overlayCam);
     }
 
     var val = 0.0;

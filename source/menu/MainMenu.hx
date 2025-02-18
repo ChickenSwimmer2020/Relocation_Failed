@@ -56,12 +56,6 @@ class MainMenu extends FlxTransitionableState {
 
     override public function create() {
         super.create();
-        if(!hasSeenWarning) {
-            FlashWarn();
-            hasSeenWarning = true;
-        }else{
-            trace('Player has seen flash warning. not showing');
-        }
         //determin the outro message now.
         RandomNumber = new FlxRandom().int(0, OutroText.length - 1);
 
@@ -101,7 +95,7 @@ class MainMenu extends FlxTransitionableState {
 
         var vingette = new FlxSprite(0, 0, 'assets/Vingette.png'); //* shouldnt be infront of things that glow, should it?
         vingette.alpha = 0.4;
-        vingette.camera = shipCam;
+        vingette.camera = verCam; //so it doesnt shake
         add(vingette);
 
         //menu title stuff.
@@ -110,51 +104,51 @@ class MainMenu extends FlxTransitionableState {
         Title.updateHitbox();
         Title.screenCenter(X);
         Title.x = Title.x += 33;
-        Title.camera = shipCam;
+        Title.camera = verCam;
         Title.antialiasing = false;
         add(Title);
 
         Suffix = new FlxText(0, 0, 0, "", 8, true);
         Suffix.setFormat(null, 24, FlxColor.YELLOW, CENTER, NONE, FlxColor.TRANSPARENT, true);
         Suffix.text = "TESTING VERSION";
-        Suffix.camera = shipCam;
+        Suffix.camera = verCam;
         Suffix.setPosition(Title.x + 250, Title.y + 100);
         Suffix.antialiasing = false;
         add(Suffix);
 
-        //                      these should have been behind the buttons.              \\
+        //                      these should have been behind the buttons.                           \\
         shipGlow = new FlxSprite(0, 0, 'assets/ship-glow.png');
         shipGlow.setGraphicSize(1280, 720);
         shipGlow.updateHitbox();
         shipGlow.antialiasing = false;
-        shipGlow.camera = shipCam;
+        shipGlow.camera = verCam;
         add(shipGlow);
 
         shipGlow2 = new FlxSprite(0, 0, 'assets/ship-glow-front.png');
         shipGlow2.setGraphicSize(1280, 720);
         shipGlow2.updateHitbox();
         shipGlow2.antialiasing = false;
-        shipGlow2.camera = shipCam;
+        shipGlow2.camera = verCam;
         add(shipGlow2);
 
         //button handling
         Button_Play = new Button('New\nGame', 560, 280, Assets.image('ButtonTEST'), ()->{ FlxG.state.openSubState(new substates.ChapterSelectSubState(this)); }, 1, false);
         //Button_Play.DaButton.updateHitbox();
         Button_Play.updateTextPosition();
-        Button_Play.camera = shipCam;
+        Button_Play.camera = verCam;
         add(Button_Play);
 
         Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); FlxG.sound.music.stop(); FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true); }, 1, false);
         //Button_Load.DaButton.updateHitbox();
         Button_Load.updateTextPosition();
-        Button_Load.camera = shipCam;
+        Button_Load.camera = verCam;
         add(Button_Load);
 
         Button_Settings = new Button('Settings', Button_Load.DaButton.x + 250, Button_Load.DaButton.y + 10, Assets.image('ButtonTEST'),
-        ()->{ FlxG.switchState(menu.Settings.new); }, 1, false);
+        ()->{ FlxG.state.openSubState(new menu.SettingsSubState(this)); }, 1, false);
         //Button_Settings.DaButton.updateHitbox();
         Button_Settings.updateTextPosition();
-        Button_Settings.camera = shipCam;
+        Button_Settings.camera = verCam;
         add(Button_Settings);
 
         Button_exit = new Button('Exit', Button_Settings.DaButton.x - 200, Button_Settings.DaButton.y + 75, Assets.image('ButtonTEST'),
@@ -185,7 +179,7 @@ class MainMenu extends FlxTransitionableState {
         }, 1, false);
         //Button_Settings.DaButton.updateHitbox();
         Button_exit.updateTextPosition();
-        Button_exit.camera = shipCam;
+        Button_exit.camera = verCam;
         add(Button_exit);
 
         platformText = new FlxText(0, 690, 0, "", 8, true);
@@ -203,9 +197,16 @@ class MainMenu extends FlxTransitionableState {
         add(versiontext);
 
         #if (debug || modded)
-        var LevelEditorButton:FlxButton = new FlxButton(0, 0, 'Level Editor', ()->{ FlxG.switchState(debug.LevelEditorState.new); });
+        var LevelEditorButton:FlxButton = new FlxButton(1200, 0, 'Level Editor', ()->{ FlxG.switchState(debug.LevelEditorState.new); });
         add(LevelEditorButton);
         #end
+
+        if(!hasSeenWarning) { //do this at the top so that *hopefully* it renders over everything else.
+            FlashWarn();
+            hasSeenWarning = true;
+        }else{
+            trace('Player has seen flash warning. not showing');
+        }
     }
 
     override public function destroy()
@@ -214,6 +215,7 @@ class MainMenu extends FlxTransitionableState {
         FlxG.cameras.remove(starCam);
         FlxG.cameras.remove(shipCam);
         FlxG.cameras.remove(planetCam);
+        FlxG.cameras.remove(verCam); //you forgot to remove this on state destory, solar. --ChickenSwimmer2020
     }
 
     public function FlashWarn() { //* we use this to create the falshing lights warning, since we're obviously going to want to add a feature to disable them, so we can get more players and accessibility!
@@ -243,11 +245,11 @@ class MainMenu extends FlxTransitionableState {
         CloseButton.alpha = 0;
         WarnGroup.add(CloseButton);
 
-        var SettingsButt:FlxButton = new FlxButton(CloseButton.x - 80, CloseButton.y, "Settings", ()->{ FlxG.switchState(menu.Settings.new); });
+        var SettingsButt:FlxButton = new FlxButton(CloseButton.x - 80, CloseButton.y, "Settings", ()->{ FlxG.state.openSubState(new menu.SettingsSubState(this)); WarnGroup.kill(); });
         SettingsButt.alpha = 0;
         WarnGroup.add(SettingsButt);
 
-        wait(5, ()->{
+        wait(2, ()->{
             FlxTween.tween(CloseButton, {alpha: 1}, 1, { ease: FlxEase.sineInOut });
             FlxTween.tween(SettingsButt, {alpha: 1}, 1, { ease: FlxEase.sineInOut });
         });

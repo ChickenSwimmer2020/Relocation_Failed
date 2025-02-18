@@ -359,7 +359,7 @@ class Playstate extends FlxTransitionableState {
 
         AimerGroup.update(elapsed); //you know, this might cause issues with animations :facepalm:
 		AimerGroup.setPosition(Player2.x, Player2.y);
-		Player3.angle = Player2.angle;
+		//Player3.angle = Player2.angle; //thisll change in the next pull, im just a stupid idiot.
 
 		Playstate.instance.AimerGroup.angle = Player2.angle + 1;
 		super.update(elapsed);
