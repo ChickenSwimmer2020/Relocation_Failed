@@ -32,3 +32,7 @@
     - [ ] level triggers stored in an internal Hscript file within the .RFL
     - [x] level jsons stored within the .RFL as well (readable now!)
     - [ ] store assets that will only be used once within the .RFL as well.
+
+---
+
+- [ ] in-engine shell ejection (toggleable setting)

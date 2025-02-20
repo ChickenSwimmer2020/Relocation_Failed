@@ -9,6 +9,7 @@ class Suit extends BaseItem {
 			ps.Player.GotSuitFirstTime = true;
 			wait(3, () -> {
 				startChecking = true;
+				trace('TODO: make awsome cutscene for getting the suit for the first time once we make that area where you obtain the suit');
 			});
 		};
 	}

@@ -157,6 +157,16 @@ class Aimer extends RFTriAxisSprite {
 class InteractionBox extends FlxSprite {
 	public function new() {
 		super();
-		makeGraphic(15, 32, FlxColor.WHITE);
+		makeGraphic(15, 15, FlxColor.WHITE);
+	}
+
+	override public function update(elapsed:Float) {
+		super.update(elapsed);
+		if(FlxG.mouse.justPressed) {
+			this.color = FlxColor.BLUE;
+			wait(0.5, ()->{
+				this.color = FlxColor.WHITE;
+			});
+		}
 	}
 }

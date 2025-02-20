@@ -25,12 +25,14 @@ class Level extends FlxGroup {
     public var levelAssets:RFLAssets;
 	public var levelData:LevelData;
 	public var levelHeader:LevelHeader;
+
 	public var objects:Map<String, LevelSprite> = new Map();
 	public var layeringGrp:FlxTypedGroup<RFTriAxisSprite> = new FlxTypedGroup<RFTriAxisSprite>();
 	public var items:Map<String, Item> = new Map();
 	public var doors:Map<String, FlxSpriteGroup> = new Map();
 	public var triggers:Map<String, FlxSprite> = new Map();
 	public var colliders:Array<LevelSprite> = [];
+	public var interactables:Array<InteractionSprite> = [];
 
 	public var LevelID:String;
 	public var ChapterID:Int;
@@ -200,6 +202,9 @@ class Level extends FlxGroup {
 			add(Trg);
 			trace('New Trigger Created\n\n$Trg');
 		}
+		//for (InteractableSprite in levelData.interactables) {
+			//TODO: this.
+		//}
 	}
 
 	public function layerSorting(s1:RFTriAxisSprite, s2:RFTriAxisSprite, array:Array<RFTriAxisSprite>):Int {
@@ -279,6 +284,27 @@ class LevelSprite extends RFTriAxisSprite {
 		}
 		if (this.isForegroundSprite) { // make sure to disable collision if the sprite is on the foreground, even if it is on a sperate camera.
 			this.solid = false; // override the last one hopefully
+		}
+	}
+}
+
+class InteractionSprite extends RFTriAxisSprite {
+	public var doubleAxisCollide:Bool = false;
+	public var tripleAxisCollide:Bool = false;
+	public var name:String = '';
+	public var texture:String = '';
+	public var dialoug:String = '';
+	public var Collide:Bool = false;
+	public var IsShiny:Bool = false;
+	public var IsAnimated:Bool = false;
+	public var giveItemOnUse:Bool = false;
+	public var ItemToGive:String = '';
+
+	override public function update(elapsed:Float) { // WORKING COLLISION?!?!?!
+		if (this.doubleAxisCollide) {
+			this.moves = false; // how can the player even fucking move the damn sprite????
+			this.solid = true; // make object have collision
+			this.immovable = true; // why did the box even move????
 		}
 	}
 }

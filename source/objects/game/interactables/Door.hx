@@ -70,8 +70,6 @@ class Door extends FlxSpriteGroup {
 				interactPrompt.visible = true;
 				if (FlxG.keys.anyJustPressed([E])) {
 					Playstate.instance.Player.Transitioning = true;
-					Playstate.instance.Player.drag.set(9999999999999,
-						9999999999999); // instantly stop the player so that we dont get issues with the aimer disconnecting from the body like a worm or something.
 					interactPrompt.visible = false;
 
 					if (hasAnim) {

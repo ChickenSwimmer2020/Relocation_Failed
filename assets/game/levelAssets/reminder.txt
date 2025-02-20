@@ -1,0 +1,1 @@
+when you place a new asset into here, remember to crop it to specifically the graphic, it puts less strain on the engine since theres less transparency to render

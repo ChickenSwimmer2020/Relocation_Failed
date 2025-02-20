@@ -29,6 +29,9 @@ enum abstract ItemType(String) from String to String
     var _SHOTGUN = '_SHOTGUN'; //gives the player a shotgun
     var _RIFLE = '_RIFLE'; //gives the player a rifle
     var _SMG = '_SMG'; //gives the player a submachine gun
+
+    //* fallbacks (for if SOMEONE forgot to implement an item type [YOU FORGOT THE SMG AMMO, SOLAR --ChickenSwimmer2020])
+    var _NULL = '_NULL'; // for missing item behaviors
 }
 
 class Item extends FlxGroup{

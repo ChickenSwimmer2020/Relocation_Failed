@@ -132,7 +132,7 @@ class HUD extends FlxSpriteGroup {
 					ammocounter_AMMOSPR3.animation.play('NATO');
 					ammocounter_AMMOSPR4.animation.play('NATO');
 				case SMGROUNDS:
-					CurAmmoName = 'FN 5.7×28mm NATO'; // we're making it a P90 smg.
+					CurAmmoName = 'FN 5.7×28mm NATO'; // we're making it a P90 smg. //no we're not, we're making it a mp9k
 					ammocounter_AMMOTEXT.x = 980;
 					CurAmmoCap = ps.Player.gunData.SMGAmmoCap;
 					CurAmmoNum = ps.Player.gunData.SMGAmmoRemaining;

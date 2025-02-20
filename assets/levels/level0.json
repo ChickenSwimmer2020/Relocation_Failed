@@ -84,8 +84,8 @@
         }
     ],
     "items":[
-        {
-            "Name": "TESTITEM1",
+        { //ammo stuff
+            "Name": "BuckShellBox",
             "behavior": "_BOXOFBUCKSHELL",
             "texture": "game/levelAssets/boxofbuckshell.png",
             "SCL": 1,
@@ -94,16 +94,16 @@
             "Z": 200
         },
         {
-            "Name": "TESTITEM2",
+            "Name": "BuckShell",
             "behavior": "_BUCKSHELL",
             "texture": "game/levelAssets/buckshells.png",
             "SCL": 1,
-            "X": 600,
-            "Y": 0,
+            "X": 500,
+            "Y": 100,
             "Z": 200
         },
         {
-            "Name": "TESTITEM3",
+            "Name": "9mmBox",
             "behavior": "_BOXOF9MM",
             "texture": "game/levelAssets/boxof9mm.png",
             "SCL": 1,
@@ -112,40 +112,85 @@
             "Z": 200
         },
         {
-            "Name": "TESTITEM4",
+            "Name": "9mm",
             "behavior": "_9MMMAG",
             "texture": "game/levelAssets/9mmmag.png",
             "SCL": 1,
-            "X": 800,
-            "Y": 0,
+            "X": 700,
+            "Y": 100,
             "Z": 200
         },
         {
-            "Name": "TestWEAPON01",
-            "behavior": "_PISTOL",
-            "texture": "game/levelAssets/itm_p.png",
+            "Name": "SmgRoundsBox",
+            "behavior": "_NULL",
+            "texture": "game/levelAssets/boxofsmgrounds.png",
             "SCL": 1,
             "X": 900,
             "Y": 0,
             "Z": 200
         },
         {
-            "Name": "TestWEAPON02",
-            "behavior": "_SHOTGUN",
-            "texture": "game/levelAssets/itm_s.png",
+            "Name": "SmgRounds",
+            "behavior": "_NULL",
+            "texture": "game/levelAssets/smgroundsmag.png",
+            "SCL": 1,
+            "X": 900,
+            "Y": 100,
+            "Z": 200
+        },
+        { //weapons stuff
+            "Name": "Pistol",
+            "behavior": "_PISTOL",
+            "texture": "game/levelAssets/itm_p.png",
             "SCL": 1,
             "X": 1000,
             "Y": 0,
             "Z": 200
         },
         {
-            "Name": "SUITTEST",
+            "Name": "Shotgun",
+            "behavior": "_SHOTGUN",
+            "texture": "game/levelAssets/itm_s.png",
+            "SCL": 1,
+            "X": 1100,
+            "Y": 0,
+            "Z": 200
+        },
+        {
+            "Name": "SubMachineGun",
+            "behavior": "_SMG",
+            "texture": "game/levelAssets/itm_sm.png",
+            "SCL": 1,
+            "X": 1200,
+            "Y": 0,
+            "Z": 200
+        },
+        { //additional tests & shtuff
+            "Name": "Suit",
             "behavior": "_SUIT",
+            "texture": "game/levelAssets/suit.png",
+            "SCL": 1,
+            "X": 600,
+            "Y": 0,
+            "Z": 300
+        },
+        {
+            "Name": "Battery",
+            "behavior": "_BATTERY",
             "texture": "game/levelAssets/battery.png",
             "SCL": 1,
             "X": 600,
             "Y": 0,
             "Z": 300
+        },
+        {
+            "Name": "MedicalKit",
+            "behavior": "_HEALTHPACK",
+            "texture": "game/levelAssets/medkit.png",
+            "SCL": 1,
+            "X": 600,
+            "Y": 0,
+            "Z": 400
         }
     ],
     "doors":[

@@ -108,6 +108,31 @@ typedef LevelItem = // should allow us to put items into the level directly
 	var SCL:Float; // scale
 }
 
+/**
+ * An interactable sprite in a level.
+ * @since RF_DEV_0.4.0
+ */
+typedef InteractableSprite = 
+{
+	var Name:String; // internal name
+	var X:Float; // X positional value
+	var Y:Float; // Y positional value
+	var Z:Float; // Z positional value
+	var ScaleX:Float; // X scale factor
+	var ScaleY:Float; // Y scale factor
+	var SFX:Float; // X scroll factor
+	var SFY:Float; // Y scroll factor
+	var Collide:Bool; // should the player collide with this sprite?
+	var IMG:String; // what image do we load
+	var Dialoug:String; // what to say on interact
+	var IsShiny:Bool; // should the sprite be shiny?
+	var IsAnimated:Bool; // should it be animated?
+	var giveItemOnUse:Bool; // should it give an item when used?
+	var ?ItemToGive:String; // what item to give (optional)
+	var ?DoubleAxisCollide:Bool; // should it collide with the player on 2 axis(x, y)?
+	var ?TripleAxisCollide:Bool; // should it collide with player on all 3 axis(x, y, z)?
+}
+
 typedef LevelData = {
 	/**
 	 * The items in the level.
@@ -138,6 +163,12 @@ typedef LevelData = {
 	 * @since RF_DEV_0.3.8
 	**/
 	var triggers:Array<LevelTrigger>;
+
+	/**
+	 * The interactable sprites in the level.
+	 * @since RF_DEV_0.4.0
+	 */
+	var interactables:Array<InteractableSprite>;
 }
 
 class LevelLoader {
