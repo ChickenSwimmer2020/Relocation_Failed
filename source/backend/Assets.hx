@@ -11,10 +11,8 @@ class Assets {
 	 * @return The image asset.
 	 * @since RF_DEV_0.0.9
 	 */
-	public static function image(Key:String, ?_:PosInfos):FlxGraphic{
-        trace('image: $Key | ${_.fileName}:${_.lineNumber}');
+	public static function image(Key:String, ?_:PosInfos):FlxGraphic
 		return FlxGraphic.fromBitmapData(BitmapData.fromFile(asset('$Key.png')));
-    }
 
 	/**
 	 * Returns the sound asset.
