@@ -1,6 +1,6 @@
 {
     "header":{
-            "NOTE": "DO NOT FUCK WITH OUR LEVELS. unless your modding",
+            "NOTE": "rehehe",
             "LevelID": "level0",
             "Chapter": 0,
             "Boundries": [1280, 720],
@@ -16,11 +16,12 @@
             "Alpha": 1,
             "X": 0,
             "Y": 0,
+            "Z": 0,
             "ScaleX": 1,
             "ScaleY": 1,
             "SFX": 1,
             "SFY": 1,
-            "IMG": "lebackgroundtestsprite",
+            "IMG": "game/levelAssets/lebackgroundtestsprite.png",
             "VIS": true,
             "IsBackground": true
         },
@@ -28,26 +29,28 @@
             "Name": "COLLTEST",
             "Alpha": 1,
             "X": 500,
-            "Y": 500,
+            "Y": 0,
+            "Z": 500,
             "ScaleX": 1,
             "ScaleY": 1,
             "SFX": 1,
             "SFY": 1,
-            "IMG": "ButtonTEST",
+            "IMG": "menu/ButtonTEST.png",
             "IsBackground": false,
             "VIS": true,
-            "CollidesWithPlayer": true
+            "TripleAxisCollide": true
         },
         {
             "Name": "TestObject1",
             "Alpha": 1,
             "X": 0,
             "Y": 0,
+            "Z": 0,
             "ScaleX": 10,
             "ScaleY": 1,
             "SFX": 3,
             "SFY": 0,
-            "IMG": "ButtonTEST",
+            "IMG": "menu/ButtonTEST.png",
             "VIS": true
         },
         {
@@ -55,26 +58,28 @@
             "Alpha": 1,
             "X": 0,
             "Y": 0,
+            "Z": 0,
             "ScaleX": 2,
             "ScaleY": 2,
             "SFX": 1,
             "SFY": 1,
-            "IMG": "ButtonTEST",
+            "IMG": "menu/ButtonTEST.png",
             "VIS": true,
-            "CollidesWithPlayer": false
+            "TripleAxisCollide": false
         },
         {
             "Name": "TESTOVERLAYSPRITE",
             "Alpha": 1,
             "X": 500,
             "Y": 0,
+            "Z": 0,
             "ScaleX": 2,
             "ScaleY": 2,
             "SFX": 1,
             "SFY": 1,
-            "IMG": "ButtonTEST",
+            "IMG": "menu/ButtonTEST.png",
             "VIS": true,
-            "CollidesWithPlayer": false,
+            "TripleAxisCollide": false,
             "RenderOverPlayer": true
         }
     ],
@@ -82,58 +87,65 @@
         {
             "Name": "TESTITEM1",
             "behavior": "_BOXOFBUCKSHELL",
-            "texture": "boxofbuckshell",
+            "texture": "game/levelAssets/boxofbuckshell.png",
             "SCL": 1,
             "X": 500,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "TESTITEM2",
             "behavior": "_BUCKSHELL",
-            "texture": "buckshells",
+            "texture": "game/levelAssets/buckshells.png",
             "SCL": 1,
             "X": 600,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "TESTITEM3",
             "behavior": "_BOXOF9MM",
-            "texture": "boxof9mm",
+            "texture": "game/levelAssets/boxof9mm.png",
             "SCL": 1,
             "X": 700,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "TESTITEM4",
             "behavior": "_9MMMAG",
-            "texture": "9mmmag",
+            "texture": "game/levelAssets/9mmmag.png",
             "SCL": 1,
             "X": 800,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "TestWEAPON01",
             "behavior": "_PISTOL",
-            "texture": "itm_p",
+            "texture": "game/levelAssets/itm_p.png",
             "SCL": 1,
             "X": 900,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "TestWEAPON02",
             "behavior": "_SHOTGUN",
-            "texture": "itm_s",
+            "texture": "game/levelAssets/itm_s.png",
             "SCL": 1,
             "X": 1000,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "SUITTEST",
             "behavior": "_SUIT",
-            "texture": "battery",
+            "texture": "game/levelAssets/battery.png",
             "SCL": 1,
             "X": 600,
-            "Y": 300
+            "Y": 0,
+            "Z": 300
         }
     ],
     "doors":[
@@ -141,13 +153,14 @@
             "Name": "testdoor01",
             "LevelToLoad": "level1",
             "isAnimated": true,
-            "Graphic": "DOOR",
+            "Graphic": "game/levelAssets/DOOR.png",
             "Frame": [31, 31],
             "openAnimLength": 1,
-            "PlayerPosition": [215, 215],
+            "PlayerPosition": [215, 0, 215],
             "scale": [2, 2],
             "X": 150,
-            "Y": 150
+            "Y": 0,
+            "Z": 150
         }
     ],
     "triggers":[
@@ -157,7 +170,8 @@
             "Visible": true,
             "isOneShot": false,
             "X": 1000,
-            "Y": 1000,
+            "Y": 0,
+            "Z": 1000,
             "Width": 500,
             "Height": 200
         }

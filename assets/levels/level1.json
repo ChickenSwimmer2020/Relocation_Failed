@@ -1,6 +1,6 @@
 {
     "header":{
-            "NOTE": "DO NOT FUCK WITH OUR LEVELS. unless your modding",
+            "NOTE": "rehehehehheahaah",
             "LevelID": "level1",
             "Chapter": 0,
             "Boundries": [1280, 720],
@@ -14,12 +14,14 @@
             "Alpha": 1,
             "X": 0,
             "Y": 0,
+            "Z": 0,
             "ScaleX": 1,
             "ScaleY": 1,
             "SFX": 1,
             "SFY": 1,
-            "IMG": "lebackgroundtestsprite",
+            "IMG": "game/levelAssets/lebackgroundtestsprite.png",
             "VIS": true,
+            "RenderBehindPlayer": true,
             "IsBackground": false
         }
     ],
@@ -27,34 +29,38 @@
         {
             "Name": "TESTITEM1",
             "behavior": "_BOXOFBUCKSHELL",
-            "texture": "boxofbuckshell",
+            "texture": "game/levelAssets/boxofbuckshell.png",
             "SCL": 1,
             "X": 500,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "TESTITEM2",
             "behavior": "_BUCKSHELL",
-            "texture": "buckshells",
+            "texture": "game/levelAssets/buckshells.png",
             "SCL": 1,
             "X": 600,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "TESTITEM3",
             "behavior": "_BOXOF9MM",
-            "texture": "boxof9mm",
+            "texture": "game/levelAssets/boxof9mm.png",
             "SCL": 1,
             "X": 700,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         },
         {
             "Name": "TESTITEM4",
             "behavior": "_9MMMAG",
-            "texture": "9mmmag",
+            "texture": "game/levelAssets/9mmmag.png",
             "SCL": 1,
             "X": 800,
-            "Y": 200
+            "Y": 0,
+            "Z": 200
         }
     ],
     "doors":[
@@ -62,13 +68,14 @@
             "Name": "testdoor02",
             "LevelToLoad": "level0",
             "isAnimated": true,
-            "Graphic": "DOOR",
+            "Graphic": "game/levelAssets/DOOR.png",
             "Frame": [31, 31],
             "openAnimLength": 1,
-            "PlayerPosition": [215, 215],
+            "PlayerPosition": [215, 0, 215],
             "scale": [2, 2],
             "X": 150,
-            "Y": 150
+            "Y": 0,
+            "Z": 150
         }
     ],
     "triggers": [

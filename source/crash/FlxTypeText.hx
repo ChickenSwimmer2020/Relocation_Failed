@@ -15,8 +15,7 @@ import openfl.media.Sound;
  * @author Noel Berry
  * @see [Flixel Demos - FlxTypeText](https://haxeflixel.com/demos/FlxTypeText/)
  */
-class FlxTypeText extends FlxText
-{
+class FlxTypeText extends FlxText {
 	/**
 	 * The delay between each character, in seconds.
 	 */
@@ -160,8 +159,7 @@ class FlxTypeText extends FlxText
 	 * @param	Size			The size of the text.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not.
 	 */
-	public function new(X:Float, Y:Float, Width:Int, Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
-	{
+	public function new(X:Float, Y:Float, Width:Int, Text:String, Size:Int = 8, EmbeddedFont:Bool = true) {
 		super(X, Y, Width, "", Size, EmbeddedFont);
 		_finalText = Text;
 	}
@@ -177,10 +175,8 @@ class FlxTypeText extends FlxText
 	 *                         Can also be set separately.
 	 * @param   Callback       An optional callback function, to be called when the typing animation is complete.
 	 */
-	public function start(?Delay:Float, ForceRestart:Bool = false, AutoErase:Bool = false, ?SkipKeys:Array<FlxKey>, ?Callback:Void->Void):Void
-	{
-		if (Delay != null)
-		{
+	public function start(?Delay:Float, ForceRestart:Bool = false, AutoErase:Bool = false, ?SkipKeys:Array<FlxKey>, ?Callback:Void->Void):Void {
+		if (Delay != null) {
 			delay = Delay;
 		}
 
@@ -189,29 +185,25 @@ class FlxTypeText extends FlxText
 		paused = false;
 		_waiting = false;
 
-		if (ForceRestart)
-		{
+		if (ForceRestart) {
 			text = "";
 			_length = 0;
 		}
 
 		autoErase = AutoErase;
 
-		if (SkipKeys != null)
-		{
+		if (SkipKeys != null) {
 			skipKeys = SkipKeys;
 		}
 
-		if (Callback != null)
-		{
+		if (Callback != null) {
 			completeCallback = Callback;
 		}
 
 		insertBreakLines();
 	}
 
-	override public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):FlxText
-	{
+	override public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):FlxText {
 		super.applyMarkup(input, rules);
 		resetText(text); // Stops applyMarkup from misaligning the colored section of text.
 		return this;
@@ -221,16 +213,14 @@ class FlxTypeText extends FlxText
 	 * Internal function that replace last space in a line for a line break.
 	 * To prevent a word start typing in a line and jump to next.
 	 */
-	function insertBreakLines()
-	{
+	function insertBreakLines() {
 		var saveText = text;
 
 		var last = _finalText.length;
 		var n0:Int = 0;
 		var n1:Int = 0;
 
-		while (true)
-		{
+		while (true) {
 			last = _finalText.substr(0, last).lastIndexOf(" ");
 
 			if (last <= 0)
@@ -244,8 +234,7 @@ class FlxTypeText extends FlxText
 			text = prefix + nextText;
 			n1 = textField.numLines;
 
-			if (n0 == n1)
-			{
+			if (n0 == n1) {
 				_finalText = nextText;
 			}
 		}
@@ -261,26 +250,22 @@ class FlxTypeText extends FlxText
 	 * @param	SkipKeys		An array of keys as string values (e.g. `[FlxKey.SPACE, FlxKey.L]`) that will advance the text. Can also be set separately.
 	 * @param	Callback		An optional callback function, to be called when the erasing animation is complete.
 	 */
-	public function erase(?Delay:Float, ForceRestart:Bool = false, ?SkipKeys:Array<FlxKey>, ?Callback:Void->Void):Void
-	{
+	public function erase(?Delay:Float, ForceRestart:Bool = false, ?SkipKeys:Array<FlxKey>, ?Callback:Void->Void):Void {
 		_erasing = true;
 		_typing = false;
 		paused = false;
 		_waiting = false;
 
-		if (Delay != null)
-		{
+		if (Delay != null) {
 			eraseDelay = Delay;
 		}
 
-		if (ForceRestart)
-		{
+		if (ForceRestart) {
 			_length = _finalText.length;
 			text = _finalText;
 		}
 
-		if (SkipKeys != null)
-		{
+		if (SkipKeys != null) {
 			skipKeys = SkipKeys;
 		}
 
@@ -292,8 +277,7 @@ class FlxTypeText extends FlxText
 	 *
 	 * @param	Text	The text that will ultimately be displayed.
 	 */
-	public function resetText(Text:String):Void
-	{
+	public function resetText(Text:String):Void {
 		text = prefix;
 		_finalText = Text;
 		_typing = false;
@@ -311,8 +295,7 @@ class FlxTypeText extends FlxText
 	 * @param	Amount		How much variation to add, as a percentage of delay (0.5 = 50% is the maximum amount that will be added or subtracted from the delay variable). Only valid if >0 and <1.
 	 * @param	On			Whether or not to add the random variation. True by default.
 	 */
-	public function setTypingVariation(Amount:Float = 0.5, On:Bool = true):Void
-	{
+	public function setTypingVariation(Amount:Float = 0.5, On:Bool = true):Void {
 		_typingVariation = On;
 		_typeVarPercent = FlxMath.bound(Amount, 0, 1);
 	}
@@ -320,125 +303,95 @@ class FlxTypeText extends FlxText
 	/**
 	 * Internal function that is called when typing is complete.
 	 */
-	function onComplete():Void
-	{
+	function onComplete():Void {
 		_timer = 0;
 		_typing = false;
 
-		if (sounds != null)
-		{
-			for (sound in sounds)
-			{
+		if (sounds != null) {
+			for (sound in sounds) {
 				sound.stop();
 			}
 		}
 
-		if (completeCallback != null)
-		{
+		if (completeCallback != null) {
 			completeCallback();
 		}
 
-		if (autoErase && waitTime <= 0)
-		{
+		if (autoErase && waitTime <= 0) {
 			_erasing = true;
-		}
-		else if (autoErase)
-		{
+		} else if (autoErase) {
 			_waitTimer = waitTime;
 			_waiting = true;
 		}
 	}
 
-	function onErased():Void
-	{
+	function onErased():Void {
 		_timer = 0;
 		_erasing = false;
 
-		if (eraseCallback != null)
-		{
+		if (eraseCallback != null) {
 			eraseCallback();
 		}
 	}
 
-	override public function update(elapsed:Float):Void
-	{
+	override public function update(elapsed:Float):Void {
 		// If the skip key was pressed, complete the animation.
 		#if FLX_KEYBOARD
-		if (skipKeys != null && skipKeys.length > 0 && FlxG.keys.anyJustPressed(skipKeys))
-		{
+		if (skipKeys != null && skipKeys.length > 0 && FlxG.keys.anyJustPressed(skipKeys)) {
 			skip();
 		}
 		#end
 
-		for (_ in 0...txtPerFrame)
-		{
-			if (_waiting && !paused)
-			{
+		for (_ in 0...txtPerFrame) {
+			if (_waiting && !paused) {
 				_waitTimer -= elapsed;
 
-				if (_waitTimer <= 0)
-				{
+				if (_waitTimer <= 0) {
 					_waiting = false;
 					_erasing = true;
 				}
 			}
 
 			// So long as we should be animating, increment the timer by time elapsed.
-			if (!_waiting && !paused)
-			{
-				if (_length < _finalText.length && _typing)
-				{
+			if (!_waiting && !paused) {
+				if (_length < _finalText.length && _typing) {
 					_timer += elapsed;
 				}
 
-				if (_length > 0 && _erasing)
-				{
+				if (_length > 0 && _erasing) {
 					_timer += elapsed;
 				}
 			}
 
 			// If the timer value is higher than the rate at which we should be changing letters, increase or decrease desired string length.
 
-			if (_typing || _erasing)
-			{
-				if (_typing && _timer >= delay)
-				{
+			if (_typing || _erasing) {
+				if (_typing && _timer >= delay) {
 					_length += Std.int(_timer / delay);
 					if (_length > _finalText.length)
 						_length = _finalText.length;
 				}
 
-				if (_erasing && _timer >= eraseDelay)
-				{
+				if (_erasing && _timer >= eraseDelay) {
 					_length -= Std.int(_timer / eraseDelay);
 					if (_length < 0)
 						_length = 0;
 				}
 
-				if ((_typing && _timer >= delay) || (_erasing && _timer >= eraseDelay))
-				{
-					if (_typingVariation)
-					{
-						if (_typing)
-						{
+				if ((_typing && _timer >= delay) || (_erasing && _timer >= eraseDelay)) {
+					if (_typingVariation) {
+						if (_typing) {
 							_timer = FlxG.random.float(-delay * _typeVarPercent / 2, delay * _typeVarPercent / 2);
-						}
-						else
-						{
+						} else {
 							_timer = FlxG.random.float(-eraseDelay * _typeVarPercent / 2, eraseDelay * _typeVarPercent / 2);
 						}
-					}
-					else
-					{
+					} else {
 						_timer %= delay;
 					}
 
-					if (sounds != null)
-					{
-						if (!finishSounds)
-						{
-							for (sound in sounds)
-							{
+					if (sounds != null) {
+						if (!finishSounds) {
+							for (sound in sounds) {
 								sound.stop();
 							}
 						}
@@ -452,38 +405,32 @@ class FlxTypeText extends FlxText
 			helperString = prefix + _finalText.substr(0, _length);
 
 			// Append the cursor if needed.
-			if (showCursor)
-			{
+			if (showCursor) {
 				_cursorTimer += elapsed;
 
 				// Prevent word wrapping because of cursor
 				var isBreakLine = (prefix + _finalText).charAt(helperString.length) == "\n";
 
-				if (_cursorTimer > cursorBlinkSpeed / 2 && !isBreakLine)
-				{
+				if (_cursorTimer > cursorBlinkSpeed / 2 && !isBreakLine) {
 					helperString += cursorCharacter.charAt(0);
 				}
 
-				if (_cursorTimer > cursorBlinkSpeed)
-				{
+				if (_cursorTimer > cursorBlinkSpeed) {
 					_cursorTimer = 0;
 				}
 			}
 
 			// If the text changed, update it.
-			if (helperString != text)
-			{
+			if (helperString != text) {
 				text = helperString;
 
 				// If we're done typing, call the onComplete() function
-				if (_length >= _finalText.length && _typing && !_waiting && !_erasing)
-				{
+				if (_length >= _finalText.length && _typing && !_waiting && !_erasing) {
 					onComplete();
 				}
 
 				// If we're done erasing, call the onErased() function
-				if (_length == 0 && _erasing && !_typing && !_waiting)
-				{
+				if (_length == 0 && _erasing && !_typing && !_waiting) {
 					onErased();
 				}
 			}
@@ -496,15 +443,11 @@ class FlxTypeText extends FlxText
 	 * Immediately finishes the animation. Called if any of the skipKeys is pressed.
 	 * Handy for custom skipping behaviour (for example with different inputs like mouse or gamepad).
 	 */
-	public function skip():Void
-	{
-		if (_erasing || _waiting)
-		{
+	public function skip():Void {
+		if (_erasing || _waiting) {
 			_length = 0;
 			_waiting = false;
-		}
-		else if (_typing)
-		{
+		} else if (_typing) {
 			_length = _finalText.length;
 		}
 	}

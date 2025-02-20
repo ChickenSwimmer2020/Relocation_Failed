@@ -8,6 +8,7 @@
  - [x] fix bullet tracers
  - [ ] optimize everything we possibly can
  - [ ] level editor
+ - [ ] when dying in hardcore, game openly insults you, then opens file explorer to save location, and fucking delets it right in front of you, then laughs. before crashing
  - [ ] ***M U L T I  P L A Y E R  S U P P O R T***
  - [ ] Discord Rich Presence Integration?
 

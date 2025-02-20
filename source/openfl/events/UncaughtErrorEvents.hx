@@ -37,8 +37,7 @@ import openfl.events.UncaughtErrorEvent;
 @:fileXml('tags="haxe,release"')
 @:noDebug
 #end
-class UncaughtErrorEvents extends EventDispatcher
-{
+class UncaughtErrorEvents extends EventDispatcher {
 	@:noCompletion private var __enabled:Bool = true;
 
 	/**
@@ -50,28 +49,23 @@ class UncaughtErrorEvents extends EventDispatcher
 		* `Loader.uncaughtErrorEvents`: to detect uncaught errors in code
 		defined in the SWF loaded by a Loader object.
 	**/
-	public function new()
-	{
+	public function new() {
 		super();
 	}
 
 	public override function addEventListener<T>(type:EventType<T>, listener:T->Void, useCapture:Bool = false, priority:Int = 0,
-			useWeakReference:Bool = false):Void
-	{
+			useWeakReference:Bool = false):Void {
 		super.addEventListener(type, listener, useCapture, priority, useWeakReference);
 
-		if (__eventMap.exists(UncaughtErrorEvent.UNCAUGHT_ERROR))
-		{
+		if (__eventMap.exists(UncaughtErrorEvent.UNCAUGHT_ERROR)) {
 			__enabled = true;
 		}
 	}
 
-	public override function removeEventListener<T>(type:EventType<T>, listener:T->Void, useCapture:Bool = false):Void
-	{
+	public override function removeEventListener<T>(type:EventType<T>, listener:T->Void, useCapture:Bool = false):Void {
 		super.removeEventListener(type, listener, useCapture);
 
-		if (!__eventMap.exists(UncaughtErrorEvent.UNCAUGHT_ERROR))
-		{
+		if (!__eventMap.exists(UncaughtErrorEvent.UNCAUGHT_ERROR)) {
 			__enabled = false;
 		}
 	}

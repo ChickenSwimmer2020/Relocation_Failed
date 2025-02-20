@@ -1,11 +1,18 @@
 package;
 
+import backend.save.GameSave;
+import backend.level.Level.LevelSprite;
+import objects.RFTriAxisSprite;
+import flixel.math.FlxPoint;
 import objects.game.controllables.Aimer.InteractionBox;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;
 import openfl.Assets;
 import haxe.zip.Reader;
+import haxe.io.Bytes;
 import haxe.zip.Entry;
+import objects.game.interactables.items.*;
+import objects.game.interactables.Item.ItemType;
 import Xml.XmlType;
 import sys.io.File;
 import flixel.math.FlxMath;
@@ -31,11 +38,12 @@ class Playstate extends FlxTransitionableState {
 	public var Player:Player;
 	public var Player2:Aimer;
 	public var AimerGroup:FlxSpriteGroup = new FlxSpriteGroup();
-	public var Player3:InteractionBox; //for interactions since i cant attach the sprite to the aimer itself :/
+	public var Player3:InteractionBox; // for interactions since i cant attach the sprite to the aimer itself :/
 
 	public var Hud:HUD;
 	public var Level:Level;
-	public var colliders:Array<FlxSprite> = [];
+	public var doubleAxisColliders:Array<RFTriAxisSprite> = [];
+	public var tripleAxisColliders:Array<LevelSprite> = [];
 
 	public var FGCAM:FlxCamera;
 	public var HUDCAM:FlxCamera;
@@ -52,7 +60,7 @@ class Playstate extends FlxTransitionableState {
 	public var DebuggerHelper = new backend.DEBUGKEYS();
 	#end
 
-	public var isBeatStateType:Bool = false; //should camera bop
+	public var isBeatStateType:Bool = false; // should camera bop
 	public var BPM:Float = 150;
 	public var BopsPerNumOfBeats:Int = 4000;
 
@@ -61,142 +69,142 @@ class Playstate extends FlxTransitionableState {
 
 	public var defaultCamZoom:Float = 1;
 	public var FgCamDefaultZoom:Float = 1;
+	public var items:Array<BaseItem> = [];
 
-	override public function new(levelToLoad:String = 'level1', ?PlayerPosition:Array<Float> = null, ?save:SaveState, ?saveSlot:Int = 1) {
+	override public function new(levelToLoad:String = 'level0', ?PlayerPosition:Array<Float> = null, ?save:SaveState, ?saveSlot:Int = 1) {
 		super();
 		instance = this;
 		this.saveSlot = saveSlot;
 		_LEVEL = levelToLoad;
-        // Test dialogue
-        var dialogue:Dialogue = {
-            strings: [
-                {
-                    dialogueBox: {
-                        texPath: '',
-                        idleAnim: {
-                            name: 'idle',
-                            frame: [100, 70],
-                            looped: true,
-                            fps: 24,
-                            flipX: false,
-                            flipY: false
-                        },
-                        scaleX: 1,
-                        scaleY: 1,
-                        xOffset: 0,
-                        yOffset: 0
-                    },
-                    fontTex: '',
-                    charLeft: 'gilbert',
-                    charRight: 'chillbert',
-                    charCenter: '',
-                    speakingCharacters: ['gilbert'],
-                    sounds: [
-                        {
-                            voiceMode: 'perChar',
-                            soundPath: 'assets/sound/voices/gilbert/1.wav',
-                            volume: 1
-                        },
-                        {
-                            voiceMode: 'perChar',
-                            soundPath: 'assets/sound/voices/chillbert/1.wav',
-                            volume: 1
-                        }
-                    ],
-                    text: [
-                        {
-                            autoplayNext: true,
-                            animsToPlay: [
-                                {
-                                    charName: 'gilbert',
-                                    animName: 'speak'
-                                },
-                                {
-                                    charName: 'chillbert',
-                                    animName: 'speak'
-                                }
-                            ],
-                            speed: 1,
-                            text: 'I,',
-                            postTextPause: 1,
-                            format: {
-                                color: '0xFF000000',
-                                borderColor: '0xFF000000',
-                                underlined: false
-                            }
-                        },
-                        {
-                            autoplayNext: true,
-                            animsToPlay: [
-                                {
-                                    charName: 'gilbert',
-                                    animName: 'speak'
-                                },
-                                {
-                                    charName: 'chillbert',
-                                    animName: 'speak'
-                                }
-                            ],
-                            speed: 1,
-                            text: 'AM,',
-                            postTextPause: 1,
-                            format: {
-                                color: '0xFF000000',
-                                borderColor: '0xFF000000',
-                                underlined: false
-                            }
-                        },
-                        {
-                            autoplayNext: true,
-                            animsToPlay: [
-                                {
-                                    charName: 'gilbert',
-                                    animName: 'yell'
-                                },
-                                {
-                                    charName: 'chillbert',
-                                    animName: 'yell'
-                                }
-                            ],
-                            speed: 1,
-                            text: 'THE ONE!!!!!',
-                            postTextPause: 1,
-                            format: {
-                                color: '0xFFFF0000',
-                                borderColor: '0xFFFF0000',
-                                underlined: true
-                            }
-                        }
-                    ]
-                }
-            ],
-            bgMusic: {
-                songs: [
-                    {
-                        volume: 1,
-                        path: 'assets/sound/mus/WeightLess.ogg',
-                        looped: false
-                    }
-                ],
-            },
-            hscriptPath: ''
-        };
-        //Clipboard.text = TJSON.encode(dialogue, 'fancy'); //! SOLAR CAN YOU LIKE, NOT?!
-								//* sorry, i was angry from a bug. but writing to my clipboard is annoying when i have code stored, because it overwrites the last result in clipboard history.
-        trace('JSON DIALOGUE: \n${TJSON.encode(dialogue, 'fancy')}');
+		// Test dialogue
+		var dialogue:Dialogue = {
+			strings: [
+				{
+					dialogueBox: {
+						texPath: '',
+						idleAnim: {
+							name: 'idle',
+							frame: [100, 70],
+							looped: true,
+							fps: 24,
+							flipX: false,
+							flipY: false
+						},
+						scaleX: 1,
+						scaleY: 1,
+						xOffset: 0,
+						yOffset: 0
+					},
+					fontTex: '',
+					charLeft: 'gilbert',
+					charRight: 'chillbert',
+					charCenter: '',
+					speakingCharacters: ['gilbert'],
+					sounds: [
+						{
+							voiceMode: 'perChar',
+							soundPath: 'assets/sound/voices/gilbert/1.wav',
+							volume: 1
+						},
+						{
+							voiceMode: 'perChar',
+							soundPath: 'assets/sound/voices/chillbert/1.wav',
+							volume: 1
+						}
+					],
+					text: [
+						{
+							autoplayNext: true,
+							animsToPlay: [
+								{
+									charName: 'gilbert',
+									animName: 'speak'
+								},
+								{
+									charName: 'chillbert',
+									animName: 'speak'
+								}
+							],
+							speed: 1,
+							text: 'I,',
+							postTextPause: 1,
+							format: {
+								color: '0xFF000000',
+								borderColor: '0xFF000000',
+								underlined: false
+							}
+						},
+						{
+							autoplayNext: true,
+							animsToPlay: [
+								{
+									charName: 'gilbert',
+									animName: 'speak'
+								},
+								{
+									charName: 'chillbert',
+									animName: 'speak'
+								}
+							],
+							speed: 1,
+							text: 'AM,',
+							postTextPause: 1,
+							format: {
+								color: '0xFF000000',
+								borderColor: '0xFF000000',
+								underlined: false
+							}
+						},
+						{
+							autoplayNext: true,
+							animsToPlay: [
+								{
+									charName: 'gilbert',
+									animName: 'yell'
+								},
+								{
+									charName: 'chillbert',
+									animName: 'yell'
+								}
+							],
+							speed: 1,
+							text: 'THE ONE!!!!!',
+							postTextPause: 1,
+							format: {
+								color: '0xFFFF0000',
+								borderColor: '0xFFFF0000',
+								underlined: true
+							}
+						}
+					]
+				}
+			],
+			bgMusic: {
+				songs: [
+					{
+						volume: 1,
+						path: 'assets/sound/mus/WeightLess.ogg',
+						looped: false
+					}
+				],
+			},
+			hscriptPath: ''
+		};
+		// Clipboard.text = TJSON.encode(dialogue, 'fancy'); //! SOLAR CAN YOU LIKE, NOT?!
+		//* sorry, i was angry from a bug. but writing to my clipboard is annoying when i have code stored, because it overwrites the last result in clipboard history.
+		// trace('JSON DIALOGUE: \n${TJSON.encode(dialogue, 'fancy')}');
 
 		if (PlayerPosition == null)
-			PlayerPosition = [0, 0];
+			PlayerPosition = [0, 0, 0];
 
-		Player = new Player(PlayerPosition[0], PlayerPosition[1],
-			this); // we need to init the player here or else its gonna cause a crash when attempting to load the save-state
+		Player = new Player(PlayerPosition[0], PlayerPosition[1], PlayerPosition[2], this);
 		Player.Transitioning = false;
-
-		loadSaveState(save);
+		if (save != null)
+			loadSaveState(save);
 	}
 
-    function loadSaveState(?state:SaveState) {
-        if (state != null) {
+	public function loadSaveState(?state:SaveState) {
+		if (state != null) {
 			// health and stamina
 			Player.Health = state.cur_health;
 			Player.stamina = state.cur_stamina;
@@ -204,62 +212,68 @@ class Playstate extends FlxTransitionableState {
 			// positioning
 			Player.x = state.player_x;
 			Player.y = state.player_y;
-			// ammo stuff.
-			Player.PistolAmmoCap = state.piscap;
-			Player.PistolAmmoRemaining = state.pisremain;
-			Player.ShotgunAmmoCap = state.shtcap;
-			Player.ShotgunAmmoRemaining = state.shtremain;
-			Player.RifleAmmoCap = state.rifcap;
-			Player.RifleAmmoRemaining = state.rifremain;
-			Player.SMGAmmoCap = state.smgcap;
-			Player.SMGAmmoRemaining = state.smgremain;
+			Player.z = state.player_z;
+
+			if (state.hassuit) {
+				var suit:Suit = new Suit(null);
+				suit.ps = this;
+				items.push(suit);
+				Player.suit = suit;
+			}
+			if (state.haspistol) {
+				var pistol:Pistol = new Pistol(null);
+				pistol.ps = this;
+				pistol.ammoRemaining = state.pisremain;
+				pistol.ammoCap = state.piscap;
+				items.push(pistol);
+				Player.weaponInventory.set(Player.weaponInventory.getNextFreeInIntMap(), pistol);
+			}
+			if (state.hasshotgun) {
+				var shotgun:Shotgun = new Shotgun(null);
+				shotgun.ps = this;
+				shotgun.ammoRemaining = state.shtremain;
+				shotgun.ammoCap = state.shtcap;
+				items.push(shotgun);
+				Player.weaponInventory.set(Player.weaponInventory.getNextFreeInIntMap(), shotgun);
+			}
+			if (state.hassmg) {
+				var smg:SMG = new SMG(null);
+				smg.ps = this;
+				smg.ammoRemaining = state.smgremain;
+				smg.ammoCap = state.smgcap;
+				items.push(smg);
+				Player.weaponInventory.set(Player.weaponInventory.getNextFreeInIntMap(), smg);
+			}
+			if (state.hasrifle) {
+				var rifle:Rifle = new Rifle(null);
+				rifle.ps = this;
+				rifle.ammoRemaining = state.rifremain;
+				rifle.ammoCap = state.rifcap;
+				items.push(rifle);
+				Player.weaponInventory.set(Player.weaponInventory.getNextFreeInIntMap(), rifle);
+			}
 			// other.
 			// Player.hasSuit =;
-			Player.hasPistol = state.haspistol;
-			Player.hasShotgun = state.hasshotgun;
-			Player.hasSMG = state.hassmg;
-			Player.hasRifle = state.hasrifle;
 		}
-    }
+	}
 
-	public function onItemPickup(?Item:String, ?Extra:Dynamic, ?Function:Void -> Void) {
-		#if debug
-		if(Item != null)
-			trace('Item was picked up: $Item');
-		else
-			trace('Item was picked up: [NAME NOT PROVIDED]');
-		#end
-		if(Item != null) {
-			if(Item == 'Pistol' || Item == 'Shotgun' || (Item == 'SMG' || Item == 'Rifle')) {
-				#if debug
-					trace('Item is a Weapon, Fixing weapon select alphas...');
-				#end
-				if(Playstate.instance.Hud.ammocounter_AMMONUMONE.alpha == 0)
-					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMONUMONE, {alpha: 1}, { ease: FlxEase.cubeInOut });
-
-				if(Playstate.instance.Hud.ammocounter_AMMONUMTWO.alpha == 0)
-					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMONUMTWO, {alpha: 1}, { ease: FlxEase.cubeInOut });
-
-				if(Playstate.instance.Hud.ammocounter_AMMOSLASH.alpha == 0)
-					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSLASH, {alpha: 1}, { ease: FlxEase.cubeInOut });
-
-				if(Playstate.instance.Hud.ammocounter_AMMOSPR1.alpha == 0)
-					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR1, {alpha: 1}, { ease: FlxEase.cubeInOut });
-				if(Playstate.instance.Hud.ammocounter_AMMOSPR2.alpha == 0)
-					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR2, {alpha: 1}, { ease: FlxEase.cubeInOut });
-				if(Playstate.instance.Hud.ammocounter_AMMOSPR3.alpha == 0)
-					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR3, {alpha: 1}, { ease: FlxEase.cubeInOut });
-				if(Playstate.instance.Hud.ammocounter_AMMOSPR4.alpha == 0)
-					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR4, {alpha: 1}, { ease: FlxEase.cubeInOut });
-
-				if(Playstate.instance.Hud.ammocounter_AMMOTEXT.alpha == 0)
-					FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOTEXT, {alpha: 1}, { ease: FlxEase.cubeInOut });
-
-			}
-		}
-		if(Function != null) {
-			Function();
-		}
+	public function onWeaponPickup() {
+		if (Playstate.instance.Hud.ammocounter_AMMONUMONE.alpha == 0)
+			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMONUMONE, {alpha: 1}, {ease: FlxEase.cubeInOut});
+		if (Playstate.instance.Hud.ammocounter_AMMONUMTWO.alpha == 0)
+			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMONUMTWO, {alpha: 1}, {ease: FlxEase.cubeInOut});
+		if (Playstate.instance.Hud.ammocounter_AMMOSLASH.alpha == 0)
+			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSLASH, {alpha: 1}, {ease: FlxEase.cubeInOut});
+		if (Playstate.instance.Hud.ammocounter_AMMOSPR1.alpha == 0)
+			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR1, {alpha: 1}, {ease: FlxEase.cubeInOut});
+		if (Playstate.instance.Hud.ammocounter_AMMOSPR2.alpha == 0)
+			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR2, {alpha: 1}, {ease: FlxEase.cubeInOut});
+		if (Playstate.instance.Hud.ammocounter_AMMOSPR3.alpha == 0)
+			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR3, {alpha: 1}, {ease: FlxEase.cubeInOut});
+		if (Playstate.instance.Hud.ammocounter_AMMOSPR4.alpha == 0)
+			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR4, {alpha: 1}, {ease: FlxEase.cubeInOut});
+		if (Playstate.instance.Hud.ammocounter_AMMOTEXT.alpha == 0)
+			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOTEXT, {alpha: 1}, {ease: FlxEase.cubeInOut});
 	}
 
 	override public function create() {
@@ -267,9 +281,9 @@ class Playstate extends FlxTransitionableState {
 
 		////RFLParser.LoadRFLData('TestRFL', '', 'TestFile');
 
-        if(!FlxG.sound.music.playing) {
-            FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true);
-        }
+		if (!FlxG.sound.music.playing) {
+			FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true);
+		}
 
 		BulletGroup = new FlxGroup();
 
@@ -281,21 +295,26 @@ class Playstate extends FlxTransitionableState {
 		FlxG.cameras.add(HUDCAM, false);
 		HUDCAM.bgColor = 0x0011FF00;
 
-		Hud = new HUD(this); //hud does get init, BUT doesnt actually show anything until you pickup the suit.
+		Hud = new HUD(this); // hud does get init, BUT doesnt actually show anything until you pickup the suit.
 		Hud.cameras = [HUDCAM];
-		Player2 = new Aimer();
-		Level = new Level(LevelLoader.ParseLevelData(_LEVEL));
+		Player2 = new Aimer(this);
+		// Level = new Level(LevelLoader.ParseLevelData(RFLParser.LoadRFLData(_LEVEL, '', 'Level')), this);
+		Level = new Level(RFLParser.LoadRFLData(Assets.asset('levels/$_LEVEL.rfl')), this);
 		Level.EditorMode = false;
 		Level.loadLevel();
 
-		for (obj in Level.objects)
-			if (obj.isCollider && !obj.isForeGroundSprite)
-				colliders.push(obj);
-		Player.colliders = colliders;
+		for (obj in Level.objects) {
+			if (obj.doubleAxisCollide && !obj.isForegroundSprite)
+				doubleAxisColliders.push(obj);
+			if (obj.tripleAxisCollide && !obj.isForegroundSprite)
+				tripleAxisColliders.push(obj);
+		}
+		Player.doubleAxisColliders = doubleAxisColliders;
+		Player.tripleAxisColliders = tripleAxisColliders;
 
 		add(Level);
-		add(Player);
-		add(Player2);
+		Level.layeringGrp.add(Player);
+		Level.layeringGrp.add(Player2);
 		add(Player3);
 		add(AimerGroup);
 		add(BulletGroup);
@@ -316,7 +335,11 @@ class Playstate extends FlxTransitionableState {
 		FlxG.watch.addQuick('TriggerTime', nextTriggerTime);
 		#end
 
-        FlxG.mouse.visible = true;
+		FlxG.mouse.visible = true;
+
+		for (item in items)
+			item.update(elapsed);
+
 		switch (Level.CameraFollowStyle) {
 			case 'LOCKON':
 				followStyle = LOCKON;
@@ -357,9 +380,9 @@ class Playstate extends FlxTransitionableState {
 
 		Player.CurRoom = Level.LevelID;
 
-        AimerGroup.update(elapsed); //you know, this might cause issues with animations :facepalm:
+		AimerGroup.update(elapsed); // you know, this might cause issues with animations :facepalm:
 		AimerGroup.setPosition(Player2.x, Player2.y);
-		//Player3.angle = Player2.angle; //thisll change in the next pull, im just a stupid idiot.
+		////Player3.angle = Player2.angle;
 
 		Playstate.instance.AimerGroup.angle = Player2.angle + 1;
 		super.update(elapsed);
@@ -369,12 +392,12 @@ class Playstate extends FlxTransitionableState {
 		//*health stuff
 
 		//* camera bop stuff for the cool stages with bopping music
-		if(isBeatStateType) {
-			if(FlxG.sound.music != null) {
-				FlxG.sound.music.onComplete = ()->{
+		if (isBeatStateType) {
+			if (FlxG.sound.music != null) {
+				FlxG.sound.music.onComplete = () -> {
 					nextTriggerTime = 0;
 				};
-				if(FlxG.sound.music.time >= nextTriggerTime) {
+				if (FlxG.sound.music.time >= nextTriggerTime) {
 					FlxG.camera.zoom += 0.01;
 					FGCAM.zoom += 0.01;
 					HUDCAM.zoom += 0.005;
@@ -382,6 +405,7 @@ class Playstate extends FlxTransitionableState {
 				}
 			}
 		}
+        GameSave.saveState.loadSaveFieldsFromArray(PlayerSaveStateUtil.getSaveArray());
 	}
 
 	override public function destroy() {
@@ -397,12 +421,12 @@ class DeathState extends FlxState {
 	var deathText3:FlxText;
 	var bg:FlxSprite; // remember to make this into a semi-transparent version of whereever you are in the main playstate somehow.
 	var deathanim:FlxSprite;
-    var saveSlot:Int = 1;
+	var saveSlot:Int = 1;
 	var deathAnimFinished:Bool = false;
 
 	public function new(saveSlot:Int = 1) {
 		super();
-        this.saveSlot = saveSlot;
+		this.saveSlot = saveSlot;
 		bg = new FlxSprite(0, 0);
 		bg.makeGraphic(FlxG.width, FlxG.height, 0xFF51FF00);
 		// bg.creategraphicfromscreenshotorseomthignidfk add function to create graphic from screenshot.
@@ -410,34 +434,34 @@ class DeathState extends FlxState {
 		deathText2 = new FlxText(0, 0, FlxG.width, "But you can try again...");
 		deathText3 = new FlxText(0, 0, FlxG.width, "Press any key to load your last save.\n Or press escape to return to the main menu.");
 
-        deathanim = new FlxSprite(0, 0);
-        //TODO: create death animation.
+		deathanim = new FlxSprite(0, 0);
+		// TODO: create death animation.
 
 		FlxTween.tween(bg, {alpha: 0.25}, 1, {ease: FlxEase.smootherStepInOut});
 		wait(1, function() {
 			StartDeath();
 		});
 
-        add(bg);
-        //add(deathanim);
-        add(deathText);
-        add(deathText2);
-        add(deathText3);
+		add(bg);
+		// add(deathanim);
+		add(deathText);
+		add(deathText2);
+		add(deathText3);
 	}
 
 	public function StartDeath():Void {
-        //do something i think.
-    }
+		// do something i think.
+	}
 
-    override public function update(elapsed:Float):Void {
-        super.update(elapsed);
-		if(deathAnimFinished) {
-        	if (FlxG.keys.anyPressed([ESCAPE])) {
-        	    FlxG.switchState(MainMenu.new);
-        	}
-        	if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
-        	    PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
-        	}
+	override public function update(elapsed:Float):Void {
+		super.update(elapsed);
+		if (deathAnimFinished) {
+			if (FlxG.keys.anyPressed([ESCAPE])) {
+				FlxG.switchState(MainMenu.new);
+			}
+			if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
+				PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
+			}
 		}
-    }
+	}
 }

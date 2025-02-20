@@ -18,17 +18,16 @@ import flixel.util.FlxDestroyUtil;
 import flixel.input.touch.FlxTouch;
 #end
 
-enum abstract FlxButtonState2(Int) to Int
-{
+enum abstract FlxButtonState2(Int) to Int {
 	/** The button is not highlighted or pressed */
 	var NORMAL = 0;
-	
+
 	/** The button is selected, usually meaning the mouse is hovering over it */
 	var HIGHLIGHT = 1;
-	
+
 	/** The button is being pressed usually by a mouse */
 	var PRESSED = 2;
-	
+
 	/** The button is not interactible */
 	var DISABLED = 3;
 }
@@ -36,8 +35,7 @@ enum abstract FlxButtonState2(Int) to Int
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
-class FlxSquareButton2 extends FlxTypedButton2<FlxText>
-{
+class FlxSquareButton2 extends FlxTypedButton2<FlxText> {
 	/**
 	 * Used with public variable status, means not highlighted or pressed.
 	 */
@@ -80,8 +78,7 @@ class FlxSquareButton2 extends FlxTypedButton2<FlxText>
 	 * @param   Text      The text that you want to appear on the button.
 	 * @param   OnClick   The function to call whenever the button is clicked.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Text:String, ?OnClick:Void->Void)
-	{
+	public function new(X:Float = 0, Y:Float = 0, ?Text:String, ?OnClick:Void->Void) {
 		super(X, Y, OnClick);
 
 		for (point in labelOffsets)
@@ -93,21 +90,17 @@ class FlxSquareButton2 extends FlxTypedButton2<FlxText>
 	/**
 	 * Updates the size of the text field to match the button.
 	 */
-	override function resetHelpers():Void
-	{
+	override function resetHelpers():Void {
 		super.resetHelpers();
 
-		if (label != null)
-		{
+		if (label != null) {
 			label.fieldWidth = label.frameWidth = Std.int(width);
 			label.size = label.size; // Calls set_size(), don't remove!
 		}
 	}
 
-	inline function initLabel(Text:String):Void
-	{
-		if (Text != null)
-		{
+	inline function initLabel(Text:String):Void {
+		if (Text != null) {
 			label = new FlxText(x + labelOffsets[FlxButtonState2.NORMAL].x, y + labelOffsets[FlxButtonState2.NORMAL].y, 30, Text);
 			label.setFormat(null, 16, 0x333333, "center");
 			label.alpha = labelAlphas[status];
@@ -115,19 +108,14 @@ class FlxSquareButton2 extends FlxTypedButton2<FlxText>
 		}
 	}
 
-	inline function get_text():String
-	{
+	inline function get_text():String {
 		return (label != null) ? label.text : null;
 	}
 
-	inline function set_text(Text:String):String
-	{
-		if (label == null)
-		{
+	inline function set_text(Text:String):String {
+		if (label == null) {
 			initLabel(Text);
-		}
-		else
-		{
+		} else {
 			label.text = Text;
 		}
 		return Text;
@@ -140,8 +128,7 @@ class FlxSquareButton2 extends FlxTypedButton2<FlxText>
 #if !display
 @:generic
 #end
-class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
-{
+class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput {
 	/**
 	 * The label that appears on the button. Can be any `FlxSprite`.
 	 */
@@ -239,8 +226,7 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * @param   Y         The y position of the button.
 	 * @param   OnClick   The function to call whenever the button is clicked.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?OnClick:Void->Void)
-	{
+	public function new(X:Float = 0, Y:Float = 0, ?OnClick:Void->Void) {
 		super(X, Y);
 
 		loadDefaultGraphic();
@@ -267,8 +253,7 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 		input = new FlxInput(0);
 	}
 
-	override public function graphicLoaded():Void
-	{
+	override public function graphicLoaded():Void {
 		super.graphicLoaded();
 
 		setupAnimation("normal", NORMAL);
@@ -277,13 +262,11 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 		setupAnimation("disabled", DISABLED);
 	}
 
-	function loadDefaultGraphic():Void
-	{
+	function loadDefaultGraphic():Void {
 		loadGraphic("assets/buttonSQR2.png", true, 30, 30);
 	}
 
-	function setupAnimation(animationName:String, frameIndex:Int):Void
-	{
+	function setupAnimation(animationName:String, frameIndex:Int):Void {
 		// make sure the animation doesn't contain an invalid frame
 		frameIndex = Std.int(Math.min(frameIndex, animation.numFrames - 1));
 		animation.add(animationName, [frameIndex]);
@@ -292,8 +275,7 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Called by the game state when state is changed (if this object belongs to the state)
 	 */
-	override public function destroy():Void
-	{
+	override public function destroy():Void {
 		label = FlxDestroyUtil.destroy(label);
 		_spriteLabel = null;
 
@@ -318,20 +300,17 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Called by the game loop automatically, handles mouseover and click detection.
 	 */
-	override public function update(elapsed:Float):Void
-	{
+	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		if (visible)
-		{
+		if (visible) {
 			// Update the button, but only if at least either mouse or touches are enabled
 			#if FLX_POINTER_INPUT
 			updateButton();
 			#end
 
 			// Trigger the animation only if the button's input status changes.
-			if (lastStatus != status)
-			{
+			if (lastStatus != status) {
 				updateStatusAnimation();
 				lastStatus = status;
 			}
@@ -340,20 +319,17 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 		input.update();
 	}
 
-	function updateStatusAnimation():Void
-	{
+	function updateStatusAnimation():Void {
 		animation.play(statusAnimations[status]);
 	}
 
 	/**
 	 * Just draws the button graphic and text label to the screen.
 	 */
-	override public function draw():Void
-	{
+	override public function draw():Void {
 		super.draw();
 
-		if (_spriteLabel != null && _spriteLabel.visible)
-		{
+		if (_spriteLabel != null && _spriteLabel.visible) {
 			_spriteLabel.cameras = _cameras;
 			_spriteLabel.draw();
 		}
@@ -363,12 +339,10 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Helper function to draw the debug graphic for the label as well.
 	 */
-	override public function drawDebug():Void
-	{
+	override public function drawDebug():Void {
 		super.drawDebug();
 
-		if (_spriteLabel != null)
-		{
+		if (_spriteLabel != null) {
 			_spriteLabel.drawDebug();
 		}
 	}
@@ -382,21 +356,18 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * @param   atlas   Atlas to stamp graphic to.
 	 * @return  Whether the button's graphic and label's graphic were stamped on the atlas successfully.
 	 */
-	public function stampOnAtlas(atlas:FlxAtlas):Bool
-	{
+	public function stampOnAtlas(atlas:FlxAtlas):Bool {
 		var buttonNode:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
 		var result:Bool = (buttonNode != null);
 
-		if (buttonNode != null)
-		{
+		if (buttonNode != null) {
 			var buttonFrames:FlxTileFrames = cast frames;
 			var tileSize:FlxPoint = FlxPoint.get(buttonFrames.tileSize.x, buttonFrames.tileSize.y);
 			var tileFrames:FlxTileFrames = buttonNode.getTileFrames(tileSize);
 			this.frames = tileFrames;
 		}
 
-		if (result && label != null)
-		{
+		if (result && label != null) {
 			var labelNode:FlxNode = atlas.addNode(label.graphic.bitmap, label.graphic.key);
 			result = result && (labelNode != null);
 
@@ -411,8 +382,7 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * Basic button update logic - searches for overlaps with touches and
 	 * the mouse cursor and calls `updateStatus()`.
 	 */
-	function updateButton():Void
-	{
+	function updateButton():Void {
 		// Prevent interactions with this input if it's currently disabled
 		if (status == DISABLED)
 			return;
@@ -421,28 +391,22 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 		if (!overlapFound)
 			overlapFound = checkTouchOverlap();
 
-		if (currentInput != null && currentInput.justReleased && overlapFound)
-		{
+		if (currentInput != null && currentInput.justReleased && overlapFound) {
 			onUpHandler();
 		}
 
-		if (status != NORMAL && (!overlapFound || (currentInput != null && currentInput.justReleased)))
-		{
+		if (status != NORMAL && (!overlapFound || (currentInput != null && currentInput.justReleased))) {
 			onOutHandler();
 		}
 	}
 
-	function checkMouseOverlap():Bool
-	{
+	function checkMouseOverlap():Bool {
 		var overlap = false;
 		#if FLX_MOUSE
-		for (camera in getCameras())
-		{
-			for (buttonID in mouseButtons)
-			{
+		for (camera in getCameras()) {
+			for (buttonID in mouseButtons) {
 				var button = FlxMouseButton.getByID(buttonID);
-				if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera))
-				{
+				if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera)) {
 					overlap = true;
 				}
 			}
@@ -451,16 +415,12 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 		return overlap;
 	}
 
-	function checkTouchOverlap():Bool
-	{
+	function checkTouchOverlap():Bool {
 		var overlap = false;
 		#if FLX_TOUCH
-		for (camera in getCameras())
-		{
-			for (touch in FlxG.touches.list)
-			{
-				if (checkInput(touch, touch, touch.justPressedPosition, camera))
-				{
+		for (camera in getCameras()) {
+			for (touch in FlxG.touches.list) {
+				if (checkInput(touch, touch, touch.justPressedPosition, camera)) {
 					overlap = true;
 				}
 			}
@@ -469,16 +429,12 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 		return overlap;
 	}
 
-	function checkInput(pointer:FlxPointer, input:IFlxInput, justPressedPosition:FlxPoint, camera:FlxCamera):Bool
-	{
+	function checkInput(pointer:FlxPointer, input:IFlxInput, justPressedPosition:FlxPoint, camera:FlxCamera):Bool {
 		if (maxInputMovement != Math.POSITIVE_INFINITY
 			&& justPressedPosition.distanceTo(pointer.getViewPosition(FlxPoint.weak())) > maxInputMovement
-			&& input == currentInput)
-		{
+			&& input == currentInput) {
 			currentInput = null;
-		}
-		else if (overlapsPoint(pointer.getWorldPosition(camera, _point), true, camera))
-		{
+		} else if (overlapsPoint(pointer.getWorldPosition(camera, _point), true, camera)) {
 			updateStatus(input);
 			return true;
 		}
@@ -489,29 +445,21 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Updates the button status by calling the respective event handler function.
 	 */
-	function updateStatus(input:IFlxInput):Void
-	{
-		if (input.justPressed)
-		{
+	function updateStatus(input:IFlxInput):Void {
+		if (input.justPressed) {
 			currentInput = input;
 			onDownHandler();
-		}
-		else if (status == NORMAL)
-		{
+		} else if (status == NORMAL) {
 			// Allow "swiping" to press a button (dragging it over the button while pressed)
-			if (allowSwiping && input.pressed)
-			{
+			if (allowSwiping && input.pressed) {
 				onDownHandler();
-			}
-			else
-			{
+			} else {
 				onOverHandler();
 			}
 		}
 	}
 
-	function updateLabelPosition()
-	{
+	function updateLabelPosition() {
 		if (_spriteLabel != null) // Label positioning
 		{
 			_spriteLabel.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
@@ -519,10 +467,8 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 		}
 	}
 
-	function updateLabelAlpha()
-	{
-		if (_spriteLabel != null && labelAlphas.length > (status : Int))
-		{
+	function updateLabelAlpha() {
+		if (_spriteLabel != null && labelAlphas.length > (status : Int)) {
 			_spriteLabel.alpha = alpha * labelAlphas[status];
 		}
 	}
@@ -532,10 +478,8 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * certain things like opening a new window are only allowed when they are user-initiated.
 	 */
 	#if FLX_MOUSE
-	function onUpEventListener(_):Void
-	{
-		if (visible && exists && active && status == PRESSED)
-		{
+	function onUpEventListener(_):Void {
+		if (visible && exists && active && status == PRESSED) {
 			onUpHandler();
 		}
 	}
@@ -544,8 +488,7 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Internal function that handles the onUp event.
 	 */
-	function onUpHandler():Void
-	{
+	function onUpHandler():Void {
 		status = HIGHLIGHT;
 		input.release();
 		currentInput = null;
@@ -556,8 +499,7 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Internal function that handles the onDown event.
 	 */
-	function onDownHandler():Void
-	{
+	function onDownHandler():Void {
 		status = PRESSED;
 		input.press();
 		// Order matters here, because onDown.fire() could cause a state change and destroy this object.
@@ -567,13 +509,11 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Internal function that handles the onOver event.
 	 */
-	function onOverHandler():Void
-	{
+	function onOverHandler():Void {
 		#if FLX_MOUSE
 		// If mouse input is not enabled, this button must ignore over actions
 		// by remaining in the normal state (until mouse input is re-enabled).
-		if (!FlxG.mouse.enabled)
-		{
+		if (!FlxG.mouse.enabled) {
 			status = NORMAL;
 			return;
 		}
@@ -586,18 +526,15 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Internal function that handles the onOut event.
 	 */
-	function onOutHandler():Void
-	{
+	function onOutHandler():Void {
 		status = NORMAL;
 		input.release();
 		// Order matters here, because onOut.fire() could cause a state change and destroy this object.
 		onOut.fire();
 	}
 
-	function set_label(Value:T):T
-	{
-		if (Value != null)
-		{
+	function set_label(Value:T):T {
+		if (Value != null) {
 			// use the same FlxPoint object for both
 			Value.scrollFactor.put();
 			Value.scrollFactor = scrollFactor;
@@ -611,52 +548,44 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 		return Value;
 	}
 
-	function set_status(value:FlxButtonState2):FlxButtonState2
-	{
+	function set_status(value:FlxButtonState2):FlxButtonState2 {
 		status = value;
 		updateLabelAlpha();
 		updateLabelPosition();
 		return status;
 	}
 
-	override function set_alpha(Value:Float):Float
-	{
+	override function set_alpha(Value:Float):Float {
 		super.set_alpha(Value);
 		updateLabelAlpha();
 		return alpha;
 	}
 
-	override function set_x(Value:Float):Float
-	{
+	override function set_x(Value:Float):Float {
 		super.set_x(Value);
 		updateLabelPosition();
 		return x;
 	}
 
-	override function set_y(Value:Float):Float
-	{
+	override function set_y(Value:Float):Float {
 		super.set_y(Value);
 		updateLabelPosition();
 		return y;
 	}
 
-	inline function get_justReleased():Bool
-	{
+	inline function get_justReleased():Bool {
 		return input.justReleased;
 	}
 
-	inline function get_released():Bool
-	{
+	inline function get_released():Bool {
 		return input.released;
 	}
 
-	inline function get_pressed():Bool
-	{
+	inline function get_pressed():Bool {
 		return input.pressed;
 	}
 
-	inline function get_justPressed():Bool
-	{
+	inline function get_justPressed():Bool {
 		return input.justPressed;
 	}
 }
@@ -664,8 +593,7 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput
 /** 
  * Helper function for `FlxButton` which handles its events.
  */
-private class FlxButtonEvent implements IFlxDestroyable
-{
+private class FlxButtonEvent implements IFlxDestroyable {
 	/**
 	 * The callback function to call when this event fires.
 	 */
@@ -682,8 +610,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	 * @param   Callback   The callback function to call when this event fires.
 	 * @param   sound      The sound to play when this event fires.
 	 */
-	public function new(?Callback:Void->Void, ?sound:FlxSound)
-	{
+	public function new(?Callback:Void->Void, ?sound:FlxSound) {
 		callback = Callback;
 
 		#if FLX_SOUND_SYSTEM
@@ -694,8 +621,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	/**
 	 * Cleans up memory.
 	 */
-	public inline function destroy():Void
-	{
+	public inline function destroy():Void {
 		callback = null;
 
 		#if FLX_SOUND_SYSTEM
@@ -706,8 +632,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	/**
 	 * Fires this event (calls the callback and plays the sound)
 	 */
-	public inline function fire():Void
-	{
+	public inline function fire():Void {
 		if (callback != null)
 			callback();
 

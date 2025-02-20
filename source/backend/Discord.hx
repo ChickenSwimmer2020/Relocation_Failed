@@ -1,7 +1,3 @@
 package backend;
 
-
-
-class Discord{
-
-}
+class Discord {}

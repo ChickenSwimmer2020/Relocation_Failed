@@ -102,8 +102,7 @@ class RFTrail extends #if (flixel < "5.7.0") FlxSpriteGroup #else FlxSpriteConta
 	 * @param   alpha    The alpha value for the very first trailsprite.
 	 * @param   diff     How much lower the alpha of the next trailsprite is.
 	 */
-	public function new(target:FlxSprite, ?graphic:FlxGraphicAsset, length = 10, delay = 3, alpha = 0.4, diff = 0.05):Void
-	{
+	public function new(target:FlxSprite, ?graphic:FlxGraphicAsset, length = 10, delay = 3, alpha = 0.4, diff = 0.05):Void {
 		super();
 
 		_spriteOrigin = FlxPoint.get().copyFrom(target.origin);
@@ -120,8 +119,7 @@ class RFTrail extends #if (flixel < "5.7.0") FlxSpriteGroup #else FlxSpriteConta
 		solid = false;
 	}
 
-	override public function destroy():Void
-	{
+	override public function destroy():Void {
 		FlxDestroyUtil.putArray(_recentPositions);
 		FlxDestroyUtil.putArray(_recentScales);
 
@@ -143,112 +141,101 @@ class RFTrail extends #if (flixel < "5.7.0") FlxSpriteGroup #else FlxSpriteConta
 	/**
 	 * Updates positions and other values according to the delay that has been set.
 	 */
-	override public function update(elapsed:Float):Void
-	{
+	override public function update(elapsed:Float):Void {
 		// Count the frames
 		_counter++;
-		
+
 		// Update the trail in case the intervall and there actually is one.
-		if (_counter >= delay && _trailLength >= 1)
-		{
+		if (_counter >= delay && _trailLength >= 1) {
 			_counter = 0;
 			addTrailFrame();
-			
+
 			// Now we need to update the all the Trailsprites' values
 			redrawTrailSprites();
 		}
-		try{ super.update(elapsed); }catch(e){ destroy(); }
+		try {
+			super.update(elapsed);
+		} catch (e) {
+			destroy();
+		}
 	}
-	
-	inline function recyclePoint(list:Array<FlxPoint>, x:Float, y:Float)
-	{
-		final pos = if (list.length >= _trailLength)
-			list.pop().set(x, y);
-		else
-			FlxPoint.get(x, y);
-		
+
+	inline function recyclePoint(list:Array<FlxPoint>, x:Float, y:Float) {
+		final pos = if (list.length >= _trailLength) list.pop().set(x, y); else FlxPoint.get(x, y);
+
 		list.unshift(pos);
 	}
-	
-	function addTrailFrame()
-	{
-        try{
-            if (target != null){
-		        // Push the current position into the positons array and drop one.
-		        recyclePoint(_recentPositions, target.x - target.offset.x, target.y - target.offset.y);
 
-		        // Also do the same thing for the Sprites angle if rotationsEnabled
-		        if (rotationsEnabled)
-		        {
-		        	cacheValue(_recentAngles, target.angle);
-		        }
+	function addTrailFrame() {
+		try {
+			if (target != null) {
+				// Push the current position into the positons array and drop one.
+				recyclePoint(_recentPositions, target.x - target.offset.x, target.y - target.offset.y);
 
-		        // Again the same thing for Sprites scales if scalesEnabled
-		        if (scalesEnabled)
-		        {
-		        	recyclePoint(_recentScales, target.scale.x, target.scale.y);
-		        }
+				// Also do the same thing for the Sprites angle if rotationsEnabled
+				if (rotationsEnabled) {
+					cacheValue(_recentAngles, target.angle);
+				}
 
-		        // Again the same thing for Sprites frames if framesEnabled
-		        if (framesEnabled && _graphic == null)
-		        {
-		        	cacheValue(_recentFrames, target.animation.frameIndex);
-		        	cacheValue(_recentFlipX, target.flipX);
-		        	cacheValue(_recentFlipY, target.flipY);
-		        	cacheValue(_recentAnimations, target.animation.curAnim);
-		        }
-            }
-        }catch(_) destroy();
+				// Again the same thing for Sprites scales if scalesEnabled
+				if (scalesEnabled) {
+					recyclePoint(_recentScales, target.scale.x, target.scale.y);
+				}
+
+				// Again the same thing for Sprites frames if framesEnabled
+				if (framesEnabled && _graphic == null) {
+					cacheValue(_recentFrames, target.animation.frameIndex);
+					cacheValue(_recentFlipX, target.flipX);
+					cacheValue(_recentFlipY, target.flipY);
+					cacheValue(_recentAnimations, target.animation.curAnim);
+				}
+			}
+		} catch (_)
+			destroy();
 	}
-	
-	function redrawTrailSprites()
-	{
-        try{
-		    for (i in 0..._recentPositions.length)
-		    {
-		    	final trailSprite = members[i];
-		    	trailSprite.x = _recentPositions[i].x;
-		    	trailSprite.y = _recentPositions[i].y;
-            
-		    	// And the angle...
-		    	if (rotationsEnabled)
-		    	{
-		    		trailSprite.angle = _recentAngles[i];
-		    		trailSprite.origin.x = _spriteOrigin.x;
-		    		trailSprite.origin.y = _spriteOrigin.y;
-		    	}
-            
-		    	// the scale...
-		    	if (scalesEnabled)
-		    	{
-		    		trailSprite.scale.copyFrom(_recentScales[i]);
-		    	}
-            
-		    	// and frame...
-		    	if (framesEnabled && _graphic == null)
-		    	{
-		    		trailSprite.animation.frameIndex = _recentFrames[i];
-		    		trailSprite.flipX = _recentFlipX[i];
-		    		trailSprite.flipY = _recentFlipY[i];
-                
-		    		trailSprite.animation.curAnim = _recentAnimations[i];
-		    	}
-            
-		    	// Is the trailsprite even visible?
-		    	trailSprite.exists = true;
-		    }
-        }catch(_) destroy();
+
+	function redrawTrailSprites() {
+		try {
+			for (i in 0..._recentPositions.length) {
+				final trailSprite = members[i];
+				trailSprite.x = _recentPositions[i].x;
+				trailSprite.y = _recentPositions[i].y;
+
+				// And the angle...
+				if (rotationsEnabled) {
+					trailSprite.angle = _recentAngles[i];
+					trailSprite.origin.x = _spriteOrigin.x;
+					trailSprite.origin.y = _spriteOrigin.y;
+				}
+
+				// the scale...
+				if (scalesEnabled) {
+					trailSprite.scale.copyFrom(_recentScales[i]);
+				}
+
+				// and frame...
+				if (framesEnabled && _graphic == null) {
+					trailSprite.animation.frameIndex = _recentFrames[i];
+					trailSprite.flipX = _recentFlipX[i];
+					trailSprite.flipY = _recentFlipY[i];
+
+					trailSprite.animation.curAnim = _recentAnimations[i];
+				}
+
+				// Is the trailsprite even visible?
+				trailSprite.exists = true;
+			}
+		} catch (_)
+			destroy();
 	}
-	
-	function cacheValue<T>(array:Array<T>, value:T)
-	{
+
+	function cacheValue<T>(array:Array<T>, value:T) {
 		array.unshift(value);
 		if (array.length > _trailLength)
 			array.resize(_trailLength);
 	}
 
-	public function resetTrail():Void
-	{
+	public function resetTrail():Void {
 		FlxDestroyUtil.putArray(_recentPositions);
 		FlxDestroyUtil.putArray(_recentScales);
 		_recentAngles.resize(0);
@@ -257,41 +244,33 @@ class RFTrail extends #if (flixel < "5.7.0") FlxSpriteGroup #else FlxSpriteConta
 		_recentFlipY.resize(0);
 		_recentAnimations.resize(0);
 
-		for (i in 0...members.length)
-		{
-			if (members[i] != null)
-			{
+		for (i in 0...members.length) {
+			if (members[i] != null) {
 				members[i].exists = false;
 			}
 		}
 	}
-	
+
 	/**
 	 * A function to add a specific number of sprites to the trail to increase its length.
 	 *
 	 * @param   amount  The amount of sprites to add to the trail.
 	 */
-	public function increaseLength(amount:Int):Void
-	{
+	public function increaseLength(amount:Int):Void {
 		// Can't create less than 1 sprite obviously
-		if (amount <= 0)
-		{
+		if (amount <= 0) {
 			return;
 		}
-		
+
 		_trailLength += amount;
-		
+
 		// Create the trail sprites
-		for (i in 0...amount)
-		{
+		for (i in 0...amount) {
 			final trailSprite = new FlxSprite(0, 0);
-			
-			if (_graphic == null)
-			{
+
+			if (_graphic == null) {
 				trailSprite.loadGraphicFromSprite(target);
-			}
-			else
-			{
+			} else {
 				trailSprite.loadGraphic(_graphic);
 			}
 			trailSprite.exists = false;
@@ -300,25 +279,22 @@ class RFTrail extends #if (flixel < "5.7.0") FlxSpriteGroup #else FlxSpriteConta
 			trailSprite.alpha = _transp;
 			_transp -= _difference;
 			trailSprite.solid = solid;
-			
-			if (trailSprite.alpha <= 0)
-			{
+
+			if (trailSprite.alpha <= 0) {
 				trailSprite.kill();
 			}
 		}
 	}
-	
+
 	/**
 	 * In case you want to change the trailsprite image in runtime...
 	 *
 	 * @param  image  The image the sprites should load
 	 */
-	public function changeGraphic(image:Dynamic):Void
-	{
+	public function changeGraphic(image:Dynamic):Void {
 		_graphic = image;
-		
-		for (i in 0..._trailLength)
-		{
+
+		for (i in 0..._trailLength) {
 			members[i].loadGraphic(image);
 		}
 	}
@@ -331,8 +307,7 @@ class RFTrail extends #if (flixel < "5.7.0") FlxSpriteGroup #else FlxSpriteConta
 	 * @param   y      Whether the trail reacts to y changes or not.
 	 * @param   scale  Wheater the trail reacts to scale changes or not.
 	 */
-	public function changeValuesEnabled(angle:Bool, x = true, y = true, scale = true):Void
-	{
+	public function changeValuesEnabled(angle:Bool, x = true, y = true, scale = true):Void {
 		rotationsEnabled = angle;
 		xEnabled = x;
 		yEnabled = y;

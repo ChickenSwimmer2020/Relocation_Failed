@@ -3,47 +3,56 @@ package substates;
 import backend.save.PlayerSaveStateUtil;
 
 class PauseMenuSubState extends FlxSubState {
-    var pauseCAM:FlxCamera;
-    var icon:FlxText;
-    
-    var button_backToGame:FlxButton;
-    var button_saveGame:FlxButton;
-    var button_mainMenu:FlxButton;
+	var pauseCAM:FlxCamera;
+	var icon:FlxText;
 
-    public static var PauseJustClosed:Bool = false;
+	var button_backToGame:FlxButton;
+	var button_saveGame:FlxButton;
+	var button_mainMenu:FlxButton;
 
-    override function create() {
-        pauseCAM = new FlxCamera();
-        FlxG.cameras.add(pauseCAM, false);
-        pauseCAM.bgColor = 0x000000;
+	public static var PauseJustClosed:Bool = false;
 
-        icon = new FlxText(0, 0, 0, "R", 8, true);
-        icon.setFormat(null, 48, FlxColor.BLUE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
-        icon.updateHitbox();
-        icon.scrollFactor.set(0,0);
-        icon.cameras = [pauseCAM];
-        add(icon);
+	override function create() {
+		pauseCAM = new FlxCamera();
+		FlxG.cameras.add(pauseCAM, false);
+		pauseCAM.bgColor = 0x000000;
 
-        button_backToGame = new FlxButton(0, icon.y + 75, "Back", () -> { close(); FlxG.sound.music.resume(); });
-        button_backToGame.camera = pauseCAM;
-        add(button_backToGame);
+		icon = new FlxText(0, 0, 0, "R", 8, true);
+		icon.setFormat(null, 48, FlxColor.BLUE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+		icon.updateHitbox();
+		icon.scrollFactor.set(0, 0);
+		icon.cameras = [pauseCAM];
+		add(icon);
 
-        button_saveGame = new FlxButton(0, button_backToGame.y + 20, "Save", () -> { PlayerSaveStateUtil.SavePlayerSaveState(); });
-        button_saveGame.camera = pauseCAM;
-        add(button_saveGame);
+		button_backToGame = new FlxButton(0, icon.y + 75, "Back", () -> {
+			close();
+			FlxG.sound.music.resume();
+		});
+		button_backToGame.camera = pauseCAM;
+		add(button_backToGame);
 
-        button_mainMenu = new FlxButton(0, button_saveGame.y + 20, "Main Menu", () -> {close(); FlxG.switchState(menu.MainMenu.new); pauseCAM.destroy();});
-        button_mainMenu.camera = pauseCAM;
-        add(button_mainMenu);
-    }
+		button_saveGame = new FlxButton(0, button_backToGame.y + 20, "Save", () -> {
+			PlayerSaveStateUtil.SavePlayerSaveState();
+		});
+		button_saveGame.camera = pauseCAM;
+		add(button_saveGame);
 
-    override public function update(elapsed:Float) {
-        super.update(elapsed);
-        if(FlxG.keys.anyJustPressed([ESCAPE])) {
-            close();
-            PauseJustClosed = true;
-            if(FlxG.sound.music != null && !FlxG.sound.music.playing)
-                FlxG.sound.music.resume();
-        }
-    }
+		button_mainMenu = new FlxButton(0, button_saveGame.y + 20, "Main Menu", () -> {
+			close();
+			FlxG.switchState(menu.MainMenu.new);
+			pauseCAM.destroy();
+		});
+		button_mainMenu.camera = pauseCAM;
+		add(button_mainMenu);
+	}
+
+	override public function update(elapsed:Float) {
+		super.update(elapsed);
+		if (FlxG.keys.anyJustPressed([ESCAPE])) {
+			close();
+			PauseJustClosed = true;
+			if (FlxG.sound.music != null && !FlxG.sound.music.playing)
+				FlxG.sound.music.resume();
+		}
+	}
 }

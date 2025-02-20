@@ -11,14 +11,12 @@ import flixel.FlxG;
  * Help from Ne_Eo
  * @see https://twitter.com/Ne_Eo_Twitch
  */
-class Flx3DUtil
-{
+class Flx3DUtil {
 	/**
 	 * Returns the total amount of 3D stages (not exculding the ones in use)
 	 * @return Int
 	 */
-	public static inline function getTotal3D():Int
-	{
+	public static inline function getTotal3D():Int {
 		return FlxG.stage.stage3Ds.length;
 	}
 
@@ -26,8 +24,7 @@ class Flx3DUtil
 	 * Returns if a Stage3D is available
 	 * @return Bool
 	 */
-	public static inline function is3DAvailable():Bool
-	{
+	public static inline function is3DAvailable():Bool {
 		@:privateAccess {
 			if (Stage3DManager._stageProxies == null)
 				return true;
@@ -41,8 +38,7 @@ class Flx3DUtil
 	 * @param obj 
 	 * @return null
 	 */
-	public static inline function dispose<T:IAsset>(obj:Null<T>):T
-	{
+	public static inline function dispose<T:IAsset>(obj:Null<T>):T {
 		if (obj != null)
 			obj.dispose();
 

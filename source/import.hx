@@ -23,8 +23,16 @@ import lime.app.*;
 
 // Custom Stuff
 import backend.Functions.wait;
+import backend.level.rfl.*;
 import backend.level.*;
 import backend.*;
+
+// LunarPS Logging
+import lunarps.LGUtils.LunarLogger.log;
+import lunarps.LGUtils.LunarLogger.info;
+import lunarps.LGUtils.LunarLogger.error;
+import lunarps.LGUtils.LunarLogger.warning;
+import lunarps.LGUtils.LunarLogger.fatalError;
 
 using backend.GUtils;
 #end

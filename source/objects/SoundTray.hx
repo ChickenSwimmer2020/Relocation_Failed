@@ -17,7 +17,7 @@ class SoundTray extends FlxSoundTray {
 	var graphicScale:Float = 0.30;
 	var lerpXPos:Float = 1280;
 	var alphaTarget:Float = 0;
-    var sound:FlxSound = new FlxSound();
+	var sound:FlxSound = new FlxSound();
 
 	public function new() {
 		// calls super, then removes all children to add our own
@@ -27,7 +27,7 @@ class SoundTray extends FlxSoundTray {
 
 		y = 550;
 
-		var bg:Bitmap = new Bitmap(openfl.Assets.getBitmapData(Assets.asset("soundtray.png")));
+		var bg:Bitmap = new Bitmap(openfl.Assets.getBitmapData(Assets.asset("volume/soundtray.png")));
 		bg.scaleX = graphicScale;
 		bg.scaleY = graphicScale;
 		bg.smoothing = true;
@@ -35,7 +35,7 @@ class SoundTray extends FlxSoundTray {
 		visible = false;
 
 		// makes an alpha'd version of all the bars (bar_10.png)
-		var backingBar:Bitmap = new Bitmap(openfl.Assets.getBitmapData(Assets.asset("vol_10.png")));
+		var backingBar:Bitmap = new Bitmap(openfl.Assets.getBitmapData(Assets.asset("volume/vol_10.png")));
 		backingBar.x = 9;
 		backingBar.y = 5;
 		backingBar.scaleX = graphicScale;
@@ -51,7 +51,7 @@ class SoundTray extends FlxSoundTray {
 		// 1...11 due to how block named the assets,
 		// we are trying to get assets bars_1-10
 		for (i in 1...11) {
-			var bar:Bitmap = new Bitmap(openfl.Assets.getBitmapData(Assets.asset("vol_" + i + '.png')));
+			var bar:Bitmap = new Bitmap(openfl.Assets.getBitmapData(Assets.asset("volume/vol_" + i + '.png')));
 			bar.x = 9;
 			bar.y = 5;
 			bar.scaleX = graphicScale;
@@ -61,7 +61,7 @@ class SoundTray extends FlxSoundTray {
 			_bars.push(bar);
 		}
 
-        y += 90;
+		y += 90;
 	}
 
 	override public function update(MS:Float):Void {
@@ -69,7 +69,7 @@ class SoundTray extends FlxSoundTray {
 		x = lerpFunc(x, lerpXPos, 0.1);
 		alpha = lerpFunc(alpha, alphaTarget, 0.25);
 
-		var shouldHide = true; //why was it set to not hide if it was muted?
+		var shouldHide = true; // why was it set to not hide if it was muted?
 
 		// Animate sound tray thing
 		if (_timer > 0) {
@@ -90,15 +90,10 @@ class SoundTray extends FlxSoundTray {
 	}
 
 	function onResize(event:Event):Void {
-		if(stage.stageHeight == 720)
-			y = 640
-		else
-			y = stage.stageHeight - height / 2;
-			x = stage.stageWidth - width / 2;
-		trace(stage.stageHeight);
+		y = stage.stageHeight == 720 ? 640 : stage.stageHeight - height / 2;
 	}
 
-    function lerpFunc(base:Float, target:Float, ratio:Float):Float
+	function lerpFunc(base:Float, target:Float, ratio:Float):Float
 		return base + (ratio * (FlxG.elapsed / (1 / 60))) * (target - base);
 
 	/**
@@ -108,8 +103,8 @@ class SoundTray extends FlxSoundTray {
 	 */
 	override public function show(up:Bool = false):Void {
 		_timer = 1;
-        if (!visible)
-            x = 1280;
+		if (!visible)
+			x = 1280;
 		lerpXPos = 1050;
 		visible = true;
 		active = true;
@@ -129,12 +124,7 @@ class SoundTray extends FlxSoundTray {
 				sound.loadEmbedded(soundStr).play();
 		}
 
-		for (i in 0..._bars.length) {
-			if (i < globalVolume) {
-				_bars[i].visible = true;
-			} else {
-				_bars[i].visible = false;
-			}
-		}
+		for (i in 0..._bars.length)
+			_bars[i].visible = i < globalVolume;
 	}
 }

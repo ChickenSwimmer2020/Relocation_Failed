@@ -1,34 +1,42 @@
 package objects.game.interactables;
 
 import flixel.group.FlxGroup;
+import backend.save.PlayerSaveStateUtil;
+import backend.save.GameSave;
+import backend.level.rfl.RFLParser.RFLAssets;
+import backend.save.SaveState;
+import objects.game.interactables.items.*;
 
-enum ItemType 
+enum abstract ItemType(String) from String to String
 {
     //health
-    _HEALTHPACK; //full health refill
-    _STIMPACK; //refil a determinate ammount of health depending on current health value
+    var _HEALTHPACK = '_HEALTHPACK'; //full health refill
+    var _STIMPACK = '_STIMPACK'; //refil a determinate ammount of health depending on current health value
     //ammo stuff
-    _BOXOFBUCKSHELL; //full buckshell refill
-    _BUCKSHELL; //gives + 25 buckshell
-    _BOXOF9MM; //full 9MM refill
-    _9MMMAG; //gives +25 9MM
-    _RIFLEROUNDSBOX; //full 7.62x51mm NATO refill
-    _RIFLEROUNDSMAG; //gives +25 7.62x51MM NATO
+    var _BOXOFBUCKSHELL = '_BOXOFBUCKSHELL'; //full buckshell refill
+    var _BUCKSHELL = '_BUCKSHELL'; //gives + 25 buckshell
+    var _BOXOF9MM = '_BOXOF9MM'; //full 9MM refill
+    var _9MMMAG = '_9MMMAG'; //gives +25 9MM
+    var _RIFLEROUNDSBOX = '_RIFLEROUNDSBOX'; //full 7.62x51mm NATO refill
+    var _RIFLEROUNDSMAG = '_RIFLEROUNDSMAG'; //gives +25 7.62x51MM NATO
     //misc
-    _OXYGENTANK; //gives oxygen (FOR THE HULL BREACH AREAS ONLY.)
-    _SUITBATTERY; //gives +15% armor battery
+    var _OXYGENTANK = '_OXYGENTANK'; //gives oxygen (FOR THE HULL BREACH AREAS ONLY.)
+    var _SUITBATTERY = '_SUITBATTERY'; //gives +15% armor battery
     //other
-    _SUIT; //gives players access to sprint, weapons, and hud.
+    var _SUIT = '_SUIT'; //gives players access to sprint, weapons, and hud.
     //guns >:)
-    _PISTOL; //gives the player a pistol
-    _SHOTGUN; //gives the player a shotgun
-    _RIFLE; //gives the player a rifle
-    _SMG; //gives the player a submachine gun
+    var _PISTOL = '_PISTOL'; //gives the player a pistol
+    var _SHOTGUN = '_SHOTGUN'; //gives the player a shotgun
+    var _RIFLE = '_RIFLE'; //gives the player a rifle
+    var _SMG = '_SMG'; //gives the player a submachine gun
 }
 
-class Item extends FlxSpriteGroup{
-    public var whatdoido:ItemType;
-    public var DaItem:FlxSprite;
+class Item extends FlxGroup{
+    public var curItemType:ItemType;
+    public var itemTex:RFTriAxisSprite;
+    public var ps:Playstate;
+    public var groupParent:FlxTypedGroup<RFTriAxisSprite>;
+    public var directParent:FlxGroup;
 
     public var EditorMode:Bool = false;
 
@@ -36,118 +44,51 @@ class Item extends FlxSpriteGroup{
     public var _STATMSGWAITTIME:Float = 1;
     public var _STATMSGFINISHYPOS:Float = 10;
 
-    public function new(X:Float, Y:Float, texture:FlxGraphic, itemType:ItemType, ?Editor:Bool = false) {
+    public function new(assets:RFLAssets, X:Float, Y:Float, Z:Float, texture:String, itemType:ItemType, ps:Playstate, directParent:FlxGroup, groupParent:FlxTypedGroup<RFTriAxisSprite>, ?Editor:Bool = false) {
         super();    
-        whatdoido = itemType;
+        curItemType = itemType;
+        this.ps = ps;
         EditorMode = Editor;
-        DaItem = new FlxSprite(X, Y, texture);
-        add(DaItem);
+        itemTex = new RFTriAxisSprite(X, Y, Z, Level.getGraphicFromRFLAssets(texture, assets));
+        this.groupParent = groupParent;
+        this.directParent = directParent;
+        groupParent.add(itemTex);
     }
+
+    function typeToClass(type:ItemType):BaseItem
+        return type == _HEALTHPACK ? new HealthPack(this) : type == _STIMPACK ? new Stimpack(this) : type == _BOXOFBUCKSHELL ? new BoxOfBuckShells(this) : type == _BUCKSHELL ? new Buckshell(this) : type == _BOXOF9MM ? new BoxOf9MM(this) : type == _9MMMAG ? new NineMMMag(this) : type == _RIFLEROUNDSBOX ? new RifleRoundsBox(this) : type == _RIFLEROUNDSMAG ? new RifleRoundsMag(this) : type == _OXYGENTANK ? new OxygenTank(this) : type == _SUITBATTERY ? new SuitBattery(this) : type == _SUIT ? new Suit(this) : type == _PISTOL ? new Pistol(this) : type == _SHOTGUN ? new Shotgun(this) : type == _RIFLE ? new Rifle(this) : type == _SMG ? new SMG(this) : null;
 
     override public function update(elapsed:Float) {
         super.update(elapsed);
-        for(DaItem in this) {
-            var item:FlxSprite = cast DaItem;
-            if(!EditorMode) {
-                if(item.overlaps(Playstate.instance.Player)) {
-                    if(doItemShtuff(whatdoido) == 0)
-                        this.kill();
+        if(!EditorMode) {
+            if(itemTex.overlaps(ps.Player)) {
+                if(processItem(curItemType) == 0){
+                    groupParent.remove(itemTex);
+                    directParent.remove(this);
+                    itemTex.destroy();
+                    destroy();
                 }
             }
         }
     }
 
-    function doItemShtuff(WhatToDo:ItemType):Int {
+    function processItem(itemType:ItemType):Int {
         if(!EditorMode) {
-            switch(WhatToDo) {
-                case _HEALTHPACK:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Health Pack', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.Health = Playstate.instance.Player.maxHealth;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('administering medical assistance...', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                    wait(_STATMSGWAITTIME, ()->{
-                        Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Health Restored!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                    });
-                case _STIMPACK:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('stimpack', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.Health += 25; //TODO: make it change the value depending on player health and suit
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('administering medical assistance...', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                    wait(_STATMSGWAITTIME, ()->{
-                        Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Health Restored By [CHANGABLE VALUE]%!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                    });
-                case _BOXOFBUCKSHELL:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Box Of Buckshell', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.ShotgunAmmoRemaining = Playstate.instance.Player.ShotgunAmmoCap;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Shotgun Ammo Refilled!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                case _BUCKSHELL:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Buckshells', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.ShotgunAmmoRemaining += 25;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Shotgun Ammo +25!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                case _BOXOF9MM:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Box of 9MM', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.PistolAmmoRemaining = Playstate.instance.Player.PistolAmmoCap;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Pistol Ammo Refilled!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                case _9MMMAG:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('9MM Mag', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.PistolAmmoRemaining += 25;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Pistol Ammo +25!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                case _RIFLEROUNDSBOX:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Box of Rifle Rounds', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.RifleAmmoRemaining = Playstate.instance.Player.RifleAmmoCap;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Rifle Ammo Refilled!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                case _RIFLEROUNDSMAG:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Rifle Mag', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.RifleAmmoRemaining += 25;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Rifle Ammo +25!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                case _SUIT:
-                    Playstate.instance.Player.GotSuitFirstTime = true;
-                    wait(4, ()->{ Playstate.instance.Player.hasSuit = true; Playstate.instance.Player.GotSuitFirstTime = false; });
-                case _SUITBATTERY:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Battery', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.battery += 15;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Battery Recharged By 15%!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                case _PISTOL:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Pistol', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.hasPistol = true;
-                    Playstate.instance.Player.CurWeaponChoice = PISTOLROUNDS;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Pistol Acquired!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                    if(Playstate.instance.Player.gun.theGunTexture.alpha == 0)
-                        Playstate.instance.Player.gun.theGunTexture.alpha = 1;
-                    Playstate.instance.Player.updateWeapon();
-                case _SHOTGUN:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Shotgun', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.hasShotgun = true;
-                    Playstate.instance.Player.CurWeaponChoice = SHOTGUNSHELL;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Shotgun Acquired!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                    if(Playstate.instance.Player.gun.theGunTexture.alpha == 0)
-                        Playstate.instance.Player.gun.theGunTexture.alpha = 1;
-                    Playstate.instance.Player.CurWeaponChoice = SHOTGUNSHELL;
-                    Playstate.instance.Player.updateWeapon();
-                case _RIFLE:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Rifle', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.hasRifle = true;
-                    Playstate.instance.Player.CurWeaponChoice = RIFLEROUNDS;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Rifle Acquired!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                case _SMG:
-                    if (!Playstate.instance.Player.hasSuit) return 1;
-                    Playstate.instance.onItemPickup('Smg', null, () -> { GameState.saveState([Playstate.instance.Player.Health, Playstate.instance.Player.oxygen, Playstate.instance.Player.battery, Playstate.instance.Player.stamina, Playstate.instance.Player.PistolAmmoRemaining, Playstate.instance.Player.ShotgunAmmoRemaining, Playstate.instance.Player.RifleAmmoRemaining, Playstate.instance.Player.SMGAmmoRemaining, null, Playstate.instance.Player.hasPistol, Playstate.instance.Player.hasShotgun, Playstate.instance.Player.hasRifle, Playstate.instance.Player.hasSMG]); });
-                    Playstate.instance.Player.hasSMG = true;
-                    Playstate.instance.Player.CurWeaponChoice = SMGROUNDS;
-                    Playstate.instance.Hud.StatMSGContainer.CreateStatusMessage('Submachine Gun Acquired!', _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
-                default:
-                    trace('Unknown item type aquired!');
+            var item:BaseItem = typeToClass(itemType);
+            if (!item.returnCondition){
+                item.remove();
+                item = null;
+                return 1;
             }
+            ps.items.push(item);
+            if (Std.isOfType(item, BaseWeapon))
+                ps.onWeaponPickup();
+            if (item.customPickupCallback != null) 
+                item.customPickupCallback(); 
+            else
+                item.onPickup();
+            if (item.statusMessage != '')
+                ps.Hud.StatMSGContainer.CreateStatusMessage(item.statusMessage, _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
         }
         return 0;
     }

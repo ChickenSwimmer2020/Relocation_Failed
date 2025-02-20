@@ -205,11 +205,11 @@ class SaveUtil
         return decodingMap.exists(letter) ? decodingMap[letter] : letter;
     }
 
-    public static function encodeString(text:String):String {
-        return [for (i in 0...text.length) encodeLetter(text.charAt(i))].join("");
+    public static function encodeString(str:String):String {
+        return [for (i in 0...str.length) encodeLetter(str.charAt(i))].join("");
     }
 
-    public static function decodeString(text:String):String {
-        return [for (i in 0...text.length) decodeLetter(text.charAt(i))].join("");
+    public static function decodeString(str:String):String {
+        return [for (i in 0...str.length) decodeLetter(str.charAt(i))].join("");
     }
 }

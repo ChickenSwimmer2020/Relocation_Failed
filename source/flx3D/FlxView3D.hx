@@ -13,8 +13,7 @@ import openfl.display.BitmapData;
  * Edited by lunarclient
  * @see https://twitter.com/lunarcleint
  */
-class FlxView3D extends FlxSprite
-{
+class FlxView3D extends FlxSprite {
 	@:noCompletion private var bmp:BitmapData;
 
 	/**
@@ -25,7 +24,7 @@ class FlxView3D extends FlxSprite
 	/**
 	 * Set this flag to true to force the View3D to update during the `draw()` call.
 	 */
-	 public var dirty3D:Bool = true;
+	public var dirty3D:Bool = true;
 
 	/**
 	 * Creates a new instance of a View3D from Away3D and renders it as a FlxSprite
@@ -35,8 +34,7 @@ class FlxView3D extends FlxSprite
 	 * @param width Leave as -1 for screen width
 	 * @param height Leave as -1 for screen height
 	 */
-	public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1)
-	{
+	public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1) {
 		super(x, y);
 
 		view = new View3D();
@@ -57,39 +55,32 @@ class FlxView3D extends FlxSprite
 	 * @param obj 
 	 * @return T null
 	 */
-	public static function dispose<T:IAsset>(obj:Null<T>):T
-	{
+	public static function dispose<T:IAsset>(obj:Null<T>):T {
 		return Flx3DUtil.dispose(obj);
 	}
 
 	/**
 	 * Disposes of all the Away3D assets associated with the FlxView3D
 	 */
-	override function destroy()
-	{
+	override function destroy() {
 		FlxG.stage.removeChild(view);
 		super.destroy();
 
-		if (bmp != null)
-		{
+		if (bmp != null) {
 			bmp.dispose();
 			bmp = null;
 		}
 
-		if (view != null) 
-		{
+		if (view != null) {
 			view.dispose();
 			view = null;
 		}
-	
 	}
 
-	@:noCompletion override function draw()
-	{
+	@:noCompletion override function draw() {
 		super.draw();
 
-		if (dirty3D)
-		{
+		if (dirty3D) {
 			view.visible = false;
 			FlxG.stage.addChildAt(view, 0);
 
@@ -104,14 +95,12 @@ class FlxView3D extends FlxSprite
 		}
 	}
 
-	@:noCompletion override function set_width(newWidth:Float):Float
-	{
+	@:noCompletion override function set_width(newWidth:Float):Float {
 		super.set_width(newWidth);
 		return view != null ? view.width = width : width;
 	}
 
-	@:noCompletion override function set_height(newHeight:Float):Float
-	{
+	@:noCompletion override function set_height(newHeight:Float):Float {
 		super.set_height(newHeight);
 		return view != null ? view.height = height : height;
 	}

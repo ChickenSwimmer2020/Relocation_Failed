@@ -5,14 +5,15 @@ import haxe.Json;
 import backend.dialogue.DialogueTypedefs;
 
 class DialogueSubState extends FlxSubState {
-    public var dialogue:Dialogue;
-    override public function new(jsonPath:String) {
-        super();
-        var jsonData = Json.parse(Assets.getText(jsonPath));
-        // cast my beloved
-        dialogue = cast jsonData; //* wait wait, werent we doing xml dialouge? or did we switch to json
+	public var dialogue:Dialogue;
 
-        trace(jsonData);
-        close();
-    }
+	override public function new(jsonPath:String) {
+		super();
+		var jsonData = Json.parse(Assets.getText(jsonPath));
+		// cast my beloved
+		dialogue = cast jsonData; //* wait wait, werent we doing xml dialouge? or did we switch to json
+
+		trace(jsonData);
+		close();
+	}
 }

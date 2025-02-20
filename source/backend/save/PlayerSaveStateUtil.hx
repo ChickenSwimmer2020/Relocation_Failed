@@ -1,5 +1,6 @@
 package backend.save;
 
+import objects.game.controllables.Player;
 import backend.macros.SaveMacro;
 import backend.save.SaveUtil.Save;
 import haxe.Json;
@@ -35,7 +36,6 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 	 * Does the player have the suit?
 	 * ---
 	 * without this:
-	 * - Sprinting should be disabled
 	 * - Weapons should be disabled
 	 * - HUD should be disabled
 	 *   - Health will regen quickly, shown by a red vingget on the sides of the screen,
@@ -50,33 +50,57 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 	 * @since RF_DEV_0.3.5
 	 */
 	public static function LoadPlayerSaveState(slot:Int, ?ForceLevel:String = '') {
-		var SaveDir:String;
 		var SaveName:String = 'SAVE.rfs'; // rfsave file
 		var ExecPath:String = Sys.programPath();
 		var GameFolder:String = ExecPath.substring(0, ExecPath.length - 10);
-        var GameFolderNormalized:String = Path.normalize(Path.removeTrailingSlashes(GameFolder));
-		SaveDir = '$GameFolderNormalized/saves/sv${slot}/$SaveName';
+		var GameFolderNormalized:String = Path.normalize(Path.removeTrailingSlashes(GameFolder));
+		var SaveDir:String = '$GameFolderNormalized/saves/sv${slot}/$SaveName';
 		if (!FileSystem.exists(SaveDir)) {
 			trace('no data to load.');
 		} else {
 			var playerstatus:SaveState = new SaveState();
-            playerstatus.loadSaveFieldsFromString(File.getContent(SaveDir));
-			if(ForceLevel != '')
-				loadPlayerState(playerstatus);
-			else
-				loadPlayerState(playerstatus, ForceLevel);
+			playerstatus.loadSaveFieldsFromString(File.getContent(SaveDir));
+			loadPlayerState(playerstatus, slot, ForceLevel);
 		}
 	}
+
 	/**
 	 * Actually load the player save state from the rsf
 	 * ---
 	 * @since RF_DEV_0.3.5
 	 */
-	static function loadPlayerState(Stats:SaveState, ?OverrideLevel:String = '') {
-		if(OverrideLevel != '')
-			FlxG.switchState(()->new Playstate(OverrideLevel, Stats)); //* we have to use the ()-> method here because of varible passthrough. annoying.
-		else
-			FlxG.switchState(()->new Playstate(Stats.cur_lvl, Stats));
+	static function loadPlayerState(Stats:SaveState, slot:Int, ?OverrideLevel:String = '') {
+		FlxG.switchState(() -> new Playstate((OverrideLevel != '') ? OverrideLevel : Stats.cur_lvl, null, Stats,
+			slot)); //* we have to use the ()-> method here because of varible passthrough. annoying.
+	}
+
+	public static function getSaveArray():Array<Save> {
+		var ps:Playstate = Playstate.instance;
+		var plr:Player = ps.Player;
+		var data = plr.gunData;
+		return [
+			{name: 'save_ver', type: '', value: '${Application.current.meta.get('version')}'}, // so you didnt just use the current game version, why?
+			{name: 'cur_lvl', type: '', value: ps._LEVEL},
+			{name: 'cur_health', type: 0.0, value: plr.Health},
+			{name: 'cur_stamina', type: 0.0, value: plr.stamina},
+			{name: 'cur_battery', type: 0.0, value: plr.battery},
+			{name: 'player_x', type: 0.0, value: plr.x},
+			{name: 'player_y', type: 0.0, value: plr.y},
+			{name: 'player_z', type: 0.0, value: plr.z},
+			{name: 'piscap', type: 0, value: data.PistolAmmoCap},
+			{name: 'pisremain', type: 0, value: data.PistolAmmoRemaining},
+			{name: 'shtcap', type: 0, value: data.ShotgunAmmoCap},
+			{name: 'shtremain', type: 0, value: data.ShotgunAmmoRemaining},
+			{name: 'rifcap', type: 0, value: data.RifleAmmoCap},
+			{name: 'rifremain', type: 0, value: data.RifleAmmoRemaining},
+			{name: 'smgcap', type: 0, value: data.SMGAmmoCap},
+			{name: 'smgremain', type: 0, value: data.SMGAmmoRemaining},
+			{name: 'haspistol', type: false, value: data.hasPistol},
+			{name: 'hasrifle', type: false, value: data.hasRifle},
+			{name: 'hasshotgun', type: false, value: data.hasShotgun},
+			{name: 'hassmg', type: false, value: data.hasSMG},
+			{name: 'hassuit', type: false, value: data.hasSuit},
+		];
 	}
 
 	/**
@@ -89,32 +113,9 @@ class PlayerSaveStateUtil { // this is for player save instancing, for creating 
 		var SaveName:String = 'SAVE.rfs'; // rfsave file
 		var ExecPath:String = Sys.programPath();
 		var GameFolder:String = ExecPath.substring(0, ExecPath.length - 10);
-        var GameFolderNormalized:String = Path.normalize(Path.removeTrailingSlashes(GameFolder));
-
-        var saveData:Array<Save> = [
-            {name: 'save_ver', type: '', value: '${Application.current.meta.get('version')}'}, //so you didnt just use the current game version, why?
-            {name: 'cur_lvl', type: '', value: Playstate.instance._LEVEL},
-            {name: 'cur_health', type: 0.0, value: Playstate.instance.Player.Health},
-            {name: 'cur_stamina', type: 0.0, value: Playstate.instance.Player.stamina},
-			{name: 'cur_battery', type: 0.0, value: Playstate.instance.Player.battery},
-            {name: 'player_x', type: 0.0, value: Playstate.instance.Player.x},
-            {name: 'player_y', type: 0.0, value: Playstate.instance.Player.y},
-            {name: 'piscap', type: 0, value: Playstate.instance.Player.PistolAmmoCap},
-            {name: 'pisremain', type: 0, value: Playstate.instance.Player.PistolAmmoRemaining},
-            {name: 'shtcap', type: 0, value: Playstate.instance.Player.ShotgunAmmoCap},
-            {name: 'shtremain', type: 0, value: Playstate.instance.Player.ShotgunAmmoRemaining},
-            {name: 'rifcap', type: 0, value: Playstate.instance.Player.RifleAmmoCap},
-            {name: 'rifremain', type: 0, value: Playstate.instance.Player.RifleAmmoRemaining},
-            {name: 'smgcap', type: 0, value: Playstate.instance.Player.SMGAmmoCap},
-            {name: 'smgremain', type: 0, value: Playstate.instance.Player.SMGAmmoRemaining},
-            {name: 'haspistol', type: false, value: Playstate.instance.Player.hasPistol},
-            {name: 'hasrifle', type: false, value: Playstate.instance.Player.hasRifle},
-            {name: 'hasshotgun', type: false, value: Playstate.instance.Player.hasShotgun},
-            {name: 'hassmg', type: false, value: Playstate.instance.Player.hasSMG},
-        ];
-
+		var GameFolderNormalized:String = Path.normalize(Path.removeTrailingSlashes(GameFolder));
 		SaveDir = '$GameFolderNormalized/saves/sv${Playstate.instance.saveSlot}/';
-        FileSystem.createDirectory(SaveDir);
-		File.saveContent('$SaveDir/$SaveName', SaveUtil.createSave(saveData));
+		FileSystem.createDirectory(SaveDir);
+		File.saveContent('$SaveDir/$SaveName', SaveUtil.createSave(getSaveArray()));
 	}
 }

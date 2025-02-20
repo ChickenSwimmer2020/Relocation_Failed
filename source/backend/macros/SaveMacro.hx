@@ -4,21 +4,17 @@ import backend.save.SaveUtil;
 import backend.save.SaveState;
 import haxe.macro.Expr;
 
-class SaveMacro
-{
-	macro static public function buildSaveFields(object:String, field:String, verbose:Bool):Array<haxe.macro.Field>
-	{
+class SaveMacro {
+	macro static public function buildSaveFields(object:String, field:String, verbose:Bool):Array<haxe.macro.Field> {
 		var fields:Array<haxe.macro.Field> = haxe.macro.Context.getBuildFields();
-        var saves:String = Reflect.field(object, field);
-		if (saves != null)
-		{
+		var saves:String = Reflect.field(object, field);
+		if (saves != null) {
 			var save = SaveUtil.parseSave(saves, verbose);
-			for (saveVar in save)
-			{
+			for (saveVar in save) {
 				var v:Field = {
 					name: saveVar.name,
 					pos: haxe.macro.Context.currentPos(),
-                    access: [APublic],
+					access: [APublic],
 					kind: FVar(macro :String, macro 'NO_VALUE')
 				}
 				// I can't put saveVar.type directly 😔
@@ -39,29 +35,25 @@ class SaveMacro
 		return fields;
 	}
 
-    static public function constructSaveFieldsFromArray(saveState:SaveState, saves:Array<Save>, verbose:Bool = false)
-	{
-        for (save in saves)
-        {
-            var name:String = save.name;
-            var value:SaveType = save.value;
-            saveState.set(name, value);
-            if (verbose)
-                trace('field pushed.. $name:${save.type} = $value');
-        }
+	static public function constructSaveFieldsFromArray(saveState:SaveState, saves:Array<Save>, verbose:Bool = false) {
+		for (save in saves) {
+			var name:String = save.name;
+			var value:SaveType = save.value;
+			saveState.set(name, value);
+			if (verbose)
+				trace('field pushed.. $name:${save.type} = $value');
+		}
 	}
 
-    static public function constructSaveFieldsFromString(saveState:SaveState, saves:String, verbose:Bool = false)
-	{
-        var savesArray:Array<Save> = SaveUtil.parseSave(saves, verbose);
-        trace('Save conversion complete.. $savesArray');
-        for (save in savesArray)
-        {
-            var name:String = save.name;
-            var value:SaveType = save.value;
-            saveState.set(name, value);
-            if (verbose)
-                trace('field pushed.. $name:${save.type} = $value');
-        }
+	static public function constructSaveFieldsFromString(saveState:SaveState, saves:String, verbose:Bool = false) {
+		var savesArray:Array<Save> = SaveUtil.parseSave(saves, verbose);
+		trace('Save conversion complete.. $savesArray');
+		for (save in savesArray) {
+			var name:String = save.name;
+			var value:SaveType = save.value;
+			saveState.set(name, value);
+			if (verbose)
+				trace('field pushed.. $name:${save.type} = $value');
+		}
 	}
 }

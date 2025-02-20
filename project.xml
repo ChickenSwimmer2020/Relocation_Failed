@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-    <app title="Relocation Failed" file="Relocation Failed" main="Main" version="0.3.7" company="StudioNotFound"/>
+    <app title="Relocation Failed" file="Relocation Failed" main="Main" version="0.4.0" company="StudioNotFound"/>
 
     <app preloader="flixel.system.FlxPreloader"/>
 
