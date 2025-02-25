@@ -52,7 +52,7 @@ class ModelView extends FlxView3D {
 		super(x, y, width, height);
 		this.antialiasing = antialiasing;
 		modelLoader = new Loader3D();
-		view.scene.addChild(modelLoader);
+		addChildToScene(modelLoader);
 	}
 
 	/**
