@@ -12,3 +12,4 @@
 - Main Logo Design idea - ZsolarDev's Brother
 - [HLWNative](https://github.com/ZSolarDev/HLWNative) By ZsolarDev
 - [LunarPS](https://github.com/ZSolarDev/LunarPS) By ZsolarDev
+- [3D-HaxeFlixel](https://github.com/lunarcleint/3D-HaxeFlixel) By Lunarcleint
