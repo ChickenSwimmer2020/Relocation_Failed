@@ -2,6 +2,7 @@ package objects.game.interactables.items;
 
 import objects.game.controllables.Player;
 
+@:keep
 class Pistol extends BaseWeapon {
 	public function new(parent:Item) {
 		super(parent);

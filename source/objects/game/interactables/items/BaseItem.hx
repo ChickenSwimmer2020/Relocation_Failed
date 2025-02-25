@@ -1,5 +1,6 @@
 package objects.game.interactables.items;
 
+@:keep
 class BaseItem extends FlxBasic {
 	public var returnCondition(get, null):Bool;
 	public var statusMessage:String = '';

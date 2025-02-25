@@ -5,36 +5,72 @@ import backend.save.PlayerSaveStateUtil;
 import backend.save.GameSave;
 import backend.level.rfl.RFLParser.RFLAssets;
 import backend.save.SaveState;
-import objects.game.interactables.items.*;
+import objects.game.interactables.items.BoxOf9MM;
+import objects.game.interactables.items.BoxOfBuckShells;
+import objects.game.interactables.items.Buckshell;
+import objects.game.interactables.items.HealthPack;
+import objects.game.interactables.items.NineMMMag;
+import objects.game.interactables.items.OxygenTank;
+import objects.game.interactables.items.RifleRoundsBox;
+import objects.game.interactables.items.RifleRoundsMag;
+import objects.game.interactables.items.SMG;
+import objects.game.interactables.items.Suit;
+import objects.game.interactables.items.SuitBattery;
+import objects.game.interactables.items.Stimpack;
+import objects.game.interactables.items.Shotgun;
+import objects.game.interactables.items.Pistol;
+import objects.game.interactables.items.Rifle;
+import objects.game.interactables.items.BaseItem;
+import objects.game.interactables.items.BaseWeapon;
+using StringTools;
 
-enum abstract ItemType(String) from String to String
-{
+enum abstract ItemType(String) from String to String {
     //health
-    var _HEALTHPACK = '_HEALTHPACK'; //full health refill
-    var _STIMPACK = '_STIMPACK'; //refil a determinate ammount of health depending on current health value
+    var _HealthPack = '_HealthPack'; //full health refill
+    var _Stimpack = '_Stimpack'; //refil a determinate ammount of health depending on current health value
     //ammo stuff
-    var _BOXOFBUCKSHELL = '_BOXOFBUCKSHELL'; //full buckshell refill
-    var _BUCKSHELL = '_BUCKSHELL'; //gives + 25 buckshell
-    var _BOXOF9MM = '_BOXOF9MM'; //full 9MM refill
-    var _9MMMAG = '_9MMMAG'; //gives +25 9MM
-    var _RIFLEROUNDSBOX = '_RIFLEROUNDSBOX'; //full 7.62x51mm NATO refill
-    var _RIFLEROUNDSMAG = '_RIFLEROUNDSMAG'; //gives +25 7.62x51MM NATO
+    var _BoxOfBuckShells = '_BoxOfBuckShells'; //full buckshell refill
+    var _Buckshell = '_Buckshell'; //gives + 25 buckshell
+    var _BoxOf9MM = '_BoxOf9MM'; //full 9MM refill
+    var _NineMMMag = '_NineMMMag'; //gives +25 9MM
+    var _RifleRoundsBox = '_RifleRoundsBox'; //full 7.62x51mm NATO refill
+    var _RifleRoundsMag = '_RifleRoundsMag'; //gives +25 7.62x51MM NATO
+    var _SMGAmmoBox = '_SMGAmmoBox'; //full SMG refill
     //misc
-    var _OXYGENTANK = '_OXYGENTANK'; //gives oxygen (FOR THE HULL BREACH AREAS ONLY.)
-    var _SUITBATTERY = '_SUITBATTERY'; //gives +15% armor battery
+    var _OxygenTank = '_OxygenTank'; //gives oxygen (FOR THE HULL BREACH AREAS ONLY.)
+    var _SuitBattery = '_SuitBattery'; //gives +15% armor battery
     //other
-    var _SUIT = '_SUIT'; //gives players access to sprint, weapons, and hud.
+    var _Suit = '_Suit'; //gives players access to sprint, weapons, and hud.
     //guns >:)
-    var _PISTOL = '_PISTOL'; //gives the player a pistol
-    var _SHOTGUN = '_SHOTGUN'; //gives the player a shotgun
-    var _RIFLE = '_RIFLE'; //gives the player a rifle
+    var _Pistol = '_Pistol'; //gives the player a pistol
+    var _Shotgun = '_Shotgun'; //gives the player a shotgun
+    var _Rifle = '_Rifle'; //gives the player a rifle
     var _SMG = '_SMG'; //gives the player a submachine gun
 
-    //* fallbacks (for if SOMEONE forgot to implement an item type [YOU FORGOT THE SMG AMMO, SOLAR --ChickenSwimmer2020])
+    //* fallbacks (for if SOMEONE forgot to implement an item type [YOU FORGOT THE SMG AMMO, SOLAR --ChickenSwimmer2020] im so sorryyyyyy 😭 -ZSolarDev)
     var _NULL = '_NULL'; // for missing item behaviors
 }
 
 class Item extends FlxGroup{
+
+    public static var itemClasses:Array<Class<Dynamic>> = [
+        HealthPack,
+        Stimpack,
+        BoxOfBuckShells,
+        Buckshell,
+        BoxOf9MM,
+        NineMMMag,
+        RifleRoundsBox,
+        RifleRoundsMag,
+        OxygenTank,
+        SuitBattery,
+        Suit,
+        Pistol,
+        Shotgun,
+        Rifle,
+        objects.game.interactables.items.SMG
+    ];
+
     public var curItemType:ItemType;
     public var itemTex:RFTriAxisSprite;
     public var ps:Playstate;
@@ -58,9 +94,15 @@ class Item extends FlxGroup{
         groupParent.add(itemTex);
     }
 
-    function typeToClass(type:ItemType):BaseItem
-        return type == _HEALTHPACK ? new HealthPack(this) : type == _STIMPACK ? new Stimpack(this) : type == _BOXOFBUCKSHELL ? new BoxOfBuckShells(this) : type == _BUCKSHELL ? new Buckshell(this) : type == _BOXOF9MM ? new BoxOf9MM(this) : type == _9MMMAG ? new NineMMMag(this) : type == _RIFLEROUNDSBOX ? new RifleRoundsBox(this) : type == _RIFLEROUNDSMAG ? new RifleRoundsMag(this) : type == _OXYGENTANK ? new OxygenTank(this) : type == _SUITBATTERY ? new SuitBattery(this) : type == _SUIT ? new Suit(this) : type == _PISTOL ? new Pistol(this) : type == _SHOTGUN ? new Shotgun(this) : type == _RIFLE ? new Rifle(this) : type == _SMG ? new SMG(this) : null;
-
+    function typeToClass(type:ItemType):BaseItem{
+        var buff:StringBuf = new StringBuf();
+        buff.add('objects.game.interactables.items.');
+        var str:String = type;
+        buff.add(str.substr(1));
+        var className:String = buff.toString();
+        var cls = Type.resolveClass(className); // NULL!?!?
+        return cls != null ? Type.createInstance(cls, [this]) : null;
+    }
     override public function update(elapsed:Float) {
         super.update(elapsed);
         if(!EditorMode) {

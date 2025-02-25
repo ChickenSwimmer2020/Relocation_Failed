@@ -1,5 +1,6 @@
 package menu.intro;
 
+import objects.game.interactables.Item;
 import haxe.io.Error;
 import flixel.tweens.FlxEase;
 import flixel.math.FlxMath;
@@ -19,6 +20,11 @@ class WindowIntro extends FlxState {
 		Thread.create(() -> {
 			Assets.image("intro/StudioLogo"); // cache the studio logos so it doesnt lag when doing stuff.
 			Assets.image("intro/studiotext");
+            for (item in Item.itemClasses){ // ensure to compile all items.
+                var itm = Type.createInstance(item, [null]);
+                itm.remove();
+                itm.destroy();
+            }
 		});
 		HLNativeWindow.setWindowDarkMode(true); // It just looks cleaner
 		window = Application.current.window;

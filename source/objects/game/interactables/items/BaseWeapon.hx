@@ -10,6 +10,7 @@ enum WeaponType {
 	BASE;
 }
 
+@:keep
 class BaseWeapon extends BaseItem {
 	public var weaponType:WeaponType = BASE;
 	public var ammoRemaining(default, set):Int = 0;

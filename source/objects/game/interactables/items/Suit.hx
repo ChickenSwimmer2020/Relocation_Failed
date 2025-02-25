@@ -1,5 +1,6 @@
 package objects.game.interactables.items;
 
+@:keep
 class Suit extends BaseItem {
 	var startChecking:Bool = false;
 

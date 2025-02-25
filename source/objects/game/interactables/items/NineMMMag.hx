@@ -1,5 +1,6 @@
 package objects.game.interactables.items;
 
+@:keep
 class NineMMMag extends BaseItem {
 	public function new(parent:Item) {
 		super(parent);

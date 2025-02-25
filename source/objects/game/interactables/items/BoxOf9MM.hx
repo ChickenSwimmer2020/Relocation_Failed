@@ -1,5 +1,6 @@
 package objects.game.interactables.items;
 
+@:keep
 class BoxOf9MM extends BaseItem {
 	public function new(parent:Item) {
 		super(parent);

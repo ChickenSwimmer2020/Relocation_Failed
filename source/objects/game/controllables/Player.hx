@@ -53,6 +53,7 @@ class Player extends RFPhysTriAxisSprite {
 	};
 	public var curPhysProperties:PhysicProperties;
 	public var curMovementDir:MovementDirection;
+    public var canMove:Bool = true;
 
 	public var gun:Gun = new Gun();
 
@@ -205,13 +206,18 @@ class Player extends RFPhysTriAxisSprite {
 	}
 
 	public function tripleAxisSeparate(object:LevelSprite):Bool {
-        var obj:XYZWHObj = new XYZWHObj(Std.int(object.x), Std.int(object.y), Std.int(object.z + object.indentationPixels), Std.int(Math.abs(object.width)), Std.int(Math.abs((object.height - height + 5))));
+        var obj:XYZWHObj = new XYZWHObj(Std.int(object.x), Std.int(object.y), Std.int(object.z + object.indentationPixels), Std.int(Math.abs(object.width)), Std.int(Math.abs(object.height)));
+        var pZ = z + height;
         var overlapX:Bool = (x + width > obj.x) && (x < obj.x + obj.width);
-        var overlapZ:Bool = (z + height > obj.z) && (z < obj.z + obj.height);
+        var overlapZ:Bool = (z + height > obj.z) && (pZ < obj.z + obj.height);
         
         if (overlapX && overlapZ) {
             var overlapDepthX:Float = Math.min(x + width - obj.x, obj.x + obj.width - x);
-            var overlapDepthZ:Float = Math.min(z + height - obj.z, obj.z + obj.height - z);
+            var overlapDepthZ:Float = 0;
+            if (z < obj.z) 
+                overlapDepthZ = Math.min(z + height - obj.z, obj.z + obj.height - z);
+            else
+                overlapDepthZ = Math.min(pZ + height - obj.z, obj.z + obj.height - pZ);
             
             if (overlapDepthX < overlapDepthZ) {
                 if (x < obj.x) {
@@ -222,7 +228,6 @@ class Player extends RFPhysTriAxisSprite {
             } else {
                 if (z < obj.z) {
                     tZ -= overlapDepthZ;
-                    
                 } else {
                     tZ += overlapDepthZ;
                 }
@@ -290,6 +295,8 @@ class Player extends RFPhysTriAxisSprite {
 	}
 
 	function movement() {
+        if (!canMove)
+            return;
 		if (FlxG.keys.anyPressed([SHIFT]) && stamina > 0 && isMoving) {
 			curPhysProperties = sprintPhysProps;
 			stamina--;

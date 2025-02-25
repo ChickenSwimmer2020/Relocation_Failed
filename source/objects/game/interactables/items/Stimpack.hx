@@ -1,5 +1,6 @@
 package objects.game.interactables.items;
 
+@:keep
 class Stimpack extends BaseItem {
 	public function new(parent:Item) {
 		super(parent);
