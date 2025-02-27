@@ -120,24 +120,24 @@
             "Y": 100,
             "Z": 200
         },
-        {
-            "Name": "SmgRoundsBox",
-            "behavior": "_NULL",
-            "texture": "game/levelAssets/boxofsmgrounds.png",
-            "SCL": 1,
-            "X": 900,
-            "Y": 0,
-            "Z": 200
-        },
-        {
-            "Name": "SmgRounds",
-            "behavior": "_NULL",
-            "texture": "game/levelAssets/smgroundsmag.png",
-            "SCL": 1,
-            "X": 900,
-            "Y": 100,
-            "Z": 200
-        },
+        //{
+        //    "Name": "SmgRoundsBox",
+        //    "behavior": "_NULL",
+        //    "texture": "game/levelAssets/boxofsmgrounds.png",
+        //    "SCL": 1,
+        //    "X": 900,
+        //    "Y": 0,
+        //    "Z": 200
+        //},
+        //{
+        //    "Name": "SmgRounds",
+        //    "behavior": "_NULL",
+        //    "texture": "game/levelAssets/smgroundsmag.png",
+        //    "SCL": 1,
+        //    "X": 900,
+        //    "Y": 100,
+        //    "Z": 200
+        //},
         { //weapons stuff
             "Name": "Pistol",
             "behavior": "_PISTOL",

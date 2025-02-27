@@ -4,10 +4,10 @@ package objects.game.interactables.items;
 class BaseItem extends FlxBasic {
 	public var returnCondition(get, null):Bool;
 	public var statusMessage:String = '';
-	public var onPickup:() -> Void = () -> {};
+	public var onPickup:Void->Void;
 	public var parent:Item;
 	public var ps:Playstate;
-	public var customPickupCallback:() -> Void = null;
+	public var customPickupCallback:Void->Void = ()->{};
 
 	public function new(parent:Item) {
 		super();
@@ -19,7 +19,14 @@ class BaseItem extends FlxBasic {
 	public function remove() {
 		statusMessage = '';
 		onPickup = null;
-		customPickupCallback = null;
+		customPickupCallback = ()->{}; //setting this to null probably wont help very much
+	}
+
+	public function RunCustomCallBackFunction():Void->Void {
+		if(customPickupCallback != null)
+			return customPickupCallback;
+		else
+			return null;
 	}
 
 	function get_returnCondition():Bool

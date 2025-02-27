@@ -38,9 +38,9 @@ enum abstract ItemType(String) from String to String {
     var _SMGAmmoBox = '_SMGAmmoBox'; //full SMG refill
     //misc
     var _OxygenTank = '_OxygenTank'; //gives oxygen (FOR THE HULL BREACH AREAS ONLY.)
-    var _SuitBattery = '_SuitBattery'; //gives +15% armor battery
+    var _BATTERY = '_SuitBattery'; //gives +15% armor battery
     //other
-    var _Suit = '_Suit'; //gives players access to sprint, weapons, and hud.
+    var _SUIT = '_Suit'; //gives players access to sprint, weapons, and hud.
     //guns >:)
     var _Pistol = '_Pistol'; //gives the player a pistol
     var _Shotgun = '_Shotgun'; //gives the player a shotgun
@@ -120,18 +120,27 @@ class Item extends FlxGroup{
     function processItem(itemType:ItemType):Int {
         if(!EditorMode) {
             var item:BaseItem = typeToClass(itemType);
-            if (!item.returnCondition){
-                item.remove();
-                item = null;
-                return 1;
+            try{
+                if (!item.returnCondition){
+                    item.remove();
+                    item = null;
+                    return 1;
+                }
+            }catch(e){
+                trace('Item return condition failed: ' + e.message);
             }
             ps.items.push(item);
             if (Std.isOfType(item, BaseWeapon))
                 ps.onWeaponPickup();
-            if (item.customPickupCallback != null) 
-                item.customPickupCallback(); 
-            else
+            if (item.customPickupCallback != null) {
+                try{
+                    item.RunCustomCallBackFunction(); 
+                }catch(e){
+                    trace('Item custom pickup callback failed: ' + e.message);
+                }
+            }else{
                 item.onPickup();
+            }
             if (item.statusMessage != '')
                 ps.Hud.StatMSGContainer.CreateStatusMessage(item.statusMessage, _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
         }
