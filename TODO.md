@@ -1,6 +1,6 @@
 # TODO
 
- - [ ] dialouge
+ - [X] dialouge (in-progress! -ZSolarDev)
  - [x] chapter select system
  - [ ] melee weapons
  - [ ] object interaction system (in-progress! -ChickenSwimmer2020)
