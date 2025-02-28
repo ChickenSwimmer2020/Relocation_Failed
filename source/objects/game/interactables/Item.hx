@@ -38,9 +38,9 @@ enum abstract ItemType(String) from String to String {
     var _SMGAmmoBox = '_SMGAmmoBox'; //full SMG refill
     //misc
     var _OxygenTank = '_OxygenTank'; //gives oxygen (FOR THE HULL BREACH AREAS ONLY.)
-    var _BATTERY = '_SuitBattery'; //gives +15% armor battery
+    var _SuitBattery = '_SuitBattery'; //gives +15% armor battery
     //other
-    var _SUIT = '_Suit'; //gives players access to sprint, weapons, and hud.
+    var _Suit = '_Suit'; //gives players access to sprint, weapons, and hud.
     //guns >:)
     var _Pistol = '_Pistol'; //gives the player a pistol
     var _Shotgun = '_Shotgun'; //gives the player a shotgun
@@ -100,8 +100,11 @@ class Item extends FlxGroup{
         var str:String = type;
         buff.add(str.substr(1));
         var className:String = buff.toString();
-        var cls = Type.resolveClass(className); // NULL!?!?
-        return cls != null ? Type.createInstance(cls, [this]) : null;
+        var cls = Type.resolveClass(className);
+        var instance = cls != null ? Type.createInstance(cls, [this]) : null;
+        if (instance == null)
+            throw 'Item type ' + type + ' not implemented/incorrect!';
+        return instance;
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);
