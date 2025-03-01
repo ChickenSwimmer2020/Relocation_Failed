@@ -8,6 +8,7 @@ package backend;
 	 */
 	public var bulletTracers:Bool = true;
 	public var SkipIntro:Bool = false;
+	public var WaterMarks:Bool = true;
 }
 
 class Preferences {

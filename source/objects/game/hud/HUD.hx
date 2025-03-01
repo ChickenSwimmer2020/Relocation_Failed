@@ -188,7 +188,7 @@ class HUD extends FlxSpriteGroup {
 	}
 
 	function createHud():Void {
-		StatMSGContainer = new StatusMessageHolder(200, 300, #if debug true #else false #end, ps);
+		StatMSGContainer = new StatusMessageHolder(0, 60, #if debug true #else false #end, ps);
 		hudCreateAnimRunning = false;
 
 		healthBar = new FlxBar(50, 5, LEFT_TO_RIGHT, 250, 25, ps.Player, 'displayHealth');

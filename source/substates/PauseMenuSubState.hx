@@ -1,5 +1,6 @@
 package substates;
 
+import menu.SettingsSubState;
 import backend.save.PlayerSaveStateUtil;
 
 class PauseMenuSubState extends FlxSubState {
@@ -9,6 +10,7 @@ class PauseMenuSubState extends FlxSubState {
 	var button_backToGame:FlxButton;
 	var button_saveGame:FlxButton;
 	var button_mainMenu:FlxButton;
+	var button_Settings:FlxButton;
 
 	public static var PauseJustClosed:Bool = false;
 
@@ -37,7 +39,13 @@ class PauseMenuSubState extends FlxSubState {
 		button_saveGame.camera = pauseCAM;
 		add(button_saveGame);
 
-		button_mainMenu = new FlxButton(0, button_saveGame.y + 20, "Main Menu", () -> {
+		button_Settings = new FlxButton(0, button_saveGame.y + 20, "Settings", () -> {
+			openSubState(new SettingsSubState(this));
+		});
+		button_Settings.camera = pauseCAM;
+		add(button_Settings);
+
+		button_mainMenu = new FlxButton(0, button_Settings.y + 20, "Main Menu", () -> {
 			close();
 			FlxG.switchState(menu.MainMenu.new);
 			pauseCAM.destroy();

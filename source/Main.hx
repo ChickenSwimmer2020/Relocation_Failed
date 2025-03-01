@@ -5,12 +5,10 @@ import openfl.errors.Error;
 import sys.io.File;
 import sys.FileSystem;
 import crash.CrashState;
-import haxe.io.Path;
-import sys.io.Process;
 import haxe.CallStack;
 import haxe.CallStack.StackItem;
 import openfl.events.UncaughtErrorEvent;
-import menu.intro.WindowIntro;
+import menu.intro.Decide;
 import openfl.Lib;
 
 class Main extends Sprite {
@@ -28,7 +26,7 @@ class Main extends Sprite {
 			FlxG.log.redirectTraces = true; //redirect ALL trace calls to the debugger's log console
 		#end
 		var fromCrash = FileSystem.exists('crash.txt');
-		var game:FlxGame = new FlxGame(0, 0, WindowIntro, 60, 60, true, false);
+		var game:FlxGame = new FlxGame(0, 0, Decide, 60, 60, true, false);
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, handleCrash);
 		if (fromCrash) {
 			crashTxt = File.getContent('crash.txt');
@@ -70,11 +68,10 @@ class Main extends Sprite {
 		Sys.exit(1);
 	}
 
-	function loadGameSaveData() {
-		if (FlxG.save.bind('RelocationFailedSAVEDATA')){
+	static function loadGameSaveData() {
+		if (FlxG.save.bind('RelocationFailedSAVEDATA'))
 			Preferences.loadSettings();
-			Application.current.window.alert('Player Data Loaded!');
-		}else
+		else
 			Application.current.window.alert('Failed to load player save!');
 	}
 }

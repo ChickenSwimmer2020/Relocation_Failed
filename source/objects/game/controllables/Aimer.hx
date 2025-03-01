@@ -18,6 +18,9 @@ class Aimer extends RFTriAxisSprite {
 	var RIFLEfireRate:Float = 0.1; // Time between shots in seconds
 	var RIFLEfireTimer:Float = 0; // Tracks time since the last shot
 
+	var SMGfireRate:Float = 0.07; // Time between shots in seconds
+	var SMGfireTimer:Float = 0; // Tracks time since the last shot
+
 	public function new(ps:Playstate) {
 		this.ps = ps;
 		player = ps.Player;
@@ -28,6 +31,7 @@ class Aimer extends RFTriAxisSprite {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 		RIFLEfireTimer += elapsed;
+		SMGfireTimer += elapsed;
 		tX = Player.AimerPOSx;
 		tY = Player.AimerPOSy;
         tZ = Player.AimerPOSz;
@@ -49,11 +53,13 @@ class Aimer extends RFTriAxisSprite {
 								}
 							}
 							pistol.ammoRemaining--;
-							trace('Pistol Bullet Shot!');
 							gun.shoot(PISTOLROUNDS);
+							Playstate.instance.Player.physVelocity.x -= 10;
 							ps.FGCAM.shake(0.001, 0.1);
 							ps.HUDCAM.shake(0.001, 0.1);
 							ps.camera.shake(0.001, 0.1);
+							pistol.remove();
+							pistol = null;
 						}
 					case RIFLEROUNDS:
 						if (RIFLEfireTimer >= RIFLEfireRate) {
@@ -65,12 +71,14 @@ class Aimer extends RFTriAxisSprite {
 								}
 							}
 							rifle.ammoRemaining--;
-							trace('Rifle Bullet Shot!');
 							gun.shoot(RIFLEROUNDS);
+							Playstate.instance.Player.physVelocity.x -= 60;
 							RIFLEfireTimer = 0; // Reset the timer after firing
 							ps.FGCAM.shake(0.002, 0.1);
 							ps.HUDCAM.shake(0.002, 0.1);
 							ps.camera.shake(0.002, 0.1);
+							rifle.remove();
+							rifle = null;
 						}
 					case SHOTGUNSHELL:
 						if (FlxG.mouse.justPressed) {
@@ -82,9 +90,9 @@ class Aimer extends RFTriAxisSprite {
 								}
 							}
 							shotgun.ammoRemaining--;
-							trace('Shotgun Fired!');
 							gun.shotgunShoot();
 							shotgunPumping = true;
+							Playstate.instance.Player.physVelocity.x -= 500;
 							wait(0.2, () -> {
 								trace('shotgun pumping...');
 								ps.AimerGroup.members[0].animation.play('Cock', true);
@@ -96,21 +104,28 @@ class Aimer extends RFTriAxisSprite {
 							ps.FGCAM.shake(0.005, 0.1);
 							ps.HUDCAM.shake(0.005, 0.1);
 							ps.camera.shake(0.005, 0.1);
+							shotgun.remove();
+							shotgun = null;
 						}
 					case SMGROUNDS:
-						var smg:SMG = new SMG(null);
-						for (weapon in player.weaponInventory) {
-							if (weapon.weaponType == SMG) {
-								smg = cast weapon;
-								break;
+						if (SMGfireTimer >= SMGfireRate) {
+							var smg:SMG = new SMG(null);
+							for (weapon in player.weaponInventory) {
+								if (weapon.weaponType == SMG) {
+									smg = cast weapon;
+									break;
+								}
 							}
+							smg.ammoRemaining--;
+							gun.shoot(SMGROUNDS);
+							Playstate.instance.Player.physVelocity.x -= 50;
+							SMGfireTimer = 0;
+							ps.FGCAM.shake(0.001, 0.1);
+							ps.HUDCAM.shake(0.001, 0.1);
+							ps.camera.shake(0.001, 0.1);
+							smg.remove();
+							smg = null;
 						}
-						smg.ammoRemaining--;
-						trace('SMG Bullet Shot!');
-						gun.shoot(SMGROUNDS);
-						ps.FGCAM.shake(0.001, 0.1);
-						ps.HUDCAM.shake(0.001, 0.1);
-						ps.camera.shake(0.001, 0.1);
 					case NULL:
 						// donothing hahaha.
 				}
@@ -158,6 +173,7 @@ class InteractionBox extends FlxSprite {
 	public function new() {
 		super();
 		makeGraphic(15, 15, FlxColor.WHITE);
+		this.scrollFactor.set();
 	}
 
 	override public function update(elapsed:Float) {

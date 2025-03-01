@@ -1,5 +1,8 @@
 package crash;
 
+import lunarps.particles.LunarParticle;
+import lunarps.LunarShape.LunarCircle;
+import lunarps.particles.LunarParticleBehavior;
 import flixel.tweens.FlxEase;
 import flixel.math.FlxMath;
 import menu.intro.WaterMarks;
@@ -66,17 +69,32 @@ class CrashState extends FlxState {
 			width: FlxG.width,
 			height: FlxG.height
 		});
-		var rect = new LunarRect(0xFF00FF00, 10, 10);
-		rect.alpha = 100;
-		var fading = new LunarFadeParticleBehavior(1);
-		fading.fadeStartedCallback = (particle, emitter, dt) -> {
-			particle.behavior = new LunarGravityParticleBehavior(1);
-		};
-		var particles = new LunarParticleEmitter(FlxG.width + 10, 0, particleRenderer, rect, null, {});
-		particles.addBehavior('Spawn in range', new LunarSpawnInRangeParticleBehavior(0, FlxG.height));
-		particles.addBehavior('Velocity', new LunarVelocityParticleBehavior());
-		particles.addBehavior('Initial Random Velocity', new LunarRandomInitialVelocityParticleBehavior(-2, -8));
-		particles.addBehavior('Fading', fading);
+		var signal:LunarSignalParticleBehavior = new LunarSignalParticleBehavior();
+		signal.onParticleFrameCallback = (particle:LunarParticle, emitter:LunarParticleEmitter, dt:Float) ->
+		{
+			if (particle.y > FlxG.height || particle.x < 0)
+				LunarParticleBehavior.killParticle(particle);
+		}
+		var r = new LunarCircle(0xFFFFFFFF, 2, 6);
+		r.alpha = 160;
+		var emitter = new LunarParticleEmitter(0, -20, particleRenderer, r, null, {autoSpawning: true, waitingSecs: 0, particlesPerWaitingSecs: 5});
+		emitter.addBehavior('spawn in range', new LunarSpawnInRangeParticleBehavior(FlxG.width + 150, 0));
+		emitter.addBehavior('velocity', new LunarVelocityParticleBehavior());
+		emitter.addBehavior('initial velocity', new LunarRandomInitialVelocityParticleBehavior(-5, -8, 10, 20));
+		emitter.addBehavior('face velocity', new LunarFaceVelocityParticleBehavior());
+		emitter.addBehavior('random color', new LunarColorVariationParticleBehavior([0xFF5BDB59, 0xFFA8FFAC, 0xFFD8FFD3]));
+		emitter.addBehavior('stretch to velocity', new LunarVelocityStretchParticleBehavior(2, 2, false, true));
+		emitter.addBehavior('signal', signal);
+		var rBG = new LunarCircle(0xFFFFFFFF, 1, 3);
+		rBG.alpha = 100;
+		var emitterBG = new LunarParticleEmitter(0, -20, particleRenderer, rBG, null, {autoSpawning: true, waitingSecs: 0, particlesPerWaitingSecs: 5});
+		emitterBG.addBehavior('spawn in range but in the bg', new LunarSpawnInRangeParticleBehavior(FlxG.width + 150, 0));
+		emitterBG.addBehavior('velocity but in the bg x2', new LunarVelocityParticleBehavior());
+		emitterBG.addBehavior('initial velocity but in the bg x3', new LunarRandomInitialVelocityParticleBehavior(-5, -8, 10, 20));
+		emitterBG.addBehavior('face velocity but in the bg x4', new LunarFaceVelocityParticleBehavior());
+		emitterBG.addBehavior('random color but in the bg x5', new LunarColorVariationParticleBehavior([0xFFA7FF98, 0xFFBCFFA8, 0xFFAAFF9F]));
+		emitterBG.addBehavior('stretch to velocity but in the bg x6', new LunarVelocityStretchParticleBehavior(1.5, 1, false, true));
+		emitterBG.addBehavior('signal but in the bg x7', signal);
 		add(particleRenderer);
 	}
 

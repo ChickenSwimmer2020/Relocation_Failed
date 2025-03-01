@@ -11,11 +11,13 @@ import flixel.addons.ui.FlxUITabMenu;
 
 class SettingsSubState extends FlxSubState{
     var TabGroups:FlxUITabMenu;
-    var Tracers_Check:FlxUICheckBox;
+    var Tracers:FlxUICheckBox;
     var SkipIntro:FlxUICheckBox;
+    var WaterMarks:FlxUICheckBox;
     var Back:FlxSquareButton;
     var Save:FlxButton;
     var Saved:Bool = false;
+    var settingsCAM:FlxCamera;
 
     private var instance:SettingsSubState;
     private var parstate:FlxState;
@@ -26,6 +28,10 @@ class SettingsSubState extends FlxSubState{
 
         this.parstate = parentState;
         this.instance = this;
+
+        settingsCAM = new FlxCamera();
+		FlxG.cameras.add(settingsCAM, false);
+		settingsCAM.bgColor = 0x000000;
     }
 
     override public function create() {
@@ -40,8 +46,6 @@ class SettingsSubState extends FlxSubState{
         TabGroups.resize(TabGroups.width + 50, TabGroups.height);
         var sliderRate = new FlxUISlider(this, 'volume', 10, 10, 0.5, 3, 150, 15, 5, FlxColor.WHITE, FlxColor.BLACK);
 		sliderRate.nameLabel.text = 'Volume';
-
-        Tracers_Check = new FlxUICheckBox(10, 20, null, null, 'Bullet Tracers');
 
 		var tab_group_1 = new FlxUI(null, TabGroups, null);
         tab_group_1.name = 'tab_1';
@@ -65,7 +69,11 @@ class SettingsSubState extends FlxSubState{
             tab_group_1.add(Tab1BG1);
             tab_group_1.add(Tab1BG2);
             SkipIntro = new FlxUICheckBox(10, 10, null, null, 'Skip Intro');
+            Tracers = new FlxUICheckBox(10, 40, null, null, 'Bullet Tracers');
+            WaterMarks = new FlxUICheckBox(10, 70, null, null, 'WaterMarks');
             tab_group_1.add(SkipIntro);
+            tab_group_1.add(Tracers);
+            tab_group_1.add(WaterMarks);
 
         //* tab group 2 -- Graphics
             var Tab2BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
@@ -79,7 +87,7 @@ class SettingsSubState extends FlxSubState{
             tab_group_3.add(Tab3BG1);
             tab_group_3.add(Tab3BG2);
 
-        //* tab group 4 -- TBA
+        //* tab group 4 -- Difficulty
             var Tab4BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
             var Tab4BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
             tab_group_4.add(Tab4BG1);
@@ -93,23 +101,23 @@ class SettingsSubState extends FlxSubState{
         add(TabGroups);
         add(Back);
         add(Save);
+
+        for(item in this.members){
+            item.camera = settingsCAM;
+            if(Std.isOfType(item, FlxSprite)) {
+                var daSpr:FlxSprite = cast item;
+                daSpr.scrollFactor.set();
+            }
+        }
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);
         parstate.update(elapsed);
+    }
 
-        @:privateAccess { //this makes it so that the main menu buttons are not usable while the settings menu is open. //doesnt work anymore?
-			if(!done) {
-				wait(0.9, ()->{
-                    if (!done){
-					    MainMenu.instance.Button_Play.visible = false;
-					    MainMenu.instance.Button_Settings.visible = false;
-					    MainMenu.instance.Button_Load.visible = false;
-                    }
-				});
-				done = true;
-			}
-        }
+    override public function destroy() {
+        super.destroy();
+        settingsCAM.destroy();
     }
 
     public function FlushToPrefs() {
@@ -117,19 +125,21 @@ class SettingsSubState extends FlxSubState{
             Preferences.save.SkipIntro = SkipIntro.checked;
             Preferences.saveSettings();
         }
+        if(Preferences.save.bulletTracers != Tracers.checked) {
+            Preferences.save.bulletTracers = Tracers.checked;
+            Preferences.saveSettings();
+        }
+        if(Preferences.save.WaterMarks != WaterMarks.checked) {
+            Preferences.save.WaterMarks = WaterMarks.checked;
+            Preferences.saveSettings();
+        }
     }
 
     public function LoadFromPrefs(){
-        SkipIntro.checked = Preferences.save.SkipIntro;
+        @:privateAccess
+            Main.loadGameSaveData();
+        SkipIntro.checked = FlxG.save.data.SkipIntro;
+        Tracers.checked = FlxG.save.data.bulletTracers;
+        WaterMarks.checked = FlxG.save.data.WaterMarks;
     }
-
-    override public function destroy() { //force re-enable the main menu buttons.
-		super.destroy();
-		@:privateAccess {
-            done = true;
-            MainMenu.instance.Button_Play.visible = true;
-            MainMenu.instance.Button_Settings.visible = true;
-            MainMenu.instance.Button_Load.visible = true;
-		}
-	}
 }

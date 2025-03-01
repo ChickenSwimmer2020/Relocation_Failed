@@ -52,6 +52,10 @@ package backend;
 				if (pressed[keyID])
 					keyResponses[keyID]();
 			}
+
+			FlxG.watch.addQuick('weaponInventory', Playstate.instance.Player.weaponInventory.toString());
+			FlxG.watch.addQuick('Player X', Playstate.instance.Player.x);
+			FlxG.watch.addQuick('Player Y', Playstate.instance.Player.y);
 		}
 
 		public function createCustomPlayerTracker(){
@@ -60,7 +64,6 @@ package backend;
 				"stamina", "Health", "displayHealth", "useDisplayHealthAsRealHealth", "oxygen", "battery", "maxStamina", "maxHealth", "maxOxygen", "maxBattery", "AimerPOSx", 
 				"AimerPOSy", "AimerPOSz", "CurRoom", "Transitioning", "doubleAxisColliding", "tripleAxisColliding"],
 			[RFPhysTriAxisSprite]));
-			FlxG.watch.addQuick('weaponInventory', Playstate.instance.Player.weaponInventory.toString());
 			FlxG.debugger.track(Playstate.instance.Player);
 		}
 	}
