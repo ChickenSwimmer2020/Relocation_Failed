@@ -20,5 +20,6 @@ class SMG extends BaseWeapon {
 
 	override public function onSelected(plr:Player) {
 		plr.CurWeaponChoice = SMGROUNDS;
+		plr.gun.changeTexture(15, 15, 'game/W_smg', false, 128, 64);
 	}
 }

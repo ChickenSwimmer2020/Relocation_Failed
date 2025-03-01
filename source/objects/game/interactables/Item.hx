@@ -133,17 +133,15 @@ class Item extends FlxGroup{
                 trace('Item return condition failed: ' + e.message);
             }
             ps.items.push(item);
-            if (Std.isOfType(item, BaseWeapon))
+            if (Std.isOfType(item, BaseWeapon)){ //weapon item type
                 ps.onWeaponPickup();
-            if (item.customPickupCallback != null) {
-                try{
-                    item.RunCustomCallBackFunction(); 
-                }catch(e){
-                    trace('Item custom pickup callback failed: ' + e.message);
-                }
+            }
+            if (item.customPickupCallback != null) { //normal item
+                    item.customPickupCallback();
             }else{
                 item.onPickup();
             }
+
             if (item.statusMessage != '')
                 ps.Hud.StatMSGContainer.CreateStatusMessage(item.statusMessage, _STATMSGTWEENTIME, _STATMSGWAITTIME, _STATMSGFINISHYPOS);
         }

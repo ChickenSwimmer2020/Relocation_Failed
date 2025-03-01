@@ -57,7 +57,7 @@ class Playstate extends FlxTransitionableState {
 
 	public var BulletGroup:FlxGroup;
 	#if debug
-	public var DebuggerHelper = new backend.DEBUGKEYS();
+		public var DebuggerHelper = new backend.DEBUG();
 	#end
 
 	public var isBeatStateType:Bool = false; // should camera bop
@@ -322,6 +322,10 @@ class Playstate extends FlxTransitionableState {
 		add(AimerGroup);
 		add(BulletGroup);
 		add(Hud);
+
+		#if debug
+			DebuggerHelper.createCustomPlayerTracker();
+		#end
 
 		isBeatStateType = Level.isBeatStage;
 		BPM = Level.FrameTime;

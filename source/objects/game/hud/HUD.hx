@@ -179,21 +179,11 @@ class HUD extends FlxSpriteGroup {
 			}
 		}
 		#end
-		if (healthTweening) { // TODO: FIX HEALTH
-			if (healthBar != null) {
-				if (!healthreset) {
-					ps.Player.displayHealth = 0;
-					healthreset = true;
-				}
-				if (healthTweening) {
-					ps.Player.displayHealth++; // TODO: find a way to use tweens on this so we can do a cool like, expoOut tween on it.
-					healthBar.value = ps.Player.displayHealth;
-				}
-			} else if (ps.Player.displayHealth == 100 && healthTweening) {
-				healthTweening = false;
-				ps.Player.useDisplayHealthAsRealHealth = true;
-				ps.Player.displayHealth = 100;
-			}
+		if (healthTweening) {
+			//TODO: this
+			ps.Player.Health = 100;
+			ps.Player.displayHealth = 100;
+			healthTweening = false;
 		}
 	}
 
