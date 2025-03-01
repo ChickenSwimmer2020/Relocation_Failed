@@ -103,7 +103,7 @@ class Item extends FlxGroup{
         var cls = Type.resolveClass(className);
         var instance = cls != null ? Type.createInstance(cls, [this]) : null;
         if (instance == null)
-            throw 'Item type ' + type + ' not implemented/incorrect!';
+            throw 'Item type: \"$type\" not implemented/incorrect!'; //you know you didnt need the { + type + }, right? --ChickenSwimmer2020
         return instance;
     }
     override public function update(elapsed:Float) {
