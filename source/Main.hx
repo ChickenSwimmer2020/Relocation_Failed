@@ -71,9 +71,10 @@ class Main extends Sprite {
 	}
 
 	function loadGameSaveData() {
-		if (FlxG.save.bind('RelocationFailedSAVEDATA'))
+		if (FlxG.save.bind('RelocationFailedSAVEDATA')){
 			Preferences.loadSettings();
-		else
+			Application.current.window.alert('Player Data Loaded!');
+		}else
 			Application.current.window.alert('Failed to load player save!');
 	}
 }

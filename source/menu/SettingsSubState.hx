@@ -29,11 +29,12 @@ class SettingsSubState extends FlxSubState{
     }
 
     override public function create() {
+        Preferences.loadSettings();
 		var tabs = [
 			{name: "tab_1", label: "General"},
 			{name: "tab_2", label: "Graphics"},
 			{name: "tab_3", label: "Gameplay"},
-			{name: "tab_4", label: "TBA"}
+			{name: "tab_4", label: "Difficulty"}
 		];
         TabGroups = new FlxUITabMenu(null, tabs, true);
         TabGroups.resize(TabGroups.width + 50, TabGroups.height);
@@ -112,7 +113,14 @@ class SettingsSubState extends FlxSubState{
     }
 
     public function FlushToPrefs() {
+        if(Preferences.save.SkipIntro != SkipIntro.checked) {
+            Preferences.save.SkipIntro = SkipIntro.checked;
+            Preferences.saveSettings();
+        }
+    }
 
+    public function LoadFromPrefs(){
+        SkipIntro.checked = Preferences.save.SkipIntro;
     }
 
     override public function destroy() { //force re-enable the main menu buttons.
