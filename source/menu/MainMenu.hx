@@ -1,5 +1,6 @@
 package menu;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxRandom;
 import flixel.addons.transition.FlxTransitionableState;
 import menu.intro.Star;
@@ -77,10 +78,8 @@ class MainMenu extends FlxTransitionableState {
 		verCam = new FlxCamera(0, 0, 1280, 720, 1);
 		verCam.bgColor = 0x00000000;
 		FlxG.cameras.add(verCam);
-
-		shipCam.flash();
-		if (!FlxG.sound.music.playing)
-			FlxG.sound.playMusic(Assets.music('ConnectionEstablished.ogg'));
+		
+		FlxG.sound.playMusic(Assets.music('ConnectionEstablished.ogg'));
 		// background
 		planet = new FlxSprite(0, 200, 'assets/menu/planet.png');
 		planet.camera = planetCam;

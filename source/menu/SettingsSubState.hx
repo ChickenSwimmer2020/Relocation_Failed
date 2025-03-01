@@ -12,9 +12,9 @@ import flixel.addons.ui.FlxUITabMenu;
 class SettingsSubState extends FlxSubState{
     var TabGroups:FlxUITabMenu;
     var Tracers_Check:FlxUICheckBox;
+    var SkipIntro:FlxUICheckBox;
     var Back:FlxSquareButton;
     var Save:FlxButton;
-    var volume:Float = 0;
     var Saved:Bool = false;
 
     private var instance:SettingsSubState;
@@ -63,6 +63,8 @@ class SettingsSubState extends FlxSubState{
             var Tab1BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
             tab_group_1.add(Tab1BG1);
             tab_group_1.add(Tab1BG2);
+            SkipIntro = new FlxUICheckBox(10, 10, null, null, 'Skip Intro');
+            tab_group_1.add(SkipIntro);
 
         //* tab group 2 -- Graphics
             var Tab2BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
@@ -84,7 +86,7 @@ class SettingsSubState extends FlxSubState{
 
 
 
-        Save = new FlxButton(TabGroups.x + 400, TabGroups.y + 246.7, "SAVE", function() { /*makesave*/});
+        Save = new FlxButton(TabGroups.x + 400, TabGroups.y + 246.7, "SAVE", function() { FlushToPrefs(); });
         Back = new FlxSquareButton(Save.x + 80, TabGroups.y + 246.7, "X", function() { close(); });
 
         add(TabGroups);
@@ -95,7 +97,7 @@ class SettingsSubState extends FlxSubState{
         super.update(elapsed);
         parstate.update(elapsed);
 
-        @:privateAccess { //this makes it so that the main menu buttons are not usable while the settings menu is open.
+        @:privateAccess { //this makes it so that the main menu buttons are not usable while the settings menu is open. //doesnt work anymore?
 			if(!done) {
 				wait(0.9, ()->{
                     if (!done){
@@ -106,14 +108,11 @@ class SettingsSubState extends FlxSubState{
 				});
 				done = true;
 			}
-		}
-
-        if(Tracers_Check != null) {
-            Preferences.save.bulletTracers = Tracers_Check.checked; //* solar tf were you thinking, or was this me, i forgor..
-            if(Preferences.save.bulletTracers != Tracers_Check.checked) { //only update if the save value is different from the checkbox state
-                Preferences.saveSettings();
-            }
         }
+    }
+
+    public function FlushToPrefs() {
+
     }
 
     override public function destroy() { //force re-enable the main menu buttons.
