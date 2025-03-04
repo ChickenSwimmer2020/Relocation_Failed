@@ -22,6 +22,13 @@
     <source path="source"/>
     <assets path="assets"/>
 
+    <echo value="Game is building to Hashlink, please wait..." if="hl"/>
+    <echo value="Debugger is active!" if="debug"/>
+
+    <section if="html5">
+        <error value="Current Platform Not Supported! Please switch to the html5 Branch!"/>
+    </section>
+
     <undefine name="openfl-disable-handle-error"/>
     <define name="openfl_enable_handle_error"/>
 
