@@ -7,6 +7,7 @@ package backend;
 	 * @since RF_DEV_0.3.6
 	 */
 	public var bulletTracers:Bool = true;
+	public var ShellEjection:Bool = true;
 	public var SkipIntro:Bool = false;
 	public var WaterMarks:Bool = true;
 }

@@ -11,9 +11,12 @@ import flixel.addons.ui.FlxUITabMenu;
 
 class SettingsSubState extends FlxSubState{
     var TabGroups:FlxUITabMenu;
+
     var Tracers:FlxUICheckBox;
     var SkipIntro:FlxUICheckBox;
     var WaterMarks:FlxUICheckBox;
+    var ShellEjection:FlxUICheckBox;
+
     var Back:FlxSquareButton;
     var Save:FlxButton;
     var Saved:Bool = false;
@@ -69,17 +72,19 @@ class SettingsSubState extends FlxSubState{
             tab_group_1.add(Tab1BG1);
             tab_group_1.add(Tab1BG2);
             SkipIntro = new FlxUICheckBox(10, 10, null, null, 'Skip Intro');
-            Tracers = new FlxUICheckBox(10, 40, null, null, 'Bullet Tracers');
             WaterMarks = new FlxUICheckBox(10, 70, null, null, 'WaterMarks');
             tab_group_1.add(SkipIntro);
-            tab_group_1.add(Tracers);
             tab_group_1.add(WaterMarks);
 
         //* tab group 2 -- Graphics
             var Tab2BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
             var Tab2BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
+            Tracers = new FlxUICheckBox(10, 40, null, null, 'Bullet Tracers');
+            ShellEjection = new FlxUICheckBox(10, 70, null, null, 'Shell Ejection');
             tab_group_2.add(Tab2BG1);
             tab_group_2.add(Tab2BG2);
+            tab_group_2.add(Tracers);
+            tab_group_2.add(ShellEjection);
 
         //* tab groupd 3 -- Gameplay
             var Tab3BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
@@ -109,6 +114,7 @@ class SettingsSubState extends FlxSubState{
                 daSpr.scrollFactor.set();
             }
         }
+        LoadFromPrefs();
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);
@@ -133,13 +139,42 @@ class SettingsSubState extends FlxSubState{
             Preferences.save.WaterMarks = WaterMarks.checked;
             Preferences.saveSettings();
         }
+        if(Preferences.save.ShellEjection != ShellEjection.checked) {
+            Preferences.save.ShellEjection = ShellEjection.checked;
+            Preferences.saveSettings();
+        }
     }
 
     public function LoadFromPrefs(){
         @:privateAccess
             Main.loadGameSaveData();
-        SkipIntro.checked = FlxG.save.data.SkipIntro;
-        Tracers.checked = FlxG.save.data.bulletTracers;
-        WaterMarks.checked = FlxG.save.data.WaterMarks;
+
+        if(FlxG.save.data.SkipIntro != null) {
+            SkipIntro.checked = FlxG.save.data.SkipIntro;
+        }else{
+            SkipIntro.checked = false;
+            FlxG.save.data.SkipIntro = false;
+        }
+
+        if(FlxG.save.data.Tracers != null) {
+            Tracers.checked = FlxG.save.data.bulletTracers;
+        }else{
+            Tracers.checked = false;
+            FlxG.save.data.bulletTracers = false;
+        }
+
+        if(FlxG.save.data.WaterMarks != null) {
+            WaterMarks.checked = FlxG.save.data.WaterMarks;
+        }else{
+            WaterMarks.checked = false;
+            FlxG.save.data.WaterMarks = false;
+        }
+
+        if(FlxG.save.data.ShellEjection != null) {
+            ShellEjection.checked = FlxG.save.data.ShellEjection;
+        }else{
+            ShellEjection.checked = false;
+            FlxG.save.data.ShellEjection = false;
+        }
     }
 }
