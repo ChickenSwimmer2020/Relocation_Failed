@@ -40,7 +40,7 @@ class Main extends Sprite {
 		var game:FlxGame = new FlxGame(0, 0, Decide, 60, 60, true, false);
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, handleCrash);
 		if (fromCrash) {
-			crashTxt = File.getContent('crash/crash${dateNow.substr(0, dateNow.length - 9)}.txt');
+			crashTxt = File.getContent('crash/crash${File.getContent('./idied.RFDUMP')}.txt');
 			game = new FlxGame(0, 0, CrashState, 60, 60, true, false);
 			FileSystem.deleteFile('idied.rfDUMP');
 		}
@@ -77,8 +77,8 @@ class Main extends Sprite {
 		var file = '${lastError}|||${lastStack}';
 		if(!FileSystem.exists('crash'))
 			FileSystem.createDirectory('crash');
-		File.saveContent('./crash/crash${dateNow.substr(0, dateNow.length - 9)}.txt', file);
-		File.saveContent('./idied.rfDUMP', 'How the fuck did you open this?!');
+		File.saveContent('./crash/crash$dateNow.txt', file);
+		File.saveContent('./idied.rfDUMP', dateNow);
 		trace('${lastError}\n\n${lastStack}');
 		Sys.command('start "" "./Relocation Failed.exe"');
 		Sys.exit(1);
