@@ -1,4 +1,4 @@
-package backend;
+package debug;
 
 #if debug
 	import objects.game.controllables.Player;

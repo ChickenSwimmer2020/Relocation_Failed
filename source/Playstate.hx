@@ -56,8 +56,9 @@ class Playstate extends FlxTransitionableState {
 	public var LevelTransitionFadeSprite:FlxSprite = new FlxSprite(0, 0);
 
 	public var BulletGroup:FlxGroup;
+	public var ShellGroup:FlxGroup;
 	#if debug
-		public var DebuggerHelper = new backend.DEBUG();
+		public var DebuggerHelper = new debug.DEBUG();
 	#end
 
 	public var isBeatStateType:Bool = false; // should camera bop
@@ -286,6 +287,7 @@ class Playstate extends FlxTransitionableState {
 		}
 
 		BulletGroup = new FlxGroup();
+		ShellGroup = new FlxGroup();
 
 		FGCAM = new FlxCamera();
 		FlxG.cameras.add(FGCAM, false);
@@ -321,6 +323,7 @@ class Playstate extends FlxTransitionableState {
 		add(Player3);
 		add(AimerGroup);
 		add(BulletGroup);
+		add(ShellGroup);
 		add(Hud);
 
 		#if debug
@@ -341,6 +344,20 @@ class Playstate extends FlxTransitionableState {
 		FlxG.watch.addQuick('interval', interval);
 		FlxG.watch.addQuick('TriggerTime', nextTriggerTime);
 		#end
+
+		for(FlxSprite in ShellGroup){
+			var Sprite = cast FlxSprite;
+			if(Sprite.velocity.x > 0){
+				Sprite.velocity.x--;
+			}else if(Sprite.velocity.x < 0){
+				Sprite.velocity.x++;
+			}
+			if(Sprite.velocity.y > 0){
+				Sprite.velocity.y--;
+			}else if(Sprite.velocity.y < 0){
+				Sprite.velocity.y++;
+			}
+		}
 
 		FlxG.mouse.visible = true;
 

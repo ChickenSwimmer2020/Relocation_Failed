@@ -16,6 +16,7 @@ using StringTools;
 class Main extends Sprite {
 	public static var crashTxt:String = '';
 	var dateNow:String = Date.now().toString();
+	public static var CrashFileName:String = ''; //for opening the file with space instead of just copying message.
 	
 
 	public function new() {
@@ -42,10 +43,10 @@ class Main extends Sprite {
 		if (fromCrash) {
 			crashTxt = File.getContent('crash/crash${File.getContent('./idied.RFDUMP')}.txt');
 			game = new FlxGame(0, 0, CrashState, 60, 60, true, false);
-			FileSystem.deleteFile('idied.rfDUMP');
 		}
-		if(FileSystem.exists('idied.rfDUMP'))
-			FileSystem.deleteFile('idied.rfDUMP');
+		if(FileSystem.exists('idied.rfDUMP')){
+			CrashFileName = File.getContent('./idied.rfDUMP');
+		}
 		@:privateAccess game._customSoundTray = objects.SoundTray;
 		addChild(game);
 		loadGameSaveData();

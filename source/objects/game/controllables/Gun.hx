@@ -140,6 +140,8 @@ class Gun extends FlxSpriteGroup {
 		theGunTexture.x = -15;
 		////theGunTexture.angle = -15;
 		Playstate.instance.AimerGroup.members[0].animation.play('Pew', true);
+		if(Preferences.save.ShellEjection)
+			EjaculateShell('', [100, 100]);
 	}
 
 	public function shotgunShoot() {
@@ -173,6 +175,29 @@ class Gun extends FlxSpriteGroup {
 		}
 
 		return spread;
+	}
+
+	/**
+	 * ITS A JOKE! ITS FOR SHELL EJECTION!!
+	 * @since RF_DEV_0.4.0
+	 */
+	public function EjaculateShell(Type:String, Velocity:Array<Int>) {
+		var Shell:FlxSprite = new FlxSprite(0, 0);
+		switch(Type){
+			default:
+				Shell.makeGraphic(5, 1, FlxColor.YELLOW);
+		}
+		Shell.setPosition(Playstate.instance.Player2.x, Playstate.instance.Player2.y);
+		Shell.velocity.x = cast(new FlxRandom()).float(-Velocity[0], Velocity[1]); //cast my beloved --ChickenSwimmer2020
+		Shell.velocity.y = cast(new FlxRandom()).float(-Velocity[0], Velocity[1]);
+
+		Playstate.instance.ShellGroup.add(Shell);
+
+		wait(10, ()->{
+			FlxTween.tween(Shell, {alpha: 0}, 1, {onComplete: function(Twn:FlxTween) {
+				Shell.kill();
+			}});
+		});
 	}
 
 	override public function update(elapsed:Float) {

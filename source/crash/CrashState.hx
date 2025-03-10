@@ -1,5 +1,7 @@
 package crash;
 
+import sys.FileSystem;
+import sys.io.File;
 import lunarps.particles.LunarParticle;
 import lunarps.LunarShape.LunarCircle;
 import lunarps.particles.LunarParticleBehavior;
@@ -52,7 +54,7 @@ class CrashState extends FlxState {
 		addToBuffer(errorData.split('|||')[0] + '\n'); // error
 		addToBuffer(errorData.split('|||')[1]); // stack
 		addToBuffer('\n\n\n\n');
-		addToBuffer("We're sorry! The game has crashed. Please report this issue in our discord server, and press Enter to restart the game, and use space to copy the error to your clipboard to report. Thank you!");
+		addToBuffer("We're sorry! The game has crashed. Please report this issue in our discord server, and press Enter to restart the game, and use space to open the crash log to forward to the devs. Thank you!");
 		errorTxt = new FlxTypeText(0, 0, 1000, buffer.toString(), 12);
 		errorTxt.font = Assets.font('terminus');
 		errorTxt.color = 0xFF00FF00;
@@ -111,11 +113,22 @@ class CrashState extends FlxState {
 		FlxG.camera.zoom = FlxMath.lerp(1, FlxG.camera.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
 		if (FlxG.keys.justPressed.ENTER) {
 			Main.crashTxt = '';
+			Main.CrashFileName = '';
+			if(FileSystem.exists('idied.rfDUMP')){
+				FileSystem.deleteFile('idied.rfDUMP');
+			}
 			Sys.command('start "" "./Relocation Failed.exe"');
 			Sys.exit(0);
 		}
-		if (FlxG.keys.justPressed.SPACE)
-			Clipboard.text = '${errorData.split('|||')[0]}\n\n${errorData.split('|||')[1]}';
+		if (FlxG.keys.justPressed.SPACE){
+			trace(Main.CrashFileName);
+			Sys.command('notepad ' + '"./crash/crash${Main.CrashFileName}"'); //because apparently "notepad" is an actual command in windows?
+			if(FileSystem.exists('idied.rfDUMP')){
+				FileSystem.deleteFile('idied.rfDUMP');
+			}
+		}
+
+			
 
 		if (FlxG.sound.music != null) {
 			if (FlxG.sound.music.time == 0) {

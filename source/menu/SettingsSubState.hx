@@ -1,5 +1,7 @@
 package menu;
 
+import flixel.addons.ui.Anchor;
+import flixel.addons.ui.FlxUITooltip;
 import openfl.geom.Rectangle;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUI9SliceSprite;
@@ -16,6 +18,37 @@ class SettingsSubState extends FlxSubState{
     var SkipIntro:FlxUICheckBox;
     var WaterMarks:FlxUICheckBox;
     var ShellEjection:FlxUICheckBox;
+
+
+    //baby
+    var Difficulty_00:FlxUICheckBox;
+    var Difficulty_00_IMG:FlxSprite;
+    var Difficulty_00_LABEL:FlxText;
+    var Difficulty_00_TOOLTIP:FlxUITooltip;
+
+    //easy
+    var Difficulty_01:FlxUICheckBox;
+    var Difficulty_01_IMG:FlxSprite;
+    var Difficulty_01_LABEL:FlxText;
+    var Difficulty_01_TOOLTIP:FlxUITooltip;
+
+    //normal
+    var Difficulty_02:FlxUICheckBox;
+    var Difficulty_02_IMG:FlxSprite;
+    var Difficulty_02_LABEL:FlxText;
+    var Difficulty_02_TOOLTIP:FlxUITooltip;
+
+    //hard
+    var Difficulty_03:FlxUICheckBox;
+    var Difficulty_03_IMG:FlxSprite;
+    var Difficulty_03_LABEL:FlxText;
+    var Difficulty_03_TOOLTIP:FlxUITooltip;
+
+    //hardcore
+    var Difficulty_04:FlxUICheckBox;
+    var Difficulty_04_IMG:FlxSprite;
+    var Difficulty_04_LABEL:FlxText;
+    var Difficulty_04_TOOLTIP:FlxUITooltip;
 
     var Back:FlxSquareButton;
     var Save:FlxButton;
@@ -39,6 +72,9 @@ class SettingsSubState extends FlxSubState{
 
     override public function create() {
         Preferences.loadSettings();
+
+        Difficulty_00_TOOLTIP = new FlxUITooltip(150, 100);
+
 		var tabs = [
 			{name: "tab_1", label: "General"},
 			{name: "tab_2", label: "Graphics"},
@@ -47,8 +83,6 @@ class SettingsSubState extends FlxSubState{
 		];
         TabGroups = new FlxUITabMenu(null, tabs, true);
         TabGroups.resize(TabGroups.width + 50, TabGroups.height);
-        var sliderRate = new FlxUISlider(this, 'volume', 10, 10, 0.5, 3, 150, 15, 5, FlxColor.WHITE, FlxColor.BLACK);
-		sliderRate.nameLabel.text = 'Volume';
 
 		var tab_group_1 = new FlxUI(null, TabGroups, null);
         tab_group_1.name = 'tab_1';
@@ -97,6 +131,14 @@ class SettingsSubState extends FlxSubState{
             var Tab4BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
             tab_group_4.add(Tab4BG1);
             tab_group_4.add(Tab4BG2);
+                Difficulty_00 = new FlxUICheckBox(TabGroups.x + 32, TabGroups.y + 110, null, null, '');
+                Difficulty_00_IMG = new FlxSprite(TabGroups.x + 10, TabGroups.y + 10);
+                Difficulty_00_IMG.loadGraphic(Assets.image('game/settings/DIFF_POSTERS_SETTINGS'), true, 64, 100);
+                Difficulty_00_IMG.animation.add('BABY', [0], 1, true, false, false);
+                Difficulty_00_LABEL = new FlxText(TabGroups.x + 12, Difficulty_00.y + 15, 0, "Baby Mode");
+            tab_group_4.add(Difficulty_00);
+            tab_group_4.add(Difficulty_00_IMG);
+            tab_group_4.add(Difficulty_00_LABEL);
 
 
 
@@ -109,16 +151,32 @@ class SettingsSubState extends FlxSubState{
 
         for(item in this.members){
             item.camera = settingsCAM;
-            if(Std.isOfType(item, FlxSprite)) {
+            if(Std.isOfType(item, FlxSprite) || Std.isOfType(item, FlxUITooltip)) {
                 var daSpr:FlxSprite = cast item;
                 daSpr.scrollFactor.set();
             }
         }
         LoadFromPrefs();
+        add(Difficulty_00_TOOLTIP);
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);
         parstate.update(elapsed);
+
+        if ( (FlxG.mouse.overlaps(Difficulty_00_LABEL) || FlxG.mouse.overlaps(Difficulty_00_IMG)) && TabGroups.selected_tab_id == 'tab_4') {
+			Difficulty_00_TOOLTIP.show(Difficulty_00_LABEL, 'Baby Mode',
+				'For people new to top down shooters\n
+                Enemy Damage -50%\n
+                Ammo pickups +50% ammo\n
+                Enemy Speed -15%\n
+                Oxygen doesnt drain\n
+                Ammo pickups are more common\n
+                Game Autosaves At every door or every 5 minutes\n
+                \"Aw, wook at the wittel baby! --asdfmovie 2009\"',
+				true, true, true);
+		} else {
+			Difficulty_00_TOOLTIP.hide();
+		}
     }
 
     override public function destroy() {
