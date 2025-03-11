@@ -73,12 +73,12 @@ class SettingsSubState extends FlxSubState{
     override public function create() {
         Preferences.loadSettings();
 
-        Difficulty_00_TOOLTIP = new FlxUITooltip(150, 100);
+        Difficulty_00_TOOLTIP = new FlxUITooltip(200, 100, new Anchor(0, 0, "right", "top", "left", "top"));
 
 		var tabs = [
 			{name: "tab_1", label: "General"},
 			{name: "tab_2", label: "Graphics"},
-			{name: "tab_3", label: "Gameplay"},
+			{name: "tab_3", label: "Accessibility"},
 			{name: "tab_4", label: "Difficulty"}
 		];
         TabGroups = new FlxUITabMenu(null, tabs, true);
@@ -120,7 +120,7 @@ class SettingsSubState extends FlxSubState{
             tab_group_2.add(Tracers);
             tab_group_2.add(ShellEjection);
 
-        //* tab groupd 3 -- Gameplay
+        //* tab groupd 3 -- Accessibility
             var Tab3BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
             var Tab3BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
             tab_group_3.add(Tab3BG1);
@@ -136,9 +136,20 @@ class SettingsSubState extends FlxSubState{
                 Difficulty_00_IMG.loadGraphic(Assets.image('game/settings/DIFF_POSTERS_SETTINGS'), true, 64, 100);
                 Difficulty_00_IMG.animation.add('BABY', [0], 1, true, false, false);
                 Difficulty_00_LABEL = new FlxText(TabGroups.x + 12, Difficulty_00.y + 15, 0, "Baby Mode");
+
+                Difficulty_01 = new FlxUICheckBox(TabGroups.x + 94, TabGroups.y + 110, null, null, '');
+                Difficulty_01_IMG = new FlxSprite(TabGroups.x + 70, TabGroups.y + 10);
+                Difficulty_01_IMG.loadGraphic(Assets.image('game/settings/DIFF_POSTERS_SETTINGS'), true, 64, 100);
+                Difficulty_01_IMG.animation.add('EASY', [1], 1, true, false, false);
+                Difficulty_01_IMG.animation.play('EASY');
+                Difficulty_01_LABEL = new FlxText(TabGroups.x + 80, Difficulty_00.y + 15, 0, "Easy Mode");
             tab_group_4.add(Difficulty_00);
             tab_group_4.add(Difficulty_00_IMG);
             tab_group_4.add(Difficulty_00_LABEL);
+
+            tab_group_4.add(Difficulty_01);
+            tab_group_4.add(Difficulty_01_IMG);
+            tab_group_4.add(Difficulty_01_LABEL);
 
 
 
@@ -149,6 +160,8 @@ class SettingsSubState extends FlxSubState{
         add(Back);
         add(Save);
 
+        add(Difficulty_00_TOOLTIP);
+
         for(item in this.members){
             item.camera = settingsCAM;
             if(Std.isOfType(item, FlxSprite) || Std.isOfType(item, FlxUITooltip)) {
@@ -157,25 +170,31 @@ class SettingsSubState extends FlxSubState{
             }
         }
         LoadFromPrefs();
-        add(Difficulty_00_TOOLTIP);
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);
         parstate.update(elapsed);
 
         if ( (FlxG.mouse.overlaps(Difficulty_00_LABEL) || FlxG.mouse.overlaps(Difficulty_00_IMG)) && TabGroups.selected_tab_id == 'tab_4') {
+            if(!Difficulty_00_TOOLTIP.visible && !Difficulty_00_TOOLTIP.active){
 			Difficulty_00_TOOLTIP.show(Difficulty_00_LABEL, 'Baby Mode',
 				'For people new to top down shooters\n
-                Enemy Damage -50%\n
-                Ammo pickups +50% ammo\n
-                Enemy Speed -15%\n
-                Oxygen doesnt drain\n
-                Ammo pickups are more common\n
-                Game Autosaves At every door or every 5 minutes\n
-                \"Aw, wook at the wittel baby! --asdfmovie 2009\"',
-				true, true, true);
+Enemy Damage -50%, Player Damage +75%\n
+Ammo pickups +50% ammo\n
+Enemy Speed -15%, Player Speed +25%\n
+Oxygen doesnt drain, battery takes 50% less impact\n
+Ammo pickups are more common\n
+Enemies spawn less\n
+Game Autosaves At every door and every 5 minutes\n
+achivements are disabled\n
+\"Aw, wook at the wittel baby!\"\n--asdfmovie8 2014',
+				true, false, true);
+                @:privateAccess
+                    Difficulty_00_TOOLTIP._bodyText.fieldWidth = 200;
+            }
 		} else {
-			Difficulty_00_TOOLTIP.hide();
+            if(Difficulty_00_TOOLTIP.visible && Difficulty_00_TOOLTIP.active)
+			    Difficulty_00_TOOLTIP.hide();
 		}
     }
 
@@ -193,8 +212,8 @@ class SettingsSubState extends FlxSubState{
             Preferences.save.bulletTracers = Tracers.checked;
             Preferences.saveSettings();
         }
-        if(Preferences.save.WaterMarks != WaterMarks.checked) {
-            Preferences.save.WaterMarks = WaterMarks.checked;
+        if(Preferences.save.SkipWaterMarks != WaterMarks.checked) {
+            Preferences.save.SkipWaterMarks = WaterMarks.checked;
             Preferences.saveSettings();
         }
         if(Preferences.save.ShellEjection != ShellEjection.checked) {

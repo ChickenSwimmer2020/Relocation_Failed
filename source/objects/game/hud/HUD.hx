@@ -1,5 +1,6 @@
 package objects.game.hud;
 
+import openfl.utils.Object;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxPoint;
@@ -32,10 +33,6 @@ class HUD extends FlxSpriteGroup {
 	public var ammocounter_AMMONUMONE:FlxText; // current ammo ammount
 	public var ammocounter_AMMOSLASH:FlxText; // the middle slash
 	public var ammocounter_AMMONUMTWO:FlxText; // max ammo ammount
-	public var ammocounter_AMMOSPR1:FlxSprite;
-	public var ammocounter_AMMOSPR2:FlxSprite;
-	public var ammocounter_AMMOSPR3:FlxSprite;
-	public var ammocounter_AMMOSPR4:FlxSprite;
 
 	public var damageind:FlxSprite;
 
@@ -43,6 +40,8 @@ class HUD extends FlxSpriteGroup {
 	public var healthTweening:Bool = false;
 	public var hudCreated:Bool = false;
 	public var healthreset:Bool = false;
+
+	public var bullets:FlxSpriteGroup = new FlxSpriteGroup();
 
 	#if debug
 	public var debugControls:FlxText;
@@ -69,6 +68,29 @@ class HUD extends FlxSpriteGroup {
 		FPS = new FlxText(1220, 60, 0, '', 12, false);
 		add(FPS);
 		#end
+	}
+
+	private function checkBulletsNullDetection():Bool{
+		var Nulls:Array<Bool> = [false, false, false, false];
+		var isNull:Bool = false;
+
+		for(i in 0...bullets.members.length){
+			var item = bullets.members[i];
+			if(item.exists){
+				Nulls.push(item.exists);
+			}else{
+				Nulls.push(item.exists);
+			}
+		}
+
+		switch(Nulls.toString()){
+			case '[true, true, true, true]':
+				isNull = false;
+			default:
+				isNull = true;
+		}
+
+		return isNull; //false = good, true = bad
 	}
 
 	override public function update(elapsed:Float) {
@@ -101,45 +123,60 @@ class HUD extends FlxSpriteGroup {
 				btrBar.value = ps.Player.battery;
 		}
 
-		if (ammocounter_AMMONUMONE != null && ammocounter_AMMONUMTWO != null && ammocounter_AMMOSLASH != null && ammocounter_AMMOSPR1 != null
-			&& ammocounter_AMMOSPR2 != null && ammocounter_AMMOSPR3 != null && ammocounter_AMMOSPR4 != null && ammocounter_AMMOTEXT != null) {
+		if (checkBulletsNullDetection() != true) {
 			switch (ps.Player.CurWeaponChoice) {
 				case SHOTGUNSHELL:
 					CurAmmoName = '12 Gauge BuckShells';
 					ammocounter_AMMOTEXT.x = 980;
 					CurAmmoCap = ps.Player.gunData.ShotgunAmmoCap;
 					CurAmmoNum = ps.Player.gunData.ShotgunAmmoRemaining;
-					ammocounter_AMMOSPR1.animation.play('BS');
-					ammocounter_AMMOSPR2.animation.play('BS');
-					ammocounter_AMMOSPR3.animation.play('BS');
-					ammocounter_AMMOSPR4.animation.play('BS');
+
+					for(i in 0...bullets.members.length){
+						var item = bullets.members[i];
+						if(Std.isOfType(item, FlxSprite)){
+							if(item.exists && item.animation.exists('BS'))
+								item.animation.play('BS');
+						}
+					}
 				case PISTOLROUNDS:
 					CurAmmoName = '9MM';
 					ammocounter_AMMOTEXT.x = 980;
 					CurAmmoCap = ps.Player.gunData.PistolAmmoCap;
 					CurAmmoNum = ps.Player.gunData.PistolAmmoRemaining;
-					ammocounter_AMMOSPR1.animation.play('9MM');
-					ammocounter_AMMOSPR2.animation.play('9MM');
-					ammocounter_AMMOSPR3.animation.play('9MM');
-					ammocounter_AMMOSPR4.animation.play('9MM');
+
+					for(i in 0...bullets.members.length){
+						var item = bullets.members[i];
+						if(Std.isOfType(item, FlxSprite)){
+							if(item.exists && item.animation.exists('9MM'))
+								item.animation.play('9MM');
+						}
+					}
 				case RIFLEROUNDS:
 					CurAmmoName = '7.62x51MM NATO';
 					ammocounter_AMMOTEXT.x = 980;
 					CurAmmoCap = ps.Player.gunData.RifleAmmoCap;
 					CurAmmoNum = ps.Player.gunData.RifleAmmoRemaining;
-					ammocounter_AMMOSPR1.animation.play('NATO');
-					ammocounter_AMMOSPR2.animation.play('NATO');
-					ammocounter_AMMOSPR3.animation.play('NATO');
-					ammocounter_AMMOSPR4.animation.play('NATO');
+
+					for(i in 0...bullets.members.length){
+						var item = bullets.members[i];
+						if(Std.isOfType(item, FlxSprite)){
+							if(item.exists && item.animation.exists('NATO'))
+								item.animation.play('NATO');
+						}
+					}
 				case SMGROUNDS:
-					CurAmmoName = 'FN 5.7×28mm NATO'; // we're making it a P90 smg. //no we're not, we're making it a mp9k
+					CurAmmoName = '9x19mm Parabellum'; // we're making it a P90 smg. //no we're not, we're making it a mp9k
 					ammocounter_AMMOTEXT.x = 980;
 					CurAmmoCap = ps.Player.gunData.SMGAmmoCap;
 					CurAmmoNum = ps.Player.gunData.SMGAmmoRemaining;
-					ammocounter_AMMOSPR1.animation.play('10MM');
-					ammocounter_AMMOSPR2.animation.play('10MM');
-					ammocounter_AMMOSPR3.animation.play('10MM');
-					ammocounter_AMMOSPR4.animation.play('10MM');
+
+					for(i in 0...bullets.members.length){
+						var item = bullets.members[i];
+						if(Std.isOfType(item, FlxSprite)){
+							if(item.exists && item.animation.exists('10MM'))
+								item.animation.play('10MM');
+						}
+					}
 				default:
 					ammocounter_AMMOTEXT.x = 980;
 					CurAmmoName = 'None';
@@ -152,6 +189,8 @@ class HUD extends FlxSpriteGroup {
 
 			ammocounter_AMMOSLASH.x = ammocounter_AMMONUMONE.frameWidth + 1050 - 20;
 			ammocounter_AMMONUMTWO.x = ammocounter_AMMONUMONE.frameWidth + 1065 - 20;
+		}else{
+			trace('Something went wrong and the bullets could not be updated, please re-look through your code!');
 		}
 
 		#if debug
@@ -186,6 +225,11 @@ class HUD extends FlxSpriteGroup {
 			healthTweening = false;
 		}
 	}
+
+	var HudBullets:Array<Int> = [0,1,2,3];
+	var HudBulletsAnims:Array<Int> = [0,1,2,3];
+	var HudBulletsAnimNames:Array<String> = ['9MM', '10MM', 'BS', 'NATO'];
+	var HudBulletsXPos:Array<Int> = [1241, 1250, 1259, 1268];
 
 	function createHud():Void {
 		StatMSGContainer = new StatusMessageHolder(0, 60, #if debug true #else false #end, ps);
@@ -243,36 +287,20 @@ class HUD extends FlxSpriteGroup {
 		ammocounter_AMMOSLASH = new FlxText(0, 30, 0, '/', 24, true);
 		ammocounter_AMMONUMTWO = new FlxText(0, 30, 0, '', 24, true);
 
-		ammocounter_AMMOSPR1 = new FlxSprite(1241, 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31);
-		ammocounter_AMMOSPR1.animation.add('9MM', [0], 1, false, false, false);
-		ammocounter_AMMOSPR1.animation.add('10MM', [1], 1, false, false, false);
-		ammocounter_AMMOSPR1.animation.add('BS', [2], 1, false, false, false);
-		ammocounter_AMMOSPR1.animation.add('NATO', [3], 1, false, false, false);
-		ammocounter_AMMOSPR1.animation.play('9MM');
-		ammocounter_AMMOSPR2 = new FlxSprite(1250, 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31);
-		ammocounter_AMMOSPR2.animation.add('9MM', [0], 1, false, false, false);
-		ammocounter_AMMOSPR2.animation.add('10MM', [1], 1, false, false, false);
-		ammocounter_AMMOSPR2.animation.add('BS', [2], 1, false, false, false);
-		ammocounter_AMMOSPR2.animation.add('NATO', [3], 1, false, false, false);
-		ammocounter_AMMOSPR2.animation.play('9MM');
-		ammocounter_AMMOSPR3 = new FlxSprite(1259, 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31);
-		ammocounter_AMMOSPR3.animation.add('9MM', [0], 1, false, false, false);
-		ammocounter_AMMOSPR3.animation.add('10MM', [1], 1, false, false, false);
-		ammocounter_AMMOSPR3.animation.add('BS', [2], 1, false, false, false);
-		ammocounter_AMMOSPR3.animation.add('NATO', [3], 1, false, false, false);
-		ammocounter_AMMOSPR3.animation.play('9MM');
-		ammocounter_AMMOSPR4 = new FlxSprite(1268, 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31);
-		ammocounter_AMMOSPR4.animation.add('9MM', [0], 1, false, false, false);
-		ammocounter_AMMOSPR4.animation.add('10MM', [1], 1, false, false, false);
-		ammocounter_AMMOSPR4.animation.add('BS', [2], 1, false, false, false);
-		ammocounter_AMMOSPR4.animation.add('NATO', [3], 1, false, false, false);
-		ammocounter_AMMOSPR4.animation.play('9MM');
+		for(i in 0...HudBullets.length - 1){ //TODO: fix
+			var ammospr = cast(new FlxSprite(HudBulletsXPos[i], 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31));
+			for(i in 0...HudBulletsAnims.length - 1){
+				ammospr.animation.add(HudBulletsAnimNames[i], [i], 1, false, false, false);
+			}
+			add(ammospr);
+		}
 
 		FACEBG = new FlxSprite(0, 5).makeGraphic(50, 50, FlxColor.WHITE);
 
 		damageind = new FlxSprite(0, 60).loadGraphic(Assets.image('game/game/HUD_DMGINDC')); // TODO: implement when damage works.
 
 		add(HUDBG);
+		add(bullets);
 		add(healthBar);
 		add(HPTXT);
 		add(stamBar);
@@ -287,33 +315,19 @@ class HUD extends FlxSpriteGroup {
 		add(ammocounter_AMMONUMONE);
 		add(ammocounter_AMMOSLASH);
 		add(ammocounter_AMMONUMTWO);
-		add(ammocounter_AMMOSPR1);
-		add(ammocounter_AMMOSPR2);
-		add(ammocounter_AMMOSPR3);
-		add(ammocounter_AMMOSPR4);
 		add(damageind);
 		add(StatMSGContainer);
 	}
 
-	function healthAppear(V:Float) {
-		wait(V, () -> {
-			HPTXT.text = "H";
-		});
-		wait(V + 0.1, () -> {
-			HPTXT.text = "He";
-		});
-		wait(V + 0.2, () -> {
-			HPTXT.text = "Hea";
-		});
-		wait(V + 0.3, () -> {
-			HPTXT.text = "Heal";
-		});
-		wait(V + 0.4, () -> {
-			HPTXT.text = "Healt";
-		});
-		wait(V + 0.5, () -> {
-			HPTXT.text = "Health";
-		});
+	function healthAppear() { //TODO: fix
+		var healthString = "Health";
+		var Char:Int = 0;
+		for(i in 0...healthString.length - 1){
+			HPTXT.text = healthString.substring(0, Char);
+			wait(0.1, ()->{
+				Char++;
+			});
+		}
 	}
 
 	function staminaAppear(V:Float) {
@@ -463,39 +477,21 @@ class HUD extends FlxSpriteGroup {
 		ammocounter_AMMONUMTWO = new FlxText(0, 30, 0, '', 24, true);
 		ammocounter_AMMONUMTWO.alpha = 0;
 
-		ammocounter_AMMOSPR1 = new FlxSprite(1241, 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31);
-		ammocounter_AMMOSPR1.animation.add('9MM', [0], 1, false, false, false);
-		ammocounter_AMMOSPR1.animation.add('10MM', [1], 1, false, false, false);
-		ammocounter_AMMOSPR1.animation.add('BS', [2], 1, false, false, false);
-		ammocounter_AMMOSPR1.animation.add('NATO', [3], 1, false, false, false);
-		ammocounter_AMMOSPR1.animation.play('9MM');
-		ammocounter_AMMOSPR2 = new FlxSprite(1250, 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31);
-		ammocounter_AMMOSPR2.animation.add('9MM', [0], 1, false, false, false);
-		ammocounter_AMMOSPR2.animation.add('10MM', [1], 1, false, false, false);
-		ammocounter_AMMOSPR2.animation.add('BS', [2], 1, false, false, false);
-		ammocounter_AMMOSPR2.animation.add('NATO', [3], 1, false, false, false);
-		ammocounter_AMMOSPR2.animation.play('9MM');
-		ammocounter_AMMOSPR3 = new FlxSprite(1259, 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31);
-		ammocounter_AMMOSPR3.animation.add('9MM', [0], 1, false, false, false);
-		ammocounter_AMMOSPR3.animation.add('10MM', [1], 1, false, false, false);
-		ammocounter_AMMOSPR3.animation.add('BS', [2], 1, false, false, false);
-		ammocounter_AMMOSPR3.animation.add('NATO', [3], 1, false, false, false);
-		ammocounter_AMMOSPR3.animation.play('9MM');
-		ammocounter_AMMOSPR4 = new FlxSprite(1268, 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31);
-		ammocounter_AMMOSPR4.animation.add('9MM', [0], 1, false, false, false);
-		ammocounter_AMMOSPR4.animation.add('10MM', [1], 1, false, false, false);
-		ammocounter_AMMOSPR4.animation.add('BS', [2], 1, false, false, false);
-		ammocounter_AMMOSPR4.animation.add('NATO', [3], 1, false, false, false);
-		ammocounter_AMMOSPR4.animation.play('9MM');
 
-		ammocounter_AMMOSPR1.alpha = 0;
-		ammocounter_AMMOSPR2.alpha = 0;
-		ammocounter_AMMOSPR3.alpha = 0;
-		ammocounter_AMMOSPR4.alpha = 0;
+		for(i in 0...HudBullets.length - 1){
+			var ammospr = cast(new FlxSprite(HudBulletsXPos[i], 25).loadGraphic(Assets.image('game/HUD_Bullets'), true, 9, 31));
+			for(i in 0...HudBulletsAnims.length - 1){
+				ammospr.animation.add(HudBulletsAnimNames[i], [i], 1, false, false, false);
+			}
+			bullets.add(ammospr);
+		}
+
+		bullets.alpha = 0;
 
 		FlxTween.tween(HUDBG, {y: 0}, 1, {ease: FlxEase.cubeOut});
 
 		add(HUDBG);
+		add(bullets);
 		add(healthBar);
 		add(HPTXT);
 		add(stamBar);
@@ -510,10 +506,6 @@ class HUD extends FlxSpriteGroup {
 		add(ammocounter_AMMONUMONE);
 		add(ammocounter_AMMOSLASH);
 		add(ammocounter_AMMONUMTWO);
-		add(ammocounter_AMMOSPR1);
-		add(ammocounter_AMMOSPR2);
-		add(ammocounter_AMMOSPR3);
-		add(ammocounter_AMMOSPR4);
 		add(StatMSGContainer);
 		StatMSGContainer.alpha = 0;
 		wait(1, () -> {
@@ -533,7 +525,7 @@ class HUD extends FlxSpriteGroup {
 					healthTweening = true;
 					FlxTween.tween(HPTXT, {alpha: 1}, 0.2, {ease: FlxEase.sineOut});
 					wait(0.2, () -> {
-						healthAppear(0.2);
+						healthAppear();
 					});
 				}
 			});

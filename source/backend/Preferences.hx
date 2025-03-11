@@ -9,7 +9,7 @@ package backend;
 	public var bulletTracers:Bool = true;
 	public var ShellEjection:Bool = true;
 	public var SkipIntro:Bool = false;
-	public var WaterMarks:Bool = true;
+	public var SkipWaterMarks:Bool = true;
 	public var Difficulty:String = ''; //available dificulties: BABY, EASY, NORMAL, HARD, HARDCORE, CUSTOM
 
 
@@ -31,7 +31,7 @@ package backend;
 	public var ColorBlindnessMode:String = ""; //TODO: implement accessibility setting for color blindness, color blind testers needed?
 	public var Captions:Bool = false; //TODO: implement captions
 	public var EnemyOutlines:Bool = false;
-	public var High_Contrast_UI:Bool = false; //TODO: make custom versions of ui elements with high-contrast mode.
+	public var High_Contrast_UI:Bool = false; //TODO: make custom versions of ui elements with high-contrast texture.
 }
 
 class Preferences {

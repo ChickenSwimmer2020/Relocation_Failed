@@ -34,8 +34,6 @@ class MainMenu extends FlxTransitionableState {
 	var shipGlow:FlxSprite;
 	var shipGlow2:FlxSprite;
 
-	public var hasSeenWarning:Bool = false;
-
 	public var OutroText:Array<String> = [
 		"", //* blank (DONT TOUCH ITS FOR THE SECRET MESSAGE)
 		"\"I should rest for a while...\"",
@@ -202,9 +200,11 @@ class MainMenu extends FlxTransitionableState {
         add(LevelEditorButton);
         #end
 
-        if(!hasSeenWarning) { //do this at the top so that *hopefully* it renders over everything else.
+        if(FlxG.save.data.seenFlashWarning != null) { 
             FlashWarn();
-            hasSeenWarning = true;
+			#if !debug
+         		FlxG.save.data.seenFlashWarning = true;
+			#end
         }else{
             trace('Player has seen flash warning. not showing');
         }
@@ -227,7 +227,11 @@ class MainMenu extends FlxTransitionableState {
 
 		var WarningText:FlxText = new FlxText(0, 0, 0, "", 24, true);
 		WarningText.setFormat(null, 24, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
-		WarningText.text = 'This game has flashing lights.\nif you are: epileptic, or photosensitive.\nplease navigate to the settings menu and disable them.\nthank you for enjoying our game!';
+		#if !debug
+		WarningText.text = 'This game has flashing lights.\nif you are: epileptic, or photosensitive.\nplease navigate to the settings menu and disable them.\nthank you for enjoying our game!\n\n\nThis message will not show again';
+		#else
+		WarningText.text = 'This game has flashing lights.\nif you are: epileptic, or photosensitive.\nplease navigate to the settings menu and disable them.\nthank you for enjoying our game!\n\n\nThis message will not show again\n(not really, this is a debug build)';
+		#end
 		WarningText.screenCenter(XY);
 		WarnGroup.add(WarningText);
 

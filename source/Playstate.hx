@@ -259,22 +259,8 @@ class Playstate extends FlxTransitionableState {
 	}
 
 	public function onWeaponPickup() {
-		if (Playstate.instance.Hud.ammocounter_AMMONUMONE.alpha == 0)
-			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMONUMONE, {alpha: 1}, {ease: FlxEase.cubeInOut});
-		if (Playstate.instance.Hud.ammocounter_AMMONUMTWO.alpha == 0)
-			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMONUMTWO, {alpha: 1}, {ease: FlxEase.cubeInOut});
-		if (Playstate.instance.Hud.ammocounter_AMMOSLASH.alpha == 0)
-			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSLASH, {alpha: 1}, {ease: FlxEase.cubeInOut});
-		if (Playstate.instance.Hud.ammocounter_AMMOSPR1.alpha == 0)
-			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR1, {alpha: 1}, {ease: FlxEase.cubeInOut});
-		if (Playstate.instance.Hud.ammocounter_AMMOSPR2.alpha == 0)
-			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR2, {alpha: 1}, {ease: FlxEase.cubeInOut});
-		if (Playstate.instance.Hud.ammocounter_AMMOSPR3.alpha == 0)
-			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR3, {alpha: 1}, {ease: FlxEase.cubeInOut});
-		if (Playstate.instance.Hud.ammocounter_AMMOSPR4.alpha == 0)
-			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOSPR4, {alpha: 1}, {ease: FlxEase.cubeInOut});
-		if (Playstate.instance.Hud.ammocounter_AMMOTEXT.alpha == 0)
-			FlxTween.tween(Playstate.instance.Hud.ammocounter_AMMOTEXT, {alpha: 1}, {ease: FlxEase.cubeInOut});
+		if(!Playstate.instance.Hud.bullets.visible)
+			FlxTween.tween(Playstate.instance.Hud.bullets, {alpha: 1}, {ease: FlxEase.cubeInOut});
 	}
 
 	override public function create() {
