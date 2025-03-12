@@ -3,26 +3,21 @@ package rf_flixel.addons.ui;
 class FlxUIAssets
 {
 	// images
-	public static inline var IMG_BUTTON:String = "flixel/flixel-ui/img/button.png";
-	public static inline var IMG_BUTTON_ARROW_DOWN:String = "flixel/flixel-ui/img/button_arrow_down.png";
-	public static inline var IMG_BUTTON_ARROW_LEFT:String = "flixel/flixel-ui/img/button_arrow_left.png";
-	public static inline var IMG_BUTTON_ARROW_RIGHT:String = "flixel/flixel-ui/img/button_arrow_right.png";
-	public static inline var IMG_BUTTON_ARROW_UP:String = "flixel/flixel-ui/img/button_arrow_up.png";
-	public static inline var IMG_BUTTON_THIN:String = "flixel/flixel-ui/img/button_thin.png";
-	public static inline var IMG_BUTTON_TOGGLE:String = "flixel/flixel-ui/img/button_toggle.png";
-
-	public static inline var IMG_BUTTON_SIZE:Int = 18; // each of the above buttons is 18x18
-
 	public static inline var IMG_CHECK_MARK:String = "flixel/flixel-ui/img/check_mark.png";
 	public static inline var IMG_CHECK_BOX:String = "flixel/flixel-ui/img/check_box.png";
 	public static inline var IMG_CHROME:String = "flixel/flixel-ui/img/chrome.png";
+	public static inline var IMG_CHROME_HIGHCONTRAST:String = "assets/ui/chromeHC.png";
 	public static inline var IMG_CHROME_LIGHT:String = "flixel/flixel-ui/img/chrome_light.png";
 	public static inline var IMG_CHROME_FLAT:String = "flixel/flixel-ui/img/chrome_flat.png";
+	public static inline var IMG_CHROME_FLAT_HIGHCONTRAST:String = "assets/ui/chrome_flatHC.png";
 	public static inline var IMG_CHROME_INSET:String = "flixel/flixel-ui/img/chrome_inset.png";
+	public static inline var IMG_CHROME_INSET_HIGHCONTRAST:String = "assets/ui/chrome_insetHC.png";
 	public static inline var IMG_RADIO:String = "flixel/flixel-ui/img/radio.png";
 	public static inline var IMG_RADIO_DOT:String = "flixel/flixel-ui/img/radio_dot.png";
 	public static inline var IMG_TAB:String = "flixel/flixel-ui/img/tab.png";
+	public static inline var IMG_TAB_HIGHCONTRAST:String = "assets/ui/tabHC.png";
 	public static inline var IMG_TAB_BACK:String = "flixel/flixel-ui/img/tab_back.png";
+	public static inline var IMG_TAB_BACK_HIGHCONTRAST:String = "assets/ui/tab_backHC.png";
 	public static inline var IMG_BOX:String = "flixel/flixel-ui/img/box.png";
 	public static inline var IMG_DROPDOWN:String = "flixel/flixel-ui/img/dropdown_mark.png";
 	public static inline var IMG_PLUS:String = "flixel/flixel-ui/img/plus_mark.png";

@@ -55,9 +55,11 @@ class Aimer extends RFTriAxisSprite {
 							pistol.ammoRemaining--;
 							gun.shoot(PISTOLROUNDS);
 							Playstate.instance.Player.physVelocity.x -= 10;
-							ps.FGCAM.shake(0.001, 0.1);
-							ps.HUDCAM.shake(0.001, 0.1);
-							ps.camera.shake(0.001, 0.1);
+							if(FlxG.save.data.ScreenShake != null && FlxG.save.data.ScreenShake == true){
+								ps.FGCAM.shake(0.001, 0.1);
+								ps.HUDCAM.shake(0.001, 0.1);
+								ps.camera.shake(0.001, 0.1);
+							}
 							pistol.remove();
 							pistol = null;
 						}
@@ -74,9 +76,11 @@ class Aimer extends RFTriAxisSprite {
 							gun.shoot(RIFLEROUNDS);
 							Playstate.instance.Player.physVelocity.x -= 60;
 							RIFLEfireTimer = 0; // Reset the timer after firing
-							ps.FGCAM.shake(0.002, 0.1);
-							ps.HUDCAM.shake(0.002, 0.1);
-							ps.camera.shake(0.002, 0.1);
+							if(FlxG.save.data.ScreenShake != null && FlxG.save.data.ScreenShake == true){
+								ps.FGCAM.shake(0.002, 0.1);
+								ps.HUDCAM.shake(0.002, 0.1);
+								ps.camera.shake(0.002, 0.1);
+							}
 							rifle.remove();
 							rifle = null;
 						}
@@ -101,9 +105,11 @@ class Aimer extends RFTriAxisSprite {
 								shotgunPumping = false;
 								trace('shotgun pumped!');
 							}); // shotgun pumping!
-							ps.FGCAM.shake(0.005, 0.1);
-							ps.HUDCAM.shake(0.005, 0.1);
-							ps.camera.shake(0.005, 0.1);
+							if(FlxG.save.data.ScreenShake != null && FlxG.save.data.ScreenShake == true) {
+								ps.FGCAM.shake(0.005, 0.1);
+								ps.HUDCAM.shake(0.005, 0.1);
+								ps.camera.shake(0.005, 0.1);
+							}
 							shotgun.remove();
 							shotgun = null;
 						}
@@ -120,9 +126,11 @@ class Aimer extends RFTriAxisSprite {
 							gun.shoot(SMGROUNDS);
 							Playstate.instance.Player.physVelocity.x -= 50;
 							SMGfireTimer = 0;
-							ps.FGCAM.shake(0.001, 0.1);
-							ps.HUDCAM.shake(0.001, 0.1);
-							ps.camera.shake(0.001, 0.1);
+							if(FlxG.save.data.ScreenShake != null && FlxG.save.data.ScreenShake == true) {
+								ps.FGCAM.shake(0.001, 0.1);
+								ps.HUDCAM.shake(0.001, 0.1);
+								ps.camera.shake(0.001, 0.1);
+							}
 							smg.remove();
 							smg = null;
 						}

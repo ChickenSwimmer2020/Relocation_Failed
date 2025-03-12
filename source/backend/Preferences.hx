@@ -31,7 +31,7 @@ package backend;
 	public var ColorBlindnessMode:String = ""; //TODO: implement accessibility setting for color blindness, color blind testers needed?
 	public var Captions:Bool = false; //TODO: implement captions
 	public var EnemyOutlines:Bool = false;
-	public var High_Contrast_UI:Bool = false; //TODO: make custom versions of ui elements with high-contrast texture.
+	public var High_Contrast_UI:Bool = false; //TODO: make custom versions of ui elements with high-contrast texture. (WIP)
 }
 
 class Preferences {

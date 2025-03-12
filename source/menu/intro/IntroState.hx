@@ -78,8 +78,10 @@ class IntroState extends FlxState {
 					wait(2, () -> {
 						FlxG.sound.playMusic('assets/sound/intro/2.wav', 1, false);
 						overlay.alpha = 0;
-						shipCam.shake(0.001, 2);
-						FlxG.camera.shake(0.001, 2);
+						if(FlxG.save.data.ScreenShake != null && FlxG.save.data.ScreenShake == true){
+							shipCam.shake(0.001, 2);
+							FlxG.camera.shake(0.001, 2);
+						}
 						planet.scale.set(0.2, 0.2);
 						planet.alpha = 0.4;
 						FlxTween.tween(planet, {'scale.x': 0.75, 'scale.y': 0.75, alpha: 0.7}, 2, {ease: FlxEase.circIn});
@@ -91,8 +93,10 @@ class IntroState extends FlxState {
 							wait(2, () -> {
 								FlxG.sound.playMusic('assets/sound/intro/3.wav', 1, false);
 								overlay.alpha = 0;
-								shipCam.shake(0.005, 2);
-								FlxG.camera.shake(0.005, 2);
+								if(FlxG.save.data.ScreenShake != null && FlxG.save.data.ScreenShake == true){
+									shipCam.shake(0.005, 2);
+									FlxG.camera.shake(0.005, 2);
+								}
 								planet.scale.set(1, 1);
 								planet.alpha = 1;
 								FlxTween.tween(planet, {'scale.x': 5, 'scale.y': 5}, 2, {ease: FlxEase.circIn});
@@ -106,7 +110,11 @@ class IntroState extends FlxState {
 										FlxG.camera.zoom = 0;
 										FlxG.sound.music.stop();
 										FlxG.mouse.visible = true;
-										FlxG.switchState(WaterMarks.new);
+										if(FlxG.save.data.SkipWaterMarks == true && FlxG.save.data.SkipWaterMarks != null){
+											FlxG.switchState(()->new MainMenu());
+										}else{
+											FlxG.switchState(()->new WaterMarks());
+										}
 									});
 								});
 							});
@@ -140,7 +148,11 @@ class IntroState extends FlxState {
 			FlxG.camera.zoom = 0;
 			FlxG.sound.music.stop();
 			FlxG.mouse.visible = true;
-			FlxG.switchState(WaterMarks.new);
+			if(FlxG.save.data.SkipWaterMarks == true && FlxG.save.data.SkipWaterMarks != null){
+				FlxG.switchState(()->new MainMenu());
+			}else{
+				FlxG.switchState(()->new WaterMarks());
+			}
 		}
 		if (lerpWindow && fromWindowIntro) {
 			val += 0.02;

@@ -200,7 +200,7 @@ class MainMenu extends FlxTransitionableState {
         add(LevelEditorButton);
         #end
 
-        if(FlxG.save.data.seenFlashWarning != null) { 
+        if(FlxG.save.data.seenFlashWarning != null && FlxG.save.data.seenFlashWarning != true) { 
             FlashWarn();
 			#if !debug
          		FlxG.save.data.seenFlashWarning = true;
@@ -277,7 +277,9 @@ class MainMenu extends FlxTransitionableState {
 			stars.push(star);
 			add(star);
 		}
-		shipCam.shake(0.001, 1);
+		if(FlxG.save.data.ScreenShake != null && FlxG.save.data.ScreenShake == true) {
+			shipCam.shake(0.001, 1);
+		}
 		if (FlxG.mouse.overlaps(Button_Play)) {
 			FlxTween.cancelTweensOf(Button_Play.DaButton);
 			FlxTween.cancelTweensOf(Button_Play.DaText);

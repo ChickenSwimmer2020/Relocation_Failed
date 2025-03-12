@@ -229,17 +229,18 @@ class Level extends FlxGroup {
         if (Std.isOfType(s1, Player) && Std.isOfType(s2, Aimer))
 			return -1;
         if (Std.isOfType(s2, Player) && Std.isOfType(s1, Aimer))
-			return -1;
+			return 1;
 		return FlxSort.byValues(-1, s1.y + s1.height, s2.y + s2.height);
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 		// Layering (for loop cause every other frame the background is on top of everything)
-		for (_ in 0...2)
+		for (_ in 0...2){
 			layeringGrp.members.sort((spr1, spr2) -> {
 				layerSorting(spr1, spr2, layeringGrp.members);
 			});
+		}
 
 		// Dynamic Transparency (quite unoptimized, doesn't work)
 		/*for (sprID in 0...layeringGrp.members.length) {

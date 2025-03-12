@@ -5,7 +5,7 @@ import backend.save.PlayerSaveStateUtil;
 
 class PauseMenuSubState extends FlxSubState {
 	var pauseCAM:FlxCamera;
-	var icon:FlxText;
+	var icon:FlxSprite;
 
 	var button_backToGame:FlxButton;
 	var button_saveGame:FlxButton;
@@ -19,8 +19,7 @@ class PauseMenuSubState extends FlxSubState {
 		FlxG.cameras.add(pauseCAM, false);
 		pauseCAM.bgColor = 0x000000;
 
-		icon = new FlxText(0, 0, 0, "R", 8, true);
-		icon.setFormat(null, 48, FlxColor.BLUE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+		icon = new FlxSprite(0, 0, 'assets/game/PauseLogo.png');
 		icon.updateHitbox();
 		icon.scrollFactor.set(0, 0);
 		icon.cameras = [pauseCAM];

@@ -7,7 +7,7 @@ import flixel.tweens.FlxEase;
 import flixel.group.FlxGroup;
 import objects.menu.ChapterBox;
 import openfl.geom.Rectangle;
-import flixel.addons.ui.FlxUIAssets;
+import rf_flixel.addons.ui.FlxUIAssets as FlxUIAssets;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import rf_flixel.ui.FlxSquareButton;
 
@@ -33,8 +33,15 @@ class ChapterSelectSubState extends FlxSubState {
 
 	var Chapters:ChapterSelecterGroup = new ChapterSelecterGroup();
 
+	var HC:Bool = false;
+
 	override public function new(parentState:FlxState) {
 		super();
+
+		if(FlxG.save.data.High_Contrast_UI != null && FlxG.save.data.High_Contrast_UI == true){
+            HC = true;
+        }
+
 		FlxG.cameras.add(SubStateCam);
 		chapterselectCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 		FlxG.cameras.add(chapterselectCamera, false);
@@ -47,14 +54,14 @@ class ChapterSelectSubState extends FlxSubState {
 		var Group = new FlxSpriteGroup();
 		add(Group);
 
-		BG = new FlxUI9SliceSprite(0, 0, FlxUIAssets.IMG_CHROME_FLAT, new Rectangle(0, 0, 400, 200));
+		BG = new FlxUI9SliceSprite(0, 0, if(HC) FlxUIAssets.IMG_CHROME_FLAT_HIGHCONTRAST else FlxUIAssets.IMG_CHROME_FLAT, new Rectangle(0, 0, 400, 200));
 		BG.x = FlxG.width / 2 - 180;
 		BG.y = FlxG.height / 2 - BG.height / 2;
 		BG.scale.set(0, 0.1);
 		BG.camera = chapterselectCamera;
 		Group.add(BG);
 
-		BG2 = new FlxUI9SliceSprite(BG.x + 10, BG.y + 20, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(0, 0, 380, 150));
+		BG2 = new FlxUI9SliceSprite(BG.x + 10, BG.y + 20, if(HC) FlxUIAssets.IMG_CHROME_INSET_HIGHCONTRAST else FlxUIAssets.IMG_CHROME_INSET, new Rectangle(0, 0, 380, 150));
 		BG2.scale.set(0, 0);
 		BG2.camera = chapterselectCamera;
 		Group.add(BG2);
@@ -75,6 +82,9 @@ class ChapterSelectSubState extends FlxSubState {
 			Chapters.destroy();
 		});
 		add(xbutt);
+		if(HC){
+			xbutt.loadGraphic('assets/ui/buttonSQRHC.png', true, 20, 20);
+		}
 		doCoolTweenin();
 	}
 

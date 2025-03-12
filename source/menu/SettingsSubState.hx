@@ -3,13 +3,13 @@ package menu;
 import flixel.addons.ui.Anchor;
 import flixel.addons.ui.FlxUITooltip;
 import openfl.geom.Rectangle;
-import flixel.addons.ui.FlxUIAssets;
+import rf_flixel.addons.ui.FlxUIAssets as FlxUIAssets;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import rf_flixel.ui.FlxSquareButton;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUISlider;
 import flixel.addons.ui.FlxUI;
-import flixel.addons.ui.FlxUITabMenu;
+import rf_flixel.addons.ui.FlxUITabMenu as FlxUITabMenu;
 
 class SettingsSubState extends FlxSubState{
     var TabGroups:FlxUITabMenu;
@@ -18,6 +18,10 @@ class SettingsSubState extends FlxSubState{
     var SkipIntro:FlxUICheckBox;
     var WaterMarks:FlxUICheckBox;
     var ShellEjection:FlxUICheckBox;
+
+    var HCui:FlxUICheckBox;
+    var SS:FlxUICheckBox;
+
 
 
     //baby
@@ -59,6 +63,8 @@ class SettingsSubState extends FlxSubState{
     private var parstate:FlxState;
     var done:Bool = false;
 
+    var HC:Bool = false;
+
     public function new(parentState:FlxState){
         super();
 
@@ -73,6 +79,10 @@ class SettingsSubState extends FlxSubState{
     override public function create() {
         Preferences.loadSettings();
 
+        if(FlxG.save.data.High_Contrast_UI != null && FlxG.save.data.High_Contrast_UI == true){
+            HC = true;
+        }
+
         Difficulty_00_TOOLTIP = new FlxUITooltip(200, 100, new Anchor(0, 0, "right", "top", "left", "top"));
 
 		var tabs = [
@@ -81,9 +91,9 @@ class SettingsSubState extends FlxSubState{
 			{name: "tab_3", label: "Accessibility"},
 			{name: "tab_4", label: "Difficulty"}
 		];
-        TabGroups = new FlxUITabMenu(null, tabs, true);
-        TabGroups.resize(TabGroups.width + 50, TabGroups.height);
-
+        TabGroups = new FlxUITabMenu(null, tabs, if(HC) true else false, true);
+        TabGroups.resize(TabGroups.width + 55, TabGroups.height);
+        
 		var tab_group_1 = new FlxUI(null, TabGroups, null);
         tab_group_1.name = 'tab_1';
         TabGroups.addGroup(tab_group_1);
@@ -101,18 +111,18 @@ class SettingsSubState extends FlxSubState{
         TabGroups.addGroup(tab_group_4);
 
         //* tab group 1 -- General
-            var Tab1BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
-            var Tab1BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
+            var Tab1BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, if(HC) FlxUIAssets.IMG_CHROME_HIGHCONTRAST else FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
+            var Tab1BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, if(HC) FlxUIAssets.IMG_CHROME_INSET_HIGHCONTRAST else FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
             tab_group_1.add(Tab1BG1);
             tab_group_1.add(Tab1BG2);
             SkipIntro = new FlxUICheckBox(10, 10, null, null, 'Skip Intro');
-            WaterMarks = new FlxUICheckBox(10, 70, null, null, 'WaterMarks');
+            WaterMarks = new FlxUICheckBox(10, 70, null, null, 'Skip WaterMarks');
             tab_group_1.add(SkipIntro);
             tab_group_1.add(WaterMarks);
 
         //* tab group 2 -- Graphics
-            var Tab2BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
-            var Tab2BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
+            var Tab2BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, if(HC) FlxUIAssets.IMG_CHROME_HIGHCONTRAST else FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
+            var Tab2BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, if(HC) FlxUIAssets.IMG_CHROME_INSET_HIGHCONTRAST else FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
             Tracers = new FlxUICheckBox(10, 40, null, null, 'Bullet Tracers');
             ShellEjection = new FlxUICheckBox(10, 70, null, null, 'Shell Ejection');
             tab_group_2.add(Tab2BG1);
@@ -121,14 +131,18 @@ class SettingsSubState extends FlxSubState{
             tab_group_2.add(ShellEjection);
 
         //* tab groupd 3 -- Accessibility
-            var Tab3BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
-            var Tab3BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
+            var Tab3BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, if(HC) FlxUIAssets.IMG_CHROME_HIGHCONTRAST else FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
+            var Tab3BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, if(HC) FlxUIAssets.IMG_CHROME_INSET_HIGHCONTRAST else FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
+            HCui = new FlxUICheckBox(10, 10, null, null, 'High Contrast UI');
+            SS = new FlxUICheckBox(10, 30, null, null, 'ScreenShake');
             tab_group_3.add(Tab3BG1);
             tab_group_3.add(Tab3BG2);
+            tab_group_3.add(HCui);
+            tab_group_3.add(SS);
 
         //* tab group 4 -- Difficulty
-            var Tab4BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
-            var Tab4BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
+            var Tab4BG1:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x, TabGroups.y, if(HC) FlxUIAssets.IMG_CHROME_HIGHCONTRAST else FlxUIAssets.IMG_CHROME, new Rectangle(TabGroups.x, TabGroups.y, 500, 250));
+            var Tab4BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, if(HC) FlxUIAssets.IMG_CHROME_INSET_HIGHCONTRAST else FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
             tab_group_4.add(Tab4BG1);
             tab_group_4.add(Tab4BG2);
                 Difficulty_00 = new FlxUICheckBox(TabGroups.x + 32, TabGroups.y + 110, null, null, '');
@@ -155,6 +169,7 @@ class SettingsSubState extends FlxSubState{
 
         Save = new FlxButton(TabGroups.x + 400, TabGroups.y + 246.7, "SAVE", function() { FlushToPrefs(); });
         Back = new FlxSquareButton(Save.x + 80, TabGroups.y + 246.7, "X", function() { close(); });
+        if(HC) Back.loadGraphic('assets/ui/buttonSQRHC.png', true, 20, 20);
 
         add(TabGroups);
         add(Back);
@@ -170,6 +185,16 @@ class SettingsSubState extends FlxSubState{
             }
         }
         LoadFromPrefs();
+
+        if(HC){
+            for(i in this.members){
+                var item = cast i;
+                if(Std.isOfType(item, FlxButton)){
+                    var spr:FlxSprite = cast item;
+                    spr.loadGraphic("assets/ui/buttonHC.png", true, 80, 20);
+                }
+            }
+        }
     }
     override public function update(elapsed:Float) {
         super.update(elapsed);
@@ -220,8 +245,15 @@ achivements are disabled\n
             Preferences.save.ShellEjection = ShellEjection.checked;
             Preferences.saveSettings();
         }
+        if(Preferences.save.High_Contrast_UI != HCui.checked) {
+            Preferences.save.High_Contrast_UI = HCui.checked;
+            Preferences.saveSettings();
+        }
+        if(Preferences.save.ScreenShake != SS.checked) {
+            Preferences.save.ScreenShake = SS.checked;
+            Preferences.saveSettings();
+        }
     }
-
     public function LoadFromPrefs(){
         @:privateAccess
             Main.loadGameSaveData();
@@ -240,11 +272,11 @@ achivements are disabled\n
             FlxG.save.data.bulletTracers = false;
         }
 
-        if(FlxG.save.data.WaterMarks != null) {
-            WaterMarks.checked = FlxG.save.data.WaterMarks;
+        if(FlxG.save.data.SkipWaterMarks != null) {
+            WaterMarks.checked = FlxG.save.data.SkipWaterMarks;
         }else{
             WaterMarks.checked = false;
-            FlxG.save.data.WaterMarks = false;
+            FlxG.save.data.SkipWaterMarks = false;
         }
 
         if(FlxG.save.data.ShellEjection != null) {
@@ -252,6 +284,20 @@ achivements are disabled\n
         }else{
             ShellEjection.checked = false;
             FlxG.save.data.ShellEjection = false;
+        }
+
+        if(FlxG.save.data.High_Contrast_UI != null) {
+            HCui.checked = FlxG.save.data.High_Contrast_UI;
+        }else{
+            HCui.checked = false;
+            FlxG.save.data.High_Contrast_UI = false;
+        }
+
+        if(FlxG.save.data.ScreenShake != null) {
+            SS.checked = FlxG.save.data.ScreenShake;
+        }else{
+            SS.checked = false;
+            FlxG.save.data.ScreenShake = false;
         }
     }
 }

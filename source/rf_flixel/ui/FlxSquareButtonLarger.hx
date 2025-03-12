@@ -263,7 +263,7 @@ class FlxTypedButton2<T:FlxSprite> extends FlxSprite implements IFlxInput {
 	}
 
 	function loadDefaultGraphic():Void {
-		loadGraphic("assets/buttonSQR2.png", true, 30, 30);
+		loadGraphic("assets/ui/buttonSQR2.png", true, 30, 30);
 	}
 
 	function setupAnimation(animationName:String, frameIndex:Int):Void {

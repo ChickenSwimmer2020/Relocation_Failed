@@ -181,7 +181,7 @@ class Gun extends FlxSpriteGroup {
 	 * ITS A JOKE! ITS FOR SHELL EJECTION!!
 	 * @since RF_DEV_0.4.0
 	 */
-	public function EjaculateShell(Type:String, Velocity:Array<Int>) {
+	public function EjaculateShell(Type:String, Velocity:Array<Int>) { //im so keeping this, FUCK YOU KARENS!! --ChickenSwimmer2020
 		var Shell:FlxSprite = new FlxSprite(0, 0);
 		switch(Type){
 			default:
