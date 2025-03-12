@@ -65,6 +65,9 @@ class SettingsSubState extends FlxSubState{
 
     var HC:Bool = false;
 
+    public var diffigroup:FlxSpriteGroup = new FlxSpriteGroup();
+    public var tooltipgroup:FlxSpriteGroup = new FlxSpriteGroup();
+
     public function new(parentState:FlxState){
         super();
 
@@ -145,25 +148,28 @@ class SettingsSubState extends FlxSubState{
             var Tab4BG2:FlxUI9SliceSprite = new FlxUI9SliceSprite(TabGroups.x + 5, TabGroups.y + 5, if(HC) FlxUIAssets.IMG_CHROME_INSET_HIGHCONTRAST else FlxUIAssets.IMG_CHROME_INSET, new Rectangle(TabGroups.x + 5, TabGroups.y + 5, 490, 225));
             tab_group_4.add(Tab4BG1);
             tab_group_4.add(Tab4BG2);
-                Difficulty_00 = new FlxUICheckBox(TabGroups.x + 32, TabGroups.y + 110, null, null, '');
-                Difficulty_00_IMG = new FlxSprite(TabGroups.x + 10, TabGroups.y + 10);
-                Difficulty_00_IMG.loadGraphic(Assets.image('game/settings/DIFF_POSTERS_SETTINGS'), true, 64, 100);
-                Difficulty_00_IMG.animation.add('BABY', [0], 1, true, false, false);
-                Difficulty_00_LABEL = new FlxText(TabGroups.x + 12, Difficulty_00.y + 15, 0, "Baby Mode");
+            tab_group_4.add(diffigroup);
+            tab_group_4.add(tooltipgroup);
+            var difficulties:Array<Int> = [0,1,2,3,4];
+            var anim:Array<String> = ['BABY', 'EASY', 'NORMAL', 'HARD', 'HARDCORE'];
+            var label:Array<String> = ['Baby Mode', 'Easy Mode', 'Normal Mode', '  Hard Mode', 'HardCore'];
+            for(i in 0...difficulties.length){
+                var daspr:FlxSprite = cast(new FlxSprite(TabGroups.x + 10 + (64 * i), TabGroups.y + 10).loadGraphic(Assets.image('game/settings/DIFF_POSTERS_SETTINGS'), true, 64, 100));
+                daspr.animation.add(anim[i], [i], 1, true, false, false);
+                daspr.animation.play(anim[i]);
+                diffigroup.add(daspr);
+                var daCheckBox:FlxUICheckBox = cast(new FlxUICheckBox(0, 0, null, null, '', 0));
+                daCheckBox.setPosition(TabGroups.x + 32 + (64 * i), TabGroups.y + 110);
+                diffigroup.add(daCheckBox);
+                var label:FlxText = cast(new FlxText(0, 0, 0, label[i]));
+                label.setPosition(TabGroups.x + 12 + (65 * i), daCheckBox.y + 15);
+                diffigroup.add(label);
 
-                Difficulty_01 = new FlxUICheckBox(TabGroups.x + 94, TabGroups.y + 110, null, null, '');
-                Difficulty_01_IMG = new FlxSprite(TabGroups.x + 70, TabGroups.y + 10);
-                Difficulty_01_IMG.loadGraphic(Assets.image('game/settings/DIFF_POSTERS_SETTINGS'), true, 64, 100);
-                Difficulty_01_IMG.animation.add('EASY', [1], 1, true, false, false);
-                Difficulty_01_IMG.animation.play('EASY');
-                Difficulty_01_LABEL = new FlxText(TabGroups.x + 80, Difficulty_00.y + 15, 0, "Easy Mode");
-            tab_group_4.add(Difficulty_00);
-            tab_group_4.add(Difficulty_00_IMG);
-            tab_group_4.add(Difficulty_00_LABEL);
-
-            tab_group_4.add(Difficulty_01);
-            tab_group_4.add(Difficulty_01_IMG);
-            tab_group_4.add(Difficulty_01_LABEL);
+                //tooltips oh boy...
+                var tooltip:FlxUITooltip = cast(new FlxUITooltip(200, 100, new Anchor(0, 0, "right", "top", "left", "top")));
+                tooltipgroup.add(tooltip); //should create 5 different tooltips?
+            }
+            diffigroup.members[10].x += 5; //hard mode checkbox pos fix *band-aid fix*
 
 
 
@@ -175,7 +181,7 @@ class SettingsSubState extends FlxSubState{
         add(Back);
         add(Save);
 
-        add(Difficulty_00_TOOLTIP);
+        //add(Difficulty_00_TOOLTIP);
 
         for(item in this.members){
             item.camera = settingsCAM;
@@ -196,31 +202,83 @@ class SettingsSubState extends FlxSubState{
             }
         }
     }
+    public var tooltipgroupvar_title:Array<String> = [
+        'baby mode', //0
+        'easy mode', //1
+        'normal mode', //2
+        'hard mode', //3
+        'hardcore' //4
+    ];
+    public var tooltipgroupvar_body:Array<String> = [
+        'test1', //0
+        'test2', //1
+        'test3', //2
+        'test4', //3
+        'test5' //4
+    ];
     override public function update(elapsed:Float) {
         super.update(elapsed);
         parstate.update(elapsed);
 
-        if ( (FlxG.mouse.overlaps(Difficulty_00_LABEL) || FlxG.mouse.overlaps(Difficulty_00_IMG)) && TabGroups.selected_tab_id == 'tab_4') {
-            if(!Difficulty_00_TOOLTIP.visible && !Difficulty_00_TOOLTIP.active){
-			Difficulty_00_TOOLTIP.show(Difficulty_00_LABEL, 'Baby Mode',
-				'For people new to top down shooters\n
-Enemy Damage -50%, Player Damage +75%\n
-Ammo pickups +50% ammo\n
-Enemy Speed -15%, Player Speed +25%\n
-Oxygen doesnt drain, battery takes 50% less impact\n
-Ammo pickups are more common\n
-Enemies spawn less\n
-Game Autosaves At every door and every 5 minutes\n
-achivements are disabled\n
-\"Aw, wook at the wittel baby!\"\n--asdfmovie8 2014',
-				true, false, true);
-                @:privateAccess
-                    Difficulty_00_TOOLTIP._bodyText.fieldWidth = 200;
+        /**
+            oh boy, this gets complex quickly...
+            OKAY, so. essentially since i did a group system it works like this.
+            diffigroup.members[0] == baby mode image object
+            diffigroup.members[1] == baby mode checkbox object
+            diffigroup.members[2] == baby mode label object
+
+            diffigroup.members[3] == easy mode image object
+            diffigroup.members[4] == easy mode checkbox object
+            diffigroup.members[5] == easy mode label object
+
+            diffigroup.members[6] == normal mode image object
+            diffigroup.members[7] == normal mode checkbox object
+            diffigroup.members[8] == normal mode label object
+
+            diffigroup.members[9] == hard mode image object
+            diffigroup.members[10] == hard mode checkbox object
+            diffigroup.members[11] == hard mode label object
+
+            diffigroup.members[12] == hardcore mode image object
+            diffigroup.members[13] == hardcore mode checkbox object
+            diffigroup.members[14] == hardcore mode label object
+
+            X4 for every difficulty.
+        **/
+
+        for(object in diffigroup.members){
+            if(Std.isOfType(object, FlxUICheckBox)){
+                
             }
-		} else {
-            if(Difficulty_00_TOOLTIP.visible && Difficulty_00_TOOLTIP.active)
-			    Difficulty_00_TOOLTIP.hide();
-		}
+            //tooltips go down here since we only need one object loop
+            //TODO: fix the difficulty tooltips stuff
+        }
+
+        //for(object in diffigroup.members){ //! old code, unoptimized but contains original text. do not remove
+        //    if((FlxG.mouse.overlaps(diffigroup.members[0]) || FlxG.mouse.overlaps(diffigroup.members[1])) || FlxG.mouse.overlaps(diffigroup.members[2])){ //better way to do this?
+        //        if (TabGroups.selected_tab_id == 'tab_4') {
+        //            if(!Difficulty_00_TOOLTIP.visible && !Difficulty_00_TOOLTIP.active){
+        //            Difficulty_00_TOOLTIP.show(diffigroup.members[2], 'Baby Mode',
+        //                'For people new to top down shooters\n
+        //    Enemy Damage -50%, Player Damage +75%\n
+        //    Ammo pickups +50% ammo\n
+        //    Enemy Speed -15%, Player Speed +25%\n
+        //    Oxygen doesnt drain, battery takes 50% less impact\n
+        //    Ammo pickups are more common\n
+        //    Enemies spawn less\n
+        //    Game Autosaves At every door and every 5 minutes\n
+        //    achivements are disabled\n
+        //    \"Aw, wook at the wittel baby!\"\n--asdfmovie8 2014',
+        //                true, false, true);
+        //                @:privateAccess
+        //                    Difficulty_00_TOOLTIP._bodyText.fieldWidth = 200;
+        //            }
+        //        } else {
+        //            if(Difficulty_00_TOOLTIP.visible && Difficulty_00_TOOLTIP.active)
+        //                Difficulty_00_TOOLTIP.hide();
+        //        }
+        //    }
+        //}
     }
 
     override public function destroy() {
