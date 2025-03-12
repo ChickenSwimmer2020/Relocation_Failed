@@ -1,9 +1,8 @@
 @echo off
-SET D="C:\HaxeToolkit"
 
 :: Check if Haxe is installed
-if not exist %D% (
-    echo Haxe is note installed. Please install Haxe, then run this file again.
+if not exist %HAXEPATH% (
+    echo Haxe is not installed or HAXEPATH is not available. Please install Haxe and set HAXEPATH, then run this file again.
     GOTO mylabel
 )
 

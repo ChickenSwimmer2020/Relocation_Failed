@@ -513,7 +513,7 @@ class LevelEditorState extends FlxState {
 			IsBackground: Data[12],
 			RenderOverPlayer: Data[13],
 			ParrallaxBG: Data[14]
-		},);
+		});
 		trace('New Object Added To Level\n\n$DefaultObjectData');
 	}
 
@@ -627,7 +627,7 @@ class LevelEditorState extends FlxState {
 				IsBackground: object.isBackground,
 				RenderOverPlayer: object.isForegroundSprite,
 				ParrallaxBG: object.parrallaxBG
-			},);
+			});
 		}
 	}
 }
