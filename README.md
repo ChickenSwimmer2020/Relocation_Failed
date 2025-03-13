@@ -1,4 +1,18 @@
-<h1 align="center">RELOCATION FAILED<br>A Top-Down Shooter Made Completely with HaxeFlixel!</h1>
+```
+                                  ______ _____ _     _____ _____   ___ _____ _____ _____ _   _ 
+                                  | ___ \  ___| |   |  _  /  __ \ / _ \_   _|_   _|  _  | \ | |
+                                  | |_/ / |__ | |   | | | | /  \// /_\ \| |   | | | | | |  \| |
+                                  |    /|  __|| |   | | | | |    |  _  || |   | | | | | | . ` |
+                                  | |\ \| |___| |___\ \_/ / \__/\| | | || |  _| |_\ \_/ / |\  |
+                                  \_| \_\____/\_____/\___/ \____/\_| |_/\_/  \___/ \___/\_| \_/
+                                              ______ ___  _____ _      ___________ 
+                                              |  ___/ _ \|_   _| |    |  ___|  _  \
+                                              | |_ / /_\ \ | | | |    | |__ | | | |
+                                              |  _||  _  | | | | |    |  __|| | | |
+                                              | |  | | | |_| |_| |____| |___| |/ / 
+                                              \_|  \_| |_/\___/\_____/\____/|___/  
+```
+<h1 align="center">A Top-Down Shooter Made Completely with HaxeFlixel!</h1>
 
 ## What is relocation failed?
 
@@ -22,6 +36,11 @@ The planet was home to an advanced alien civilization called the Keth'ara, who h
 As your colony ship entered its space, the Keth'ara attacked with powerful weapons, breaking through the ship's defenses and severely damaging it.
 Your cryosleep pod was damaged in the attack, and you wake up alone in the broken ship.
 The sounds of distant gunfire and screaming tell you that someone - or something - is aboard, taking whatever they can from the ruined colony ship.
+
+<h1 align="center">WE HAVE A DISCORD!</h1>
+
+now you can join the team and see what we're cooking up. <br> (Please dont expect it to be active every second of every day, it probably wont be active very much)
+Visit [Now!](https://discord.gg/Px28XfKJUn) (DISCORD ***WIIL*** BE UPDATED IN FUTURE)
 
 <h2>What we need to do currently</h2>
 
