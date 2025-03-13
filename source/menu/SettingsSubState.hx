@@ -158,8 +158,9 @@ class SettingsSubState extends FlxSubState{
                 daspr.animation.add(anim[i], [i], 1, true, false, false);
                 daspr.animation.play(anim[i]);
                 diffigroup.add(daspr);
-                var daCheckBox:FlxUICheckBox = cast(new FlxUICheckBox(0, 0, null, null, '', 0));
+                var daCheckBox:FlxUICheckBox = cast(new FlxUICheckBox(0, 0, null, null, '', 0, null, GetCheckBoxDataResult(i)));
                 daCheckBox.setPosition(TabGroups.x + 32 + (64 * i), TabGroups.y + 110);
+                daCheckBox.ID = i;
                 diffigroup.add(daCheckBox);
                 var label:FlxText = cast(new FlxText(0, 0, 0, label[i]));
                 label.setPosition(TabGroups.x + 12 + (65 * i), daCheckBox.y + 15);
@@ -200,6 +201,82 @@ class SettingsSubState extends FlxSubState{
                     spr.loadGraphic("assets/ui/buttonHC.png", true, 80, 20);
                 }
             }
+        }
+    }
+    private function GetCheckBoxDataResult(Check:Int):Void->Void{
+        switch(Check){
+            case 0:
+                return ()->{
+                    trace('Difficulty is now baby mode');
+                    Preferences.save.Difficulty = 'baby,0';
+                    Preferences.saveSettings();
+                    for(object in diffigroup.members){
+                        if(Std.isOfType(object, FlxUICheckBox)){
+                            var checkbox:FlxUICheckBox = cast object;
+                            if(checkbox.ID != 0){
+                                checkbox.checked = false;
+                            }
+                        }
+                    }
+                };
+            case 1:
+                return ()->{
+                    trace('Difficulty is now easy mode');
+                    Preferences.save.Difficulty = 'easy,1';
+                    Preferences.saveSettings();
+                    for(object in diffigroup.members){
+                        if(Std.isOfType(object, FlxUICheckBox)){
+                            var checkbox:FlxUICheckBox = cast object;
+                            if(checkbox.ID != 1){
+                                checkbox.checked = false;
+                            }
+                        }
+                    }
+                };
+            case 2:
+                return ()->{
+                    trace('Difficulty is now normal mode');
+                    Preferences.save.Difficulty = 'norm,2';
+                    Preferences.saveSettings();
+                    for(object in diffigroup.members){
+                        if(Std.isOfType(object, FlxUICheckBox)){
+                            var checkbox:FlxUICheckBox = cast object;
+                            if(checkbox.ID != 2){
+                                checkbox.checked = false;
+                            }
+                        }
+                    }
+                };
+            case 3:
+                return ()->{
+                    trace('Difficulty is now hard mode');
+                    Preferences.save.Difficulty = 'hard,3';
+                    Preferences.saveSettings();
+                    for(object in diffigroup.members){
+                        if(Std.isOfType(object, FlxUICheckBox)){
+                            var checkbox:FlxUICheckBox = cast object;
+                            if(checkbox.ID != 3){
+                                checkbox.checked = false;
+                            }
+                        }
+                    }
+                };
+            case 4:
+                return ()->{
+                    trace('Difficulty is now hardcore');
+                    Preferences.save.Difficulty = 'hrd2,4';
+                    Preferences.saveSettings();
+                    for(object in diffigroup.members){
+                        if(Std.isOfType(object, FlxUICheckBox)){
+                            var checkbox:FlxUICheckBox = cast object;
+                            if(checkbox.ID != 4){
+                                checkbox.checked = false;
+                            }
+                        }
+                    }
+                };
+            default:
+                return ()->{trace('Difficulty is not recognized');};
         }
     }
     public var tooltipgroupvar_title:Array<String> = [
@@ -247,10 +324,25 @@ class SettingsSubState extends FlxSubState{
         **/
 
         for(object in diffigroup.members){
-            if(Std.isOfType(object, FlxUICheckBox)){
-                
+            if(Std.isOfType(object, FlxUITooltip)){
+
             }
-            //tooltips go down here since we only need one object loop
+            if(Std.isOfType(object, FlxUICheckBox)){
+                var checkbox:FlxUICheckBox = cast object;
+                    if(FlxG.save.data.Difficulty != ''){
+                        var difficultySplit:String = FlxG.save.data.Difficulty;
+                        trace('${difficultySplit.split(',')[0]}, ${difficultySplit.split(',')[1]}');
+                        if(checkbox.ID == Std.parseInt(difficultySplit.split(',')[1])){
+                            checkbox.checked = true;
+                        }
+                    }else{
+                        if(difficultySelectedCheck()){
+                            if(checkbox.ID == 0){
+                                checkbox.checked = true;
+                            }
+                        }
+                    }
+            }
             //TODO: fix the difficulty tooltips stuff
         }
 
@@ -279,6 +371,25 @@ class SettingsSubState extends FlxSubState{
         //        }
         //    }
         //}
+    }
+    private function difficultySelectedCheck():Bool {
+        var checksactivity:Array<Bool> = [false, false, false, false, false];
+        for(object in diffigroup.members){
+            if(Std.isOfType(object, FlxUICheckBox)){
+                var check:FlxUICheckBox = cast object;
+                if(!check.checked){
+                    checksactivity.push(false);
+                }else{
+                    checksactivity.push(true);
+                }
+            }
+        }
+        switch(checksactivity.toString()){
+            case "[false, false, false, false, false]":
+                return true;
+            default:
+                return false; //false == good, true == bad
+        }
     }
 
     override public function destroy() {

@@ -1,5 +1,6 @@
 package;
 
+import openfl.events.NativeProcessExitEvent;
 import openfl.events.ErrorEvent;
 import openfl.errors.Error;
 import sys.io.File;
@@ -40,6 +41,7 @@ class Main extends Sprite {
 		trace('${dateNow.substr(0, dateNow.length - 9)}');
 		var game:FlxGame = new FlxGame(0, 0, Decide, 60, 60, true, false);
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, handleCrash);
+		Lib.current.loaderInfo.addEventListener(NativeProcessExitEvent.EXIT, onExit);
 		if (fromCrash) {
 			crashTxt = File.getContent('crash/crash${File.getContent('./idied.RFDUMP')}.txt');
 			game = new FlxGame(0, 0, CrashState, 60, 60, true, false);
@@ -50,6 +52,11 @@ class Main extends Sprite {
 		@:privateAccess game._customSoundTray = objects.SoundTray;
 		addChild(game);
 		loadGameSaveData();
+	}
+	static function onExit(event:NativeProcessExitEvent):Void{
+		if(FileSystem.exists('idied.rfDUMP')) {
+			FileSystem.deleteFile('idied.rfDUMP');
+		}
 	}
 
 	function stackToString(callStack:Array<StackItem>) {
