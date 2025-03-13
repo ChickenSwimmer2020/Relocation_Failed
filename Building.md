@@ -11,7 +11,7 @@ once you install that, you should install [Haxe](https://haxe.org). Since this i
 
 ### part 2 dependencies
 
-for this game to be buildable, you need some different dependencies for the game to be buildable, thankfully, as of February 9, we have an easier way to set up the game! simply run the [dependencies.bat](./setup/dependencies.bat) file!
+for this game to be buildable, you need some different dependencies for the game to be buildable, thankfully, as of February 9, we have an easier way to set up the game! simply run the [Dependencies.bat](./setup/Dependencies.bat) file!
 
 #### part 3 building
 
