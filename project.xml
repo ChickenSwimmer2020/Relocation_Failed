@@ -8,12 +8,6 @@
     <window if="cpp" width="1280" height="720" fps="60" background="#000000" hardware="false" vsync="false"/>
     <window if="hl" width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false"/>
 
-    <window if="mobile" width="0" height="0" background="#FFFFFF" fps="60" />
-    <android target-sdk-version="17" />
-
-    <!--HTML5 settings-->
-    <window if="html5" width="0" height="0" resizeable="false"/>
-
     <set name="BUILD_DIR" value="export"/>
 
     <!--IF YOUR MAKING A MOD, UNCOMMENT THIS-->
@@ -21,10 +15,6 @@
     
     <source path="source"/>
     <assets path="assets"/>
-
-    <section if="html5">
-        <error value="Current Platform Not Supported! Please switch to the html5 Branch!"/>
-    </section>
 
     <undefine name="openfl-disable-handle-error"/>
     <define name="openfl_enable_handle_error"/>
