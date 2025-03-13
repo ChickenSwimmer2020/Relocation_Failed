@@ -40,7 +40,7 @@ The sounds of distant gunfire and screaming tell you that someone - or something
 <h1 align="center">WE HAVE A DISCORD!</h1>
 
 now you can join the team and see what we're cooking up. <br> (Please dont expect it to be active every second of every day, it probably wont be active very much)
-Visit [Now!](https://discord.gg/Px28XfKJUn) (DISCORD ***WIIL*** BE UPDATED IN FUTURE)
+Visit [Now!](https://discord.gg/Px28XfKJUn) (DISCORD ***WILL*** BE UPDATED IN FUTURE)
 
 <h2>What we need to do currently</h2>
 
