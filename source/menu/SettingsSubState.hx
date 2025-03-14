@@ -1,5 +1,12 @@
 package menu;
 
+import flixel.system.FlxAssets.FlxGraphicAsset;
+import substates.PauseMenuSubState;
+import flixel.addons.effects.chainable.FlxEffectSprite;
+import flixel.addons.effects.chainable.FlxRainbowEffect;
+import flixel.addons.effects.chainable.FlxOutlineEffect;
+import flixel.addons.effects.chainable.FlxGlitchEffect;
+import openfl.events.MouseEvent;
 import flixel.addons.ui.Anchor;
 import flixel.addons.ui.FlxUITooltip;
 import openfl.geom.Rectangle;
@@ -10,8 +17,11 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUISlider;
 import flixel.addons.ui.FlxUI;
 import rf_flixel.addons.ui.FlxUITabMenu as FlxUITabMenu;
+import flixel.group.FlxGroup;
+import Lambda;
 
 class SettingsSubState extends FlxSubState{
+
     var TabGroups:FlxUITabMenu;
 
     var Tracers:FlxUICheckBox;
@@ -21,38 +31,6 @@ class SettingsSubState extends FlxSubState{
 
     var HCui:FlxUICheckBox;
     var SS:FlxUICheckBox;
-
-
-
-    //baby
-    var Difficulty_00:FlxUICheckBox;
-    var Difficulty_00_IMG:FlxSprite;
-    var Difficulty_00_LABEL:FlxText;
-    var Difficulty_00_TOOLTIP:FlxUITooltip;
-
-    //easy
-    var Difficulty_01:FlxUICheckBox;
-    var Difficulty_01_IMG:FlxSprite;
-    var Difficulty_01_LABEL:FlxText;
-    var Difficulty_01_TOOLTIP:FlxUITooltip;
-
-    //normal
-    var Difficulty_02:FlxUICheckBox;
-    var Difficulty_02_IMG:FlxSprite;
-    var Difficulty_02_LABEL:FlxText;
-    var Difficulty_02_TOOLTIP:FlxUITooltip;
-
-    //hard
-    var Difficulty_03:FlxUICheckBox;
-    var Difficulty_03_IMG:FlxSprite;
-    var Difficulty_03_LABEL:FlxText;
-    var Difficulty_03_TOOLTIP:FlxUITooltip;
-
-    //hardcore
-    var Difficulty_04:FlxUICheckBox;
-    var Difficulty_04_IMG:FlxSprite;
-    var Difficulty_04_LABEL:FlxText;
-    var Difficulty_04_TOOLTIP:FlxUITooltip;
 
     var Back:FlxSquareButton;
     var Save:FlxButton;
@@ -66,7 +44,9 @@ class SettingsSubState extends FlxSubState{
     var HC:Bool = false;
 
     public var diffigroup:FlxSpriteGroup = new FlxSpriteGroup();
-    public var tooltipgroup:FlxSpriteGroup = new FlxSpriteGroup();
+    public var tooltipgroup:FlxTypedSpriteGroup<FlxUITooltip> = new FlxTypedSpriteGroup<FlxUITooltip>();
+
+    public var DifficultiesCreated:Bool = false;
 
     public function new(parentState:FlxState){
         super();
@@ -79,6 +59,18 @@ class SettingsSubState extends FlxSubState{
 		settingsCAM.bgColor = 0x000000;
     }
 
+    public var TT0:FlxUITooltip;
+    public var TT1:FlxUITooltip;
+    public var TT2:FlxUITooltip;
+    public var TT3:FlxUITooltip; 
+    public var TT4:FlxSprite;
+    public var TT4T:FlxText;
+    public var TT4T2:FlxText;
+
+    public var graphic_names:Array<FlxGraphicAsset>;
+    public var slice9tab:Array<Int>;
+    public var slice9_names:Array<Array<Int>>;
+
     override public function create() {
         Preferences.loadSettings();
 
@@ -86,7 +78,7 @@ class SettingsSubState extends FlxSubState{
             HC = true;
         }
 
-        Difficulty_00_TOOLTIP = new FlxUITooltip(200, 100, new Anchor(0, 0, "right", "top", "left", "top"));
+        //Difficulty_00_TOOLTIP = new FlxUITooltip(200, 100, new Anchor(0, 0, "right", "top", "left", "top"));
 
 		var tabs = [
 			{name: "tab_1", label: "General"},
@@ -94,7 +86,7 @@ class SettingsSubState extends FlxSubState{
 			{name: "tab_3", label: "Accessibility"},
 			{name: "tab_4", label: "Difficulty"}
 		];
-        TabGroups = new FlxUITabMenu(null, tabs, if(HC) true else false, true);
+        TabGroups = new FlxUITabMenu(null, null, tabs, if(HC) true else false, null, false, null, null, if(FlxG.state is Playstate) true else false);
         TabGroups.resize(TabGroups.width + 55, TabGroups.height);
         
 		var tab_group_1 = new FlxUI(null, TabGroups, null);
@@ -154,23 +146,22 @@ class SettingsSubState extends FlxSubState{
             var anim:Array<String> = ['BABY', 'EASY', 'NORMAL', 'HARD', 'HARDCORE'];
             var label:Array<String> = ['Baby Mode', 'Easy Mode', 'Normal Mode', '  Hard Mode', 'HardCore'];
             for(i in 0...difficulties.length){
-                var daspr:FlxSprite = cast(new FlxSprite(TabGroups.x + 10 + (64 * i), TabGroups.y + 10).loadGraphic(Assets.image('game/settings/DIFF_POSTERS_SETTINGS'), true, 64, 100));
+                var daspr = new FlxSprite(TabGroups.x + 10 + (64 * i), TabGroups.y + 10).loadGraphic(Assets.image('game/settings/DIFF_POSTERS_SETTINGS'), true, 64, 100);
                 daspr.animation.add(anim[i], [i], 1, true, false, false);
                 daspr.animation.play(anim[i]);
                 diffigroup.add(daspr);
-                var daCheckBox:FlxUICheckBox = cast(new FlxUICheckBox(0, 0, null, null, '', 0, null, GetCheckBoxDataResult(i)));
-                daCheckBox.setPosition(TabGroups.x + 32 + (64 * i), TabGroups.y + 110);
-                daCheckBox.ID = i;
+                var daCheckBox = new FlxUICheckBox(0, 0, null, null, '', 0, null, GetCheckBoxDataResult(i));
+                daCheckBox.setPosition(TabGroups.x + 32 + (65 * i), TabGroups.y + 110);
                 diffigroup.add(daCheckBox);
-                var label:FlxText = cast(new FlxText(0, 0, 0, label[i]));
+                var label = new FlxText(0, 0, 0, label[i]);
                 label.setPosition(TabGroups.x + 12 + (65 * i), daCheckBox.y + 15);
                 diffigroup.add(label);
 
-                //tooltips oh boy...
-                var tooltip:FlxUITooltip = cast(new FlxUITooltip(200, 100, new Anchor(0, 0, "right", "top", "left", "top")));
-                tooltipgroup.add(tooltip); //should create 5 different tooltips?
+                var tooltip = new FlxUITooltip(200, 100, createAnchor(i));
+                tooltipgroup.add(tooltip);
             }
-            diffigroup.members[10].x += 5; //hard mode checkbox pos fix *band-aid fix*
+            diffigroup.members[10].x += 0.5; //hard mode checkbox pos fix *band-aid fix*
+
 
 
 
@@ -182,15 +173,6 @@ class SettingsSubState extends FlxSubState{
         add(Back);
         add(Save);
 
-        //add(Difficulty_00_TOOLTIP);
-
-        for(item in this.members){
-            item.camera = settingsCAM;
-            if(Std.isOfType(item, FlxSprite) || Std.isOfType(item, FlxUITooltip)) {
-                var daSpr:FlxSprite = cast item;
-                daSpr.scrollFactor.set();
-            }
-        }
         LoadFromPrefs();
 
         if(HC){
@@ -201,6 +183,44 @@ class SettingsSubState extends FlxSubState{
                     spr.loadGraphic("assets/ui/buttonHC.png", true, 80, 20);
                 }
             }
+        }
+        DifficultiesCreated = true;
+        TT0 = tooltipgroup.members[0];
+        TT1 = tooltipgroup.members[1];
+        TT2 = tooltipgroup.members[2];
+        TT3 = tooltipgroup.members[3];
+        tooltipgroup.members[4].kill();
+        
+        TT4 = new FlxSprite(500, 0).makeGraphic(780, 720, FlxColor.BLACK);
+        TT4.alpha = 0.5;
+        add(TT4);
+        TT4T = new FlxText(500, 0, 0, "", 12, true);
+        TT4T.setFormat(null, 14, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        add(TT4T);
+        TT4T2 = new FlxText(500, -20, 0, "", 12, true);
+        TT4T2.setFormat(null, 14, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+        add(TT4T2);
+
+        graphic_names = [FlxUIAssets.IMG_TAB_DISABLED];
+        slice9tab = FlxStringUtil.toIntArray(FlxUIAssets.SLICE9_TAB);
+        slice9_names = [slice9tab, slice9tab, slice9tab, slice9tab, slice9tab, slice9tab]; //for the tab disabling on playstate so difficulty cant be changed mid-game
+
+        for(item in this.members){
+            item.camera = settingsCAM;
+            if(Std.isOfType(item, FlxSprite) || Std.isOfType(item, FlxUITooltip)) {
+                var daSpr:FlxSprite = cast item;
+                daSpr.scrollFactor.set();
+            }
+        }
+    }
+    private function createAnchor(Cur:Int):Anchor{
+        switch(Cur){
+            case 2:
+                return new Anchor(0, 0, "right", "top", "left", "top");
+            case 3:
+                return new Anchor(0, 0, "left", "top", "right", "top");
+            default:
+                return new Anchor(0, 0, "right", "top", "left", "top");
         }
     }
     private function GetCheckBoxDataResult(Check:Int):Void->Void{
@@ -287,15 +307,75 @@ class SettingsSubState extends FlxSubState{
         'hardcore' //4
     ];
     public var tooltipgroupvar_body:Array<String> = [
-        'test1', //0
-        'test2', //1
-        'test3', //2
-        'test4', //3
-        'test5' //4
+        'For people new to top down shooters\n
+Enemy Damage -50%
+Player Damage +75%
+Ammo pickups +50% ammo
+Enemy Speed -15%
+Player Speed +25%
+Oxygen doesnt drain
+battery takes 50% less impact
+Ammo pickups are more common
+Enemies spawn less
+Game Autosaves At every door and every 5 minutes
+achivements are disabled
+\"Aw, wook at the wittel baby!\"\n--asdfmovie8 2014', //0
+        'For people who have played some top down shooters\n
+Enemy Damage -25%
+Player Damage +25%
+Ammo pickups +5% ammo
+Enemy Speed -5%
+Player Speed +10%
+Oxygen Drains 50% slower
+Battery takes 25% less impact
+Ammo pickups spawn slightly more
+Enemies spawn slightly less
+Game Autosaves at every door and every 10 minutes
+Quote:\"...\"\n--CaveStory+ 2011', //1
+        'The definitive way to enjoy Relocation-Failed
+Game Autosaves at every door and every 15 minutes\n
+TBA
+TBA
+TBA
+TBA
+TBA
+', //2
+        'For those wanting a challenge\n
+TBA
+Game autosaves every 20 minutes;
+        ', //3
+        'For those wanting to fight the gods themselves\n
+Enemies do +125% damage, player does -25% damage
+Enemies move +50% faster, player moves -12% slower
+Ammo spawns incredibly rarely, conserve it, guns must be reloaded
+Enemies can hear your footsteps, enemies can see your flashlight beam
+Guns have a 12% chance to jam with every shot
+Shotgun must be manually pumped, weapons have durability, fog of war is enabled
+Stamina Drains 90% faster, oxygen drains 90% faster, battery takes 75% more impact
+player will bleed if hit with an enemy melee attack
+----------------------------------------------------
+Game doesnt autosave
+Backtracking is completely disabled, if you miss an item, your ${if(FlxG.save.data.AdultMode != null && FlxG.save.data.AdultMode == true) 'fucked.\nGame will openly insult you if you die.' else 'done.'}
+Your save will be deleted if you die' //4
     ];
+    public var checksactivity:Array<Bool> = [];
     override public function update(elapsed:Float) {
         super.update(elapsed);
         parstate.update(elapsed);
+
+        @:privateAccess
+        if(FlxG.state is Playstate){
+            if (TabGroups.length > 3) {
+                // Disable the fourth tab (index 3, as arrays are 0-indexed)
+                var fourthTab = TabGroups.getTab(3);
+                if (fourthTab != null) {
+                    // Disable the tab (make it unpressable)
+                    fourthTab.active = false;
+                    // Optionally, change alpha for visual feedback that it's disabled
+                    fourthTab.loadGraphicSlice9(graphic_names, 0, 0, slice9_names, FlxUI9SliceSprite.TILE_NONE, -1, true);
+                }
+            }
+        }
 
         /**
             oh boy, this gets complex quickly...
@@ -322,75 +402,119 @@ class SettingsSubState extends FlxSubState{
 
             X4 for every difficulty.
         **/
-
-        for(object in diffigroup.members){
-            if(Std.isOfType(object, FlxUITooltip)){
-
-            }
-            if(Std.isOfType(object, FlxUICheckBox)){
-                var checkbox:FlxUICheckBox = cast object;
-                    if(FlxG.save.data.Difficulty != ''){
-                        var difficultySplit:String = FlxG.save.data.Difficulty;
-                        trace('${difficultySplit.split(',')[0]}, ${difficultySplit.split(',')[1]}');
-                        if(checkbox.ID == Std.parseInt(difficultySplit.split(',')[1])){
-                            checkbox.checked = true;
+        if(DifficultiesCreated == true){
+            for(tooltip in tooltipgroup.members){
+                if(Std.isOfType(tooltip, FlxUITooltip)){
+                    if(Lambda.exists([for (i in 0...3) diffigroup.members[i]], obj -> FlxG.mouse.overlaps(obj)) && TabGroups.selected_tab_id == 'tab_4'){
+                        if(!TT0.visible && !TT0.active){
+                            TT0.show(diffigroup.members[1], tooltipgroupvar_title[0], tooltipgroupvar_body[0], true, false, true);
+                            @:privateAccess
+                            TT0._bodyText.fieldWidth = 200;
                         }
                     }else{
-                        if(difficultySelectedCheck()){
-                            if(checkbox.ID == 0){
-                                checkbox.checked = true;
-                            }
+                        if(TT0.visible && TT0.active){
+                            TT0.hide();
                         }
-                    }
-            }
-            //TODO: fix the difficulty tooltips stuff
-        }
+                    } //baby mode tooltip
 
-        //for(object in diffigroup.members){ //! old code, unoptimized but contains original text. do not remove
-        //    if((FlxG.mouse.overlaps(diffigroup.members[0]) || FlxG.mouse.overlaps(diffigroup.members[1])) || FlxG.mouse.overlaps(diffigroup.members[2])){ //better way to do this?
-        //        if (TabGroups.selected_tab_id == 'tab_4') {
-        //            if(!Difficulty_00_TOOLTIP.visible && !Difficulty_00_TOOLTIP.active){
-        //            Difficulty_00_TOOLTIP.show(diffigroup.members[2], 'Baby Mode',
-        //                'For people new to top down shooters\n
-        //    Enemy Damage -50%, Player Damage +75%\n
-        //    Ammo pickups +50% ammo\n
-        //    Enemy Speed -15%, Player Speed +25%\n
-        //    Oxygen doesnt drain, battery takes 50% less impact\n
-        //    Ammo pickups are more common\n
-        //    Enemies spawn less\n
-        //    Game Autosaves At every door and every 5 minutes\n
-        //    achivements are disabled\n
-        //    \"Aw, wook at the wittel baby!\"\n--asdfmovie8 2014',
-        //                true, false, true);
-        //                @:privateAccess
-        //                    Difficulty_00_TOOLTIP._bodyText.fieldWidth = 200;
-        //            }
-        //        } else {
-        //            if(Difficulty_00_TOOLTIP.visible && Difficulty_00_TOOLTIP.active)
-        //                Difficulty_00_TOOLTIP.hide();
-        //        }
-        //    }
-        //}
-    }
-    private function difficultySelectedCheck():Bool {
-        var checksactivity:Array<Bool> = [false, false, false, false, false];
-        for(object in diffigroup.members){
-            if(Std.isOfType(object, FlxUICheckBox)){
-                var check:FlxUICheckBox = cast object;
-                if(!check.checked){
-                    checksactivity.push(false);
-                }else{
-                    checksactivity.push(true);
+                    if(Lambda.exists([for (i in 3...6) diffigroup.members[i]], obj -> FlxG.mouse.overlaps(obj)) && TabGroups.selected_tab_id == 'tab_4'){
+                        if(!TT1.visible && !TT1.active){
+                            TT1.show(diffigroup.members[4], tooltipgroupvar_title[1], tooltipgroupvar_body[1], true, false, true);
+                            @:privateAccess
+                            TT1._bodyText.fieldWidth = 200;
+                        }
+                    }else{
+                        if(TT1.visible && TT1.active){
+                            TT1.hide();
+                        }
+                    } //easy mode tooltip
+
+                    if(Lambda.exists([for (i in 6...9) diffigroup.members[i]], obj -> FlxG.mouse.overlaps(obj)) && TabGroups.selected_tab_id == 'tab_4'){
+                        if(!TT2.visible && !TT2.active){
+                            TT2.show(diffigroup.members[7], tooltipgroupvar_title[2], tooltipgroupvar_body[2], true, false, true);
+                            @:privateAccess
+                            TT2._bodyText.fieldWidth = 200;
+                        }
+                    }else{
+                        if(TT2.visible && TT2.active){
+                            TT2.hide();
+                        }
+                    } //normal mode tooltip
+
+                    if(Lambda.exists([for (i in 9...12) diffigroup.members[i]], obj -> FlxG.mouse.overlaps(obj)) && TabGroups.selected_tab_id == 'tab_4'){
+                        if(!TT3.visible && !TT3.active){
+                            TT3.show(diffigroup.members[10], tooltipgroupvar_title[3], tooltipgroupvar_body[3], true, false, true);
+                            @:privateAccess
+                            TT3._bodyText.fieldWidth = 200;
+                        }
+                    }else{
+                        if(TT3.visible && TT3.active){
+                            TT3.hide();
+                        }
+                    } //hard mode tooltip
+
+                    if(Lambda.exists([for (i in 12...14) diffigroup.members[i]], obj -> FlxG.mouse.overlaps(obj)) && TabGroups.selected_tab_id == 'tab_4'){
+                        if(!TT4.visible && !TT4T.visible && !TT4T2.visible){
+                            TT4.visible = true;
+                            TT4T.visible = true;
+                            TT4T2.visible = true;
+                            if(TT4T.text == '')
+                                TT4T.text = tooltipgroupvar_title[4];
+                            if(TT4T2.text == '')
+                                TT4T2.text = tooltipgroupvar_body[4];
+                        }
+                    }else{
+                        if(TT4.visible && TT4T.visible && TT4T2.visible){
+                            TT4.visible = false;
+                            TT4T.visible = false;
+                            TT4T2.visible = false;
+                        }
+                    } //hardcore tooltip
+                }
+            }
+            for(object in diffigroup.members){
+                if(Std.isOfType(object, FlxUICheckBox)){
+                    var checkbox:FlxUICheckBox = cast object;
+                        if(FlxG.save.data.Difficulty != ''){
+                            var difficultySplit:String = FlxG.save.data.Difficulty;
+                            //trace('${difficultySplit.split(',')[0]}, ${difficultySplit.split(',')[1]}'); //bogs the console, keep disabled
+                            if(checkbox.ID == Std.parseInt(difficultySplit.split(',')[1])){
+                                checkbox.checked = true;
+                            }//TODO: add fallback for difficulty selection to automatically select normal mode if a difficulty is not selected or found from the save file
+                        }//else{
+                        //    if(FlxG.save.data.Difficulty == ''){
+                        //        if(difficultySelectedCheck()){
+                        //            if(checkbox.ID == 0){
+                        //                checkbox.checked = true;
+                        //            }
+                        //        }
+                        //    }
+                        //}
                 }
             }
         }
-        switch(checksactivity.toString()){
-            case "[false, false, false, false, false]":
-                return true;
-            default:
-                return false; //false == good, true == bad
-        }
     }
+    //private function difficultySelectedCheck():Bool {
+    //    for(object in diffigroup.members){
+    //        if(Std.isOfType(object, FlxUICheckBox)){
+    //            var check:FlxUICheckBox = cast object;
+    //            if(!check.checked){
+    //                if(checksactivity.length < 5)
+    //                    checksactivity.push(false);
+    //            }else{
+    //                if(checksactivity.length < 5)
+    //                    checksactivity.push(true);
+    //            }
+    //        }
+    //        trace(checksactivity.toString());
+    //    }
+    //    switch(checksactivity.toString()){
+    //        case "false, false, false, false, false":
+    //            return true;
+    //        default:
+    //            return false; //false == good, true == bad
+    //    }
+    //}
 
     override public function destroy() {
         super.destroy();

@@ -11,7 +11,7 @@ import backend.Functions;
 import backend.save.PlayerSaveStateUtil;
 import objects.menu.Button;
 
-class MainMenu extends FlxTransitionableState {
+class MainMenu extends FlxState {
 	var Title:FlxSprite;
 	var Suffix:FlxText;
 

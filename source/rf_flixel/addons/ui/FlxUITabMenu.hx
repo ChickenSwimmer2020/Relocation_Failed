@@ -147,7 +147,7 @@ class FlxUITabMenu extends FlxUIGroup implements IResizable implements IFlxUICli
 
 	/***PUBLIC***/
 	public function new(?back_:FlxSprite, ?tabs_:Array<IFlxUIButton>, ?tab_names_and_labels_:Array<{name:String, label:String}>, ?isHighContrast:Bool = false, ?tab_offset:FlxPoint,
-			?stretch_tabs:Bool = false, ?tab_spacing:Null<Float> = null, ?tab_stacking:Array<String> = null)
+			?stretch_tabs:Bool = false, ?tab_spacing:Null<Float> = null, ?tab_stacking:Array<String> = null, ?inPlaystate:Bool = false)
 	{
 		super();
 
@@ -196,7 +196,16 @@ class FlxUITabMenu extends FlxUIGroup implements IResizable implements IFlxUICli
     						FlxUIAssets.IMG_TAB,
     						FlxUIAssets.IMG_TAB
     					];
-                    }else{
+                    }else if (inPlaystate){
+    					graphic_names = [
+    						FlxUIAssets.IMG_TAB_BACK,
+    						FlxUIAssets.IMG_TAB_BACK,
+    						FlxUIAssets.IMG_TAB_DISABLED,
+    						FlxUIAssets.IMG_TAB,
+    						FlxUIAssets.IMG_TAB,
+    						FlxUIAssets.IMG_TAB_DISABLED
+    					];
+					}else{
                         graphic_names= [
     						FlxUIAssets.IMG_TAB_BACK_HIGHCONTRAST,
     						FlxUIAssets.IMG_TAB_BACK_HIGHCONTRAST,

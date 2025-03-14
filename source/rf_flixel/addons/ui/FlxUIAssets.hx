@@ -17,6 +17,7 @@ class FlxUIAssets
 	public static inline var IMG_TAB:String = "flixel/flixel-ui/img/tab.png";
 	public static inline var IMG_TAB_HIGHCONTRAST:String = "assets/ui/tabHC.png";
 	public static inline var IMG_TAB_BACK:String = "flixel/flixel-ui/img/tab_back.png";
+	public static inline var IMG_TAB_DISABLED:String = "assets/ui/tab_back_disabled.png";
 	public static inline var IMG_TAB_BACK_HIGHCONTRAST:String = "assets/ui/tab_backHC.png";
 	public static inline var IMG_BOX:String = "flixel/flixel-ui/img/box.png";
 	public static inline var IMG_DROPDOWN:String = "flixel/flixel-ui/img/dropdown_mark.png";

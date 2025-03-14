@@ -25,13 +25,16 @@ package backend;
 		many other things
 	**/
 
+	//would custom difficulty pre-fabs be cool?
+
 	//ACCESSIBILITY
-	public var ScreenShake:Bool = true;
-	public var FlashingLights:Bool = true;
+	public var AdultMode:Bool = true; //TODO: implement (removes curses from all dialogue boxes and menus.)
+	public var ScreenShake:Bool = true; //* implemented!
+	public var FlashingLights:Bool = true; //TODO: implement
 	public var ColorBlindnessMode:String = ""; //TODO: implement accessibility setting for color blindness, color blind testers needed?
 	public var Captions:Bool = false; //TODO: implement captions
-	public var EnemyOutlines:Bool = false;
-	public var High_Contrast_UI:Bool = false; //TODO: make custom versions of ui elements with high-contrast texture. (WIP)
+	public var EnemyOutlines:Bool = false; //TODO: implement
+	public var High_Contrast_UI:Bool = false; //! {WIP} [90% finished]
 }
 
 class Preferences {
