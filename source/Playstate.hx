@@ -71,6 +71,9 @@ class Playstate extends FlxTransitionableState {
 	public var defaultCamZoom:Float = 1;
 	public var FgCamDefaultZoom:Float = 1;
 	public var items:Array<BaseItem> = [];
+	public var dying:Bool = false;
+	var tweenOneDone:Bool = false;
+	var tweenTwoDone:Bool = false;
 
 	override public function new(levelToLoad:String = 'level0', ?PlayerPosition:Array<Float> = null, ?save:SaveState, ?saveSlot:Int = 1) {
 		super();
@@ -331,6 +334,31 @@ class Playstate extends FlxTransitionableState {
 		FlxG.watch.addQuick('TriggerTime', nextTriggerTime);
 		#end
 
+		if(FlxG.keys.anyJustPressed([BACKSLASH])){
+			if(!dying){
+				FlxTween.tween(FlxG.camera.zoom, {"zoom": 0.1}, 2.6, {
+					ease: FlxEase.expoIn,
+					onComplete: function(twn:FlxTween){
+						tweenOneDone = true;
+					}
+				});
+				wait(0.5, ()->{
+					FlxTween.tween(FlxG.camera.angle, {"angle": 90}, 1.6, {
+						ease: FlxEase.expoOut,
+						onComplete: function(twn:FlxTween){
+							FlxG.camera.angle = 0;
+							tweenTwoDone = true;
+						}
+					});
+				});
+				if(tweenOneDone && tweenTwoDone){
+					FlxG.switchState(()-> new DeathState(this.saveSlot));
+					trace('done');
+				}
+				dying = true;
+			}
+		}
+
 		for(FlxSprite in ShellGroup){
 			var Sprite = cast FlxSprite;
 			if(Sprite.velocity.x > 0){
@@ -366,27 +394,33 @@ class Playstate extends FlxTransitionableState {
 			default:
 				followStyle = null;
 		}
-		if (!Level.CameraLocked) { // camera locking so we can have static rooms
-			FlxG.camera.follow(Player, followStyle, Level.CameraLerp * elapsed);
-			FGCAM.follow(Player, followStyle, Level.CameraLerp * elapsed);
-		}
-		if (FlxG.keys.anyPressed([PAGEUP]) && defaultCamZoom < 2) {
-			defaultCamZoom += 0.05;
-			FgCamDefaultZoom += 0.05;
-		}
-		if (FlxG.keys.anyPressed([PAGEDOWN]) && defaultCamZoom > 1) {
-			defaultCamZoom -= 0.05;
-			FgCamDefaultZoom -= 0.05;
-		}
-		if (defaultCamZoom > 2)
-			defaultCamZoom = 2;
-		if (FgCamDefaultZoom > 2)
-			FgCamDefaultZoom = 2;
+		if(!dying){
+			if (!Level.CameraLocked) { // camera locking so we can have static rooms
+				FlxG.camera.follow(Player, followStyle, Level.CameraLerp * elapsed);
+				FGCAM.follow(Player, followStyle, Level.CameraLerp * elapsed);
+			}
+			if (FlxG.keys.anyPressed([PAGEUP]) && defaultCamZoom < 2) {
+				defaultCamZoom += 0.05;
+				FgCamDefaultZoom += 0.05;
+			}
+			if (FlxG.keys.anyPressed([PAGEDOWN]) && defaultCamZoom > 1) {
+				defaultCamZoom -= 0.05;
+				FgCamDefaultZoom -= 0.05;
+			}
+			if (defaultCamZoom > 2)
+				defaultCamZoom = 2;
+			if (FgCamDefaultZoom > 2)
+				FgCamDefaultZoom = 2;
 
-		if (defaultCamZoom < 1)
-			defaultCamZoom = 1;
-		if (FgCamDefaultZoom < 1)
-			FgCamDefaultZoom = 1;
+			if (defaultCamZoom < 1)
+				defaultCamZoom = 1;
+			if (FgCamDefaultZoom < 1)
+				FgCamDefaultZoom = 1;
+
+			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
+			FGCAM.zoom = FlxMath.lerp(FgCamDefaultZoom, FGCAM.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
+			HUDCAM.zoom = FlxMath.lerp(1, HUDCAM.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
+		}
 
 		Player.CurRoom = Level.LevelID;
 
@@ -397,22 +431,21 @@ class Playstate extends FlxTransitionableState {
 
 		Playstate.instance.AimerGroup.angle = Player2.angle + 1;
 		super.update(elapsed);
-		FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
-		FGCAM.zoom = FlxMath.lerp(FgCamDefaultZoom, FGCAM.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
-		HUDCAM.zoom = FlxMath.lerp(1, HUDCAM.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
 		//*health stuff
 
 		//* camera bop stuff for the cool stages with bopping music
-		if (isBeatStateType) {
-			if (FlxG.sound.music != null) {
-				FlxG.sound.music.onComplete = () -> {
-					nextTriggerTime = 0;
-				};
-				if (FlxG.sound.music.time >= nextTriggerTime) {
-					FlxG.camera.zoom += 0.01;
-					FGCAM.zoom += 0.01;
-					HUDCAM.zoom += 0.005;
-					nextTriggerTime += interval;
+		if(!dying){
+			if (isBeatStateType) {
+				if (FlxG.sound.music != null) {
+					FlxG.sound.music.onComplete = () -> {
+						nextTriggerTime = 0;
+					};
+					if (FlxG.sound.music.time >= nextTriggerTime) {
+						FlxG.camera.zoom += 0.01;
+						FGCAM.zoom += 0.01;
+						HUDCAM.zoom += 0.005;
+						nextTriggerTime += interval;
+					}
 				}
 			}
 		}
@@ -427,6 +460,13 @@ class Playstate extends FlxTransitionableState {
 }
 
 class DeathState extends FlxState {
+	//TODO: death screen
+	//I HAVE AN IDEA!!!!!!!
+	//okay, FUCK the current death screen idea of hte player simply dying, what iv we like take the ultrakill deathscreen with the static
+	//and fov changes, do like do that but then it like shows a CRT shutoff animation, after that it like, shows a scanline setting with green
+	//text that spells out with some typing sounds in the background ">| would you like to try again?" with like yes or no options
+	//and if you press yes then it like, switches to a POV of your character waking up from a nap and commenting on the weird dream, IN-UNIVERS
+	//EXPLANATION FOR SAVING AND LOADING!!!!!! ITS TWOFOLD!!!
 	var deathText:FlxText;
 	var deathText2:FlxText;
 	var deathText3:FlxText;
@@ -435,36 +475,19 @@ class DeathState extends FlxState {
 	var saveSlot:Int = 1;
 	var deathAnimFinished:Bool = false;
 
-	public function new(saveSlot:Int = 1) {
+	public function new(saveSlot:Int = 1,) {
 		super();
 		this.saveSlot = saveSlot;
-		bg = new FlxSprite(0, 0);
-		bg.makeGraphic(FlxG.width, FlxG.height, 0xFF51FF00);
-		// bg.creategraphicfromscreenshotorseomthignidfk add function to create graphic from screenshot.
-		deathText = new FlxText(0, 0, FlxG.width, "Your journey has ended.");
-		deathText2 = new FlxText(0, 0, FlxG.width, "But you can try again...");
-		deathText3 = new FlxText(0, 0, FlxG.width, "Press any key to load your last save.\n Or press escape to return to the main menu.");
-
-		deathanim = new FlxSprite(0, 0);
-		// TODO: create death animation.
-
-		FlxTween.tween(bg, {alpha: 0.25}, 1, {ease: FlxEase.smootherStepInOut});
-		wait(1, function() {
-			StartDeath();
-		});
-
+		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(50, 50, FlxColor.CYAN);
 		add(bg);
-		// add(deathanim);
-		add(deathText);
-		add(deathText2);
-		add(deathText3);
+		bg.screenCenter(XY);
+		// bg.creategraphicfromscreenshotorseomthignidfk add function to create graphic from screenshot.
+
+		//deathanim = new FlxSprite(0, 0);
+		// TODO: create death animation.
 	}
 
-	public function StartDeath():Void {
-		// do something i think.
-	}
-
-	override public function update(elapsed:Float):Void {
+	override public function update(elapsed:Float) {
 		super.update(elapsed);
 		if (deathAnimFinished) {
 			if (FlxG.keys.anyPressed([ESCAPE])) {

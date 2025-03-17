@@ -86,7 +86,19 @@ class SettingsSubState extends FlxSubState{
 			{name: "tab_3", label: "Accessibility"},
 			{name: "tab_4", label: "Difficulty"}
 		];
-        TabGroups = new FlxUITabMenu(null, null, tabs, if(HC) true else false, null, false, null, null, if(FlxG.state is Playstate) true else false);
+        @:privateAccess
+        if(FlxG.state is Playstate){
+            TabGroups = new FlxUITabMenu(null, null, tabs, if(HC) true else false, null, false, null, null, true);
+            if (TabGroups.length > 3) {
+                // Disable the fourth tab (index 3, as arrays are 0-indexed)
+                var fourthTab = TabGroups.getTab(3);
+                if (fourthTab != null) {
+                    // Disable the tab (make it unpressable)
+                    fourthTab.active = false;
+                }
+            }
+        }else
+        TabGroups = new FlxUITabMenu(null, null, tabs, if(HC) true else false, null, false, null, null, false);
         TabGroups.resize(TabGroups.width + 55, TabGroups.height);
         
 		var tab_group_1 = new FlxUI(null, TabGroups, null);
@@ -362,20 +374,6 @@ Your save will be deleted if you die' //4
     override public function update(elapsed:Float) {
         super.update(elapsed);
         parstate.update(elapsed);
-
-        @:privateAccess
-        if(FlxG.state is Playstate){
-            if (TabGroups.length > 3) {
-                // Disable the fourth tab (index 3, as arrays are 0-indexed)
-                var fourthTab = TabGroups.getTab(3);
-                if (fourthTab != null) {
-                    // Disable the tab (make it unpressable)
-                    fourthTab.active = false;
-                    // Optionally, change alpha for visual feedback that it's disabled
-                    fourthTab.loadGraphicSlice9(graphic_names, 0, 0, slice9_names, FlxUI9SliceSprite.TILE_NONE, -1, true);
-                }
-            }
-        }
 
         /**
             oh boy, this gets complex quickly...
