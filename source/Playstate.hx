@@ -1,5 +1,7 @@
 package;
 
+import flixel.effects.FlxFlicker;
+import crash.FlxTypeText;
 import backend.save.GameSave;
 import backend.level.Level.LevelSprite;
 import objects.RFTriAxisSprite;
@@ -30,6 +32,7 @@ import backend.*;
 import backend.level.*;
 import objects.game.controllables.*;
 import objects.game.hud.HUD;
+
 
 class Playstate extends FlxTransitionableState {
 	public static var instance:Playstate;
@@ -72,6 +75,7 @@ class Playstate extends FlxTransitionableState {
 	public var FgCamDefaultZoom:Float = 1;
 	public var items:Array<BaseItem> = [];
 	public var dying:Bool = false;
+	public var activlyDying:Bool = false;
 	var tweenOneDone:Bool = false;
 	var tweenTwoDone:Bool = false;
 
@@ -268,6 +272,7 @@ class Playstate extends FlxTransitionableState {
 
 	override public function create() {
 		super.create();
+		FlxG.mouse.visible = true; //* why was this being called in onUpdate(elapsed:Float)?
 
 		////RFLParser.LoadRFLData('TestRFL', '', 'TestFile');
 
@@ -334,29 +339,57 @@ class Playstate extends FlxTransitionableState {
 		FlxG.watch.addQuick('TriggerTime', nextTriggerTime);
 		#end
 
-		if(FlxG.keys.anyJustPressed([BACKSLASH])){
+		if(#if debug FlxG.keys.anyJustPressed([BACKSLASH]) #else /** todo **/ #end){ //! replace with real death logic when applicable
 			if(!dying){
-				FlxTween.tween(FlxG.camera.zoom, {"zoom": 0.1}, 2.6, {
-					ease: FlxEase.expoIn,
-					onComplete: function(twn:FlxTween){
-						tweenOneDone = true;
-					}
-				});
-				wait(0.5, ()->{
-					FlxTween.tween(FlxG.camera.angle, {"angle": 90}, 1.6, {
-						ease: FlxEase.expoOut,
-						onComplete: function(twn:FlxTween){
-							FlxG.camera.angle = 0;
-							tweenTwoDone = true;
-						}
+				FlxG.camera.zoom += 2;
+				FlxG.camera.shake(0.005, 0.4);
+				wait(0.4, ()->{
+					FlxG.camera.shake(0.0025, 0.4);
+					wait(0.4, ()->{
+						FlxG.camera.shake(0.001, 0.4);
 					});
 				});
-				if(tweenOneDone && tweenTwoDone){
-					FlxG.switchState(()-> new DeathState(this.saveSlot));
-					trace('done');
+				if(Player.suit != null){
+					FlxTween.tween(Hud.StatMSGContainer, {alpha: 0}, 0.4, { ease: FlxEase.expoIn });
+					wait(0.4, ()->{
+						FlxTween.tween(HUDCAM, {y: -60}, 0.2, { ease: FlxEase.expoIn });
+					});
 				}
-				dying = true;
+				wait(0.6, ()->{
+					activlyDying = true;
+					FlxG.sound.music.fadeOut(1.5, 0, function(snd:FlxTween) { FlxG.sound.music.stop(); });
+					FlxG.sound.play(backend.Assets.sound('death.ogg'), 1, false);
+					FlxTween.tween(FlxG.camera, {zoom: 0.001}, 1.6, { //* why dont these tweens work? //IM SUCH A DUMBASS I PUT `FlxG.camera.zoom` AS THE TARGETTED OBJECT :sob:
+						ease: FlxEase.expoIn,
+						type: ONESHOT,
+						onComplete: function(twn:FlxTween){
+							tweenOneDone = true;
+						}
+					});
+					FlxTween.tween(FGCAM, {zoom: 0.1}, 1.6, {
+					ease: FlxEase.expoIn,
+					type: ONESHOT,
+				});
+					wait(1, ()->{
+						FlxTween.tween(FlxG.camera, {angle: 90}, 0.6, {
+							ease: FlxEase.expoIn,
+							type: ONESHOT,
+							onComplete: function(twn2:FlxTween){
+								FlxG.camera.angle = 0;
+								FlxG.switchState(()-> new DeathState(this.saveSlot));
+							}
+						});
+						FlxTween.tween(FGCAM, {angle: 90}, 0.6, { //forground camera because that also needs to be moved
+							ease: FlxEase.expoIn,
+							type: ONESHOT,
+							onComplete: function(twn2:FlxTween){
+								FGCAM.angle = 0;
+							}
+						});
+					});
+				});
 			}
+			dying = true;
 		}
 
 		for(FlxSprite in ShellGroup){
@@ -372,9 +405,6 @@ class Playstate extends FlxTransitionableState {
 				Sprite.velocity.y++;
 			}
 		}
-
-		FlxG.mouse.visible = true;
-
 		for (item in items)
 			item.update(elapsed);
 
@@ -417,6 +447,9 @@ class Playstate extends FlxTransitionableState {
 			if (FgCamDefaultZoom < 1)
 				FgCamDefaultZoom = 1;
 
+
+		}
+		if(!activlyDying){
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
 			FGCAM.zoom = FlxMath.lerp(FgCamDefaultZoom, FGCAM.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
 			HUDCAM.zoom = FlxMath.lerp(1, HUDCAM.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
@@ -427,7 +460,7 @@ class Playstate extends FlxTransitionableState {
 		AimerGroup.update(elapsed); // you know, this might cause issues with animations :facepalm:
 		AimerGroup.setPosition(Player2.x, Player2.y);
 		
-		Player3.setPosition(FlxG.mouse.viewX, FlxG.mouse.viewY);
+		Player3.setPosition(FlxG.mouse.gameX, FlxG.mouse.gameY);
 
 		Playstate.instance.AimerGroup.angle = Player2.angle + 1;
 		super.update(elapsed);
@@ -462,39 +495,155 @@ class Playstate extends FlxTransitionableState {
 class DeathState extends FlxState {
 	//TODO: death screen
 	//I HAVE AN IDEA!!!!!!!
-	//okay, FUCK the current death screen idea of hte player simply dying, what iv we like take the ultrakill deathscreen with the static
+	//okay, FUCK the current death screen idea of the player simply dying, what if we like take the ultrakill deathscreen with the static
 	//and fov changes, do like do that but then it like shows a CRT shutoff animation, after that it like, shows a scanline setting with green
 	//text that spells out with some typing sounds in the background ">| would you like to try again?" with like yes or no options
 	//and if you press yes then it like, switches to a POV of your character waking up from a nap and commenting on the weird dream, IN-UNIVERS
 	//EXPLANATION FOR SAVING AND LOADING!!!!!! ITS TWOFOLD!!!
-	var deathText:FlxText;
-	var deathText2:FlxText;
-	var deathText3:FlxText;
-	var bg:FlxSprite; // remember to make this into a semi-transparent version of whereever you are in the main playstate somehow.
 	var deathanim:FlxSprite;
 	var saveSlot:Int = 1;
 	var deathAnimFinished:Bool = false;
 
+	var bg:FlxSprite;
+
+	var text:String = '';
+	var errorTxt:FlxTypeText;
+
+	var text1:FlxText;
+	var text3:FlxText;
+	var text2:FlxText;
+
 	public function new(saveSlot:Int = 1,) {
 		super();
 		this.saveSlot = saveSlot;
-		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(50, 50, FlxColor.CYAN);
+		bg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFF000000, 0xFF630000], 1, 90);
 		add(bg);
-		bg.screenCenter(XY);
-		// bg.creategraphicfromscreenshotorseomthignidfk add function to create graphic from screenshot.
+		bg.y = 720;
 
-		//deathanim = new FlxSprite(0, 0);
-		// TODO: create death animation.
+		text1 = new FlxText(0, 0, FlxG.width, 'RECONNECTING', 86, false);
+		text1.setFormat(backend.Assets.font('terminus'), 86, FlxColor.WHITE, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+		text1.screenCenter(Y);
+
+		text3 = new FlxText(800, text1.y, 500, '', 86, false);
+		text3.setFormat(backend.Assets.font('terminus'), 86, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+
+		text2 = new FlxText(0, 0, FlxG.width, '', 74, false);
+		text2.setFormat(backend.Assets.font('terminus'), 74, FlxColor.WHITE, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+		text2.y = text1.y + 58;
+
+		add(text1);
+		add(text2);
+		add(text3);
+		
+		wait(0, ()->{
+			text3.text = '';
+			wait(0.4, ()->{
+				text3.text = '.';
+				wait(0.4, ()->{
+					text3.text = '..';
+					wait(0.4, ()->{
+						text3.text = '...';
+						wait(0.4, ()->{
+							text3.text = '.';
+							wait(0.4, ()->{
+								text3.text = '..';
+								wait(0.4, ()->{
+									text3.text = '...';
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+
+		wait(2.7, ()->{
+			text3.visible = false;
+			text1.setFormat(backend.Assets.font('terminus'), 86, FlxColor.WHITE, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+			text1.text = 'CONNECTION';
+
+			text2.setFormat(backend.Assets.font('terminus'), 74, FlxColor.RED, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
+			text2.text = 'FAILED';
+			FlxFlicker.flicker(text2, 9999, 0.5, true, false);
+			FlxTween.tween(bg, {y: 0}, 0.5, { ease: FlxEase.expoInOut });
+		});
+
+		wait(5, ()->{
+			deathAnimFinished = true;
+		});
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 		if (deathAnimFinished) {
 			if (FlxG.keys.anyPressed([ESCAPE])) {
-				FlxG.switchState(MainMenu.new);
+				deathAnimFinished = false; //* shitty way of blocking input once you press a button, but it works so what do i care
+				text1.y = text1.y - 25;
+				text2.y = text2.y + 5;
+				FlxTween.tween(FlxG.camera, {zoom: 0.001}, 1.6, {
+					ease: FlxEase.expoIn,
+				});
+				FlxTween.tween(FlxG.camera, {alpha: 0}, 1.6, {
+					ease: FlxEase.expoIn,
+				});
+				FlxTween.tween(bg, {y: 720}, 0.5, { ease: FlxEase.expoIn });
+				FlxFlicker.stopFlickering(text2);
+				text2.text = 'EXCLUSIONS LIST';
+				#if windows
+				text1.text = '[signal.${Sys.environment()["COMPUTERNAME"]}] ADDED TO';
+				#elseif linux
+				text1.text = '[signal.${Sys.environment()["USER"]}] ADDED TO';
+				#end
+				wait(2, ()->{
+					FlxG.switchState(MainMenu.new);
+				});
 			}
 			if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
-				PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
+				FlxFlicker.stopFlickering(text2);
+				bg.kill();
+				bg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFF000000, 0xFF00FF00], 1, 90);
+				add(bg);
+				FlxG.camera.shake(0.005, 0.4);
+				wait(0.4, ()->{
+					FlxG.camera.shake(0.0025, 0.4);
+					wait(0.4, ()->{
+						FlxG.camera.shake(0.001, 0.4);
+					});
+				});
+				text2.visible = false;
+				text1.text = 'RETRYING';
+				text1.color = 0xFF00FF00;
+				text3.x = 800;
+				text3.visible = true;
+				text3.color = 0xFF00FF00;
+				wait(0, ()->{
+					text3.text = '';
+					wait(0.4, ()->{
+						text3.text = '.';
+						wait(0.4, ()->{
+							text3.text = '..';
+							wait(0.4, ()->{
+								text3.text = '...';
+								wait(0.4, ()->{
+									text3.text = '.';
+									wait(0.4, ()->{
+										text3.text = '..';
+										wait(0.4, ()->{
+											text3.text = '...';
+										});
+									});
+								});
+							});
+						});
+					});
+				});
+				wait(2, ()->{
+					FlxTween.tween(FlxG.camera, {alpha: 0}, 0.2, { ease: FlxEase.expoIn, onComplete: function (twn:FlxTween) {
+						wait(0.4, ()->{
+							PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
+						});
+					}});
+				});
 			}
 		}
 	}

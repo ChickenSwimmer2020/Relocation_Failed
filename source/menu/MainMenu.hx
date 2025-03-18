@@ -133,20 +133,17 @@ class MainMenu extends FlxState {
 
         //button handling
         Button_Play = new Button('New\nGame', 560, 280, Assets.image('menu/ButtonTEST'), ()->{ FlxG.state.openSubState(new substates.ChapterSelectSubState(this)); }, 1, false);
-        //Button_Play.DaButton.updateHitbox();
         Button_Play.updateTextPosition();
         Button_Play.camera = verCam;
         add(Button_Play);
 
         Button_Load = new Button('Load\nGame', Button_Play.DaButton.x, Button_Play.DaButton.y + 85, Assets.image('menu/ButtonTEST'), ()->{ PlayerSaveStateUtil.LoadPlayerSaveState(1); FlxG.sound.music.stop(); FlxG.sound.playMusic(Assets.music('WeightLess.ogg'), 1, true); }, 1, false);
-        //Button_Load.DaButton.updateHitbox();
         Button_Load.updateTextPosition();
         Button_Load.camera = verCam;
         add(Button_Load);
 
         Button_Settings = new Button('Settings', Button_Load.DaButton.x + 250, Button_Load.DaButton.y + 10, Assets.image('menu/ButtonTEST'),
         ()->{ FlxG.state.openSubState(new menu.SettingsSubState(this)); }, 1, false);
-        //Button_Settings.DaButton.updateHitbox();
         Button_Settings.updateTextPosition();
         Button_Settings.camera = verCam;
         add(Button_Settings);

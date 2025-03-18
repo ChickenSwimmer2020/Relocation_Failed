@@ -1,5 +1,6 @@
 package backend;
 
+import flixel.sound.FlxSound;
 import haxe.PosInfos;
 import sys.FileSystem;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -21,7 +22,7 @@ class Assets {
 	 * @since RF_DEV_0.0.9
 	 */
 	public static function sound(Key:String):FlxSoundAsset
-		return cast Sound.fromFile('assets/$Key');
+		return cast Sound.fromFile('assets/sound/snd/$Key');
 
 	/**
 	 * Returns the music asset.

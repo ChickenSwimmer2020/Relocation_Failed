@@ -357,13 +357,13 @@ TBA
 Game autosaves every 20 minutes;
         ', //3
         'For those wanting to fight the gods themselves\n
-Enemies do +125% damage, player does -25% damage
+Enemies do +75% damage, player does -15% damage
 Enemies move +50% faster, player moves -12% slower
 Ammo spawns incredibly rarely, conserve it, guns must be reloaded
 Enemies can hear your footsteps, enemies can see your flashlight beam
 Guns have a 12% chance to jam with every shot
 Shotgun must be manually pumped, weapons have durability, fog of war is enabled
-Stamina Drains 90% faster, oxygen drains 90% faster, battery takes 75% more impact
+Stamina Drains 25% faster, oxygen drains 75% faster, battery takes 75% more impact
 player will bleed if hit with an enemy melee attack
 ----------------------------------------------------
 Game doesnt autosave

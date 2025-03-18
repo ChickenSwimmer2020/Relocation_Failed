@@ -71,19 +71,19 @@ class HUD extends FlxSpriteGroup {
 	}
 
 	private function checkBulletsNullDetection():Bool{
-		var Nulls:Array<Bool> = [false, false, false, false];
+		var checkboxstatus:Array<Bool> = [false, false, false, false];
 		var isNull:Bool = false;
 
 		for(i in 0...bullets.members.length){
 			var item = bullets.members[i];
 			if(item.exists){
-				Nulls.push(item.exists);
+				checkboxstatus.push(item.exists);
 			}else{
-				Nulls.push(item.exists);
+				checkboxstatus.push(item.exists);
 			}
 		}
 
-		switch(Nulls.toString()){
+		switch(Std.string(checkboxstatus)){ //so, APPARENTLY, toString didnt work? either i missed the () OR somthing was fucked. idk
 			case '[true, true, true, true]':
 				isNull = false;
 			default:
@@ -190,7 +190,7 @@ class HUD extends FlxSpriteGroup {
 			ammocounter_AMMOSLASH.x = ammocounter_AMMONUMONE.frameWidth + 1050 - 20;
 			ammocounter_AMMONUMTWO.x = ammocounter_AMMONUMONE.frameWidth + 1065 - 20;
 		}else{
-			trace('Something went wrong and the bullets could not be updated, please re-look through your code!');
+			//trace('Something went wrong and the bullets could not be updated, please re-look through your code!');
 		}
 
 		#if debug
@@ -324,9 +324,7 @@ class HUD extends FlxSpriteGroup {
 		var Char:Int = 0;
 		for(i in 0...healthString.length - 1){
 			HPTXT.text = healthString.substring(0, Char);
-			wait(0.1, ()->{
-				Char++;
-			});
+			Char++;
 		}
 	}
 
