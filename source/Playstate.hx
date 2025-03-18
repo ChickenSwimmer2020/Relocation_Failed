@@ -339,14 +339,35 @@ class Playstate extends FlxTransitionableState {
 		FlxG.watch.addQuick('TriggerTime', nextTriggerTime);
 		#end
 
-		if(#if debug FlxG.keys.anyJustPressed([BACKSLASH]) #else /** todo **/ #end){ //! replace with real death logic when applicable
+		for(object in Playstate.instance.members){
+			if(Std.isOfType(object, FlxSprite)){
+				var obj:FlxSprite = cast object;
+				if(!obj.isOnScreen()){
+					if(obj.visible)
+						obj.visible = false;
+				}else{
+					if(!obj.visible)
+						obj.visible = true;
+				}
+			}
+		}
+
+		if(#if debug FlxG.keys.anyJustPressed([BACKSLASH]) #else null #end){ //! replace with real death logic when applicable
 			if(!dying){
 				FlxG.camera.zoom += 2;
+				HUDCAM.zoom += 2;
+				FGCAM.zoom += 2;
 				FlxG.camera.shake(0.005, 0.4);
+				HUDCAM.shake(0.005, 0.4);
+				FGCAM.shake(0.005, 0.4);
 				wait(0.4, ()->{
 					FlxG.camera.shake(0.0025, 0.4);
+					HUDCAM.shake(0.0025, 0.4);
+					FGCAM.shake(0.0025, 0.4);
 					wait(0.4, ()->{
 						FlxG.camera.shake(0.001, 0.4);
+						HUDCAM.shake(0.001, 0.4);
+						FGCAM.shake(0.001, 0.4);
 					});
 				});
 				if(Player.suit != null){
@@ -366,10 +387,10 @@ class Playstate extends FlxTransitionableState {
 							tweenOneDone = true;
 						}
 					});
-					FlxTween.tween(FGCAM, {zoom: 0.1}, 1.6, {
+					FlxTween.tween(FGCAM, {zoom: 0.001}, 1.6, {
 					ease: FlxEase.expoIn,
 					type: ONESHOT,
-				});
+					});
 					wait(1, ()->{
 						FlxTween.tween(FlxG.camera, {angle: 90}, 0.6, {
 							ease: FlxEase.expoIn,
@@ -405,8 +426,13 @@ class Playstate extends FlxTransitionableState {
 				Sprite.velocity.y++;
 			}
 		}
-		for (item in items)
+		for (item in items){
 			item.update(elapsed);
+			//if(Std.isOfType(item, BaseItem)){ //TODO: item logic to hide it offscreen, hard to do since BaseItem is a FlxBasic
+			//	var itm:FlxBasic = cast item;
+//
+			//}
+		}
 
 		switch (Level.CameraFollowStyle) {
 			case 'LOCKON':
@@ -505,6 +531,7 @@ class DeathState extends FlxState {
 	var deathAnimFinished:Bool = false;
 
 	var bg:FlxSprite;
+	var bg2:FlxSprite;
 
 	var text:String = '';
 	var errorTxt:FlxTypeText;
@@ -518,13 +545,17 @@ class DeathState extends FlxState {
 		this.saveSlot = saveSlot;
 		bg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFF000000, 0xFF630000], 1, 90);
 		add(bg);
+		bg2 = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFF000000, 0xFF00FF00], 1, 90);
+		add(bg2);
 		bg.y = 720;
+		bg2.visible = false;
+
 
 		text1 = new FlxText(0, 0, FlxG.width, 'RECONNECTING', 86, false);
 		text1.setFormat(backend.Assets.font('terminus'), 86, FlxColor.WHITE, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
 		text1.screenCenter(Y);
 
-		text3 = new FlxText(800, text1.y, 500, '', 86, false);
+		text3 = new FlxText(900, text1.y, 500, '', 86, false);
 		text3.setFormat(backend.Assets.font('terminus'), 86, FlxColor.WHITE, LEFT, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
 
 		text2 = new FlxText(0, 0, FlxG.width, '', 74, false);
@@ -565,7 +596,7 @@ class DeathState extends FlxState {
 			text2.setFormat(backend.Assets.font('terminus'), 74, FlxColor.RED, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
 			text2.text = 'FAILED';
 			FlxFlicker.flicker(text2, 9999, 0.5, true, false);
-			FlxTween.tween(bg, {y: 0}, 0.5, { ease: FlxEase.expoInOut });
+			FlxTween.tween(bg, {y: 0}, 0.5, { ease: FlxEase.expoOut });
 		});
 
 		wait(5, ()->{
@@ -586,7 +617,7 @@ class DeathState extends FlxState {
 				FlxTween.tween(FlxG.camera, {alpha: 0}, 1.6, {
 					ease: FlxEase.expoIn,
 				});
-				FlxTween.tween(bg, {y: 720}, 0.5, { ease: FlxEase.expoIn });
+				FlxTween.tween(bg, {y: 720}, 0.5, { ease: FlxEase.expoIn, onComplete: function(twn:FlxTween) { bg.visible = false; }});
 				FlxFlicker.stopFlickering(text2);
 				text2.text = 'EXCLUSIONS LIST';
 				#if windows
@@ -600,9 +631,8 @@ class DeathState extends FlxState {
 			}
 			if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
 				FlxFlicker.stopFlickering(text2);
-				bg.kill();
-				bg = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xFF000000, 0xFF00FF00], 1, 90);
-				add(bg);
+				bg.visible = false;
+				bg2.visible = true;
 				FlxG.camera.shake(0.005, 0.4);
 				wait(0.4, ()->{
 					FlxG.camera.shake(0.0025, 0.4);
@@ -637,9 +667,9 @@ class DeathState extends FlxState {
 						});
 					});
 				});
-				wait(2, ()->{
+				wait(2.3, ()->{
 					FlxTween.tween(FlxG.camera, {alpha: 0}, 0.2, { ease: FlxEase.expoIn, onComplete: function (twn:FlxTween) {
-						wait(0.4, ()->{
+						wait(0.2, ()->{
 							PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
 						});
 					}});
