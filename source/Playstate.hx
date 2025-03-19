@@ -1,5 +1,8 @@
 package;
 
+import shaders.DeathBinary.BinaryShader;
+import openfl.filters.ShaderFilter;
+import shaders.DeathStatic.StaticShader;
 import flixel.effects.FlxFlicker;
 import crash.FlxTypeText;
 import backend.save.GameSave;
@@ -78,6 +81,11 @@ class Playstate extends FlxTransitionableState {
 	public var activlyDying:Bool = false;
 	var tweenOneDone:Bool = false;
 	var tweenTwoDone:Bool = false;
+
+	//var staticShader:StaticShader;
+	var binary:BinaryShader;
+	//var filter:ShaderFilter;
+	var filter2:ShaderFilter;
 
 	override public function new(levelToLoad:String = 'level0', ?PlayerPosition:Array<Float> = null, ?save:SaveState, ?saveSlot:Int = 1) {
 		super();
@@ -272,6 +280,12 @@ class Playstate extends FlxTransitionableState {
 
 	override public function create() {
 		super.create();
+
+		//staticShader = new StaticShader();
+		binary = new BinaryShader();
+		//filter = new ShaderFilter(staticShader);
+		filter2 = new ShaderFilter(binary);
+
 		FlxG.mouse.visible = true; //* why was this being called in onUpdate(elapsed:Float)?
 
 		////RFLParser.LoadRFLData('TestRFL', '', 'TestFile');
@@ -354,6 +368,8 @@ class Playstate extends FlxTransitionableState {
 
 		if(#if debug FlxG.keys.anyJustPressed([BACKSLASH]) #else null #end){ //! replace with real death logic when applicable
 			if(!dying){
+				binary.createPixels();
+				FlxG.camera.filters = [/*filter,*/filter2];
 				FlxG.camera.zoom += 2;
 				HUDCAM.zoom += 2;
 				FGCAM.zoom += 2;
@@ -519,7 +535,6 @@ class Playstate extends FlxTransitionableState {
 }
 
 class DeathState extends FlxState {
-	//TODO: death screen
 	//I HAVE AN IDEA!!!!!!!
 	//okay, FUCK the current death screen idea of the player simply dying, what if we like take the ultrakill deathscreen with the static
 	//and fov changes, do like do that but then it like shows a CRT shutoff animation, after that it like, shows a scanline setting with green
@@ -533,12 +548,20 @@ class DeathState extends FlxState {
 	var bg:FlxSprite;
 	var bg2:FlxSprite;
 
-	var text:String = '';
-	var errorTxt:FlxTypeText;
+	var text:String = 'Would you like to try again?';
+	var	Msg:FlxTypeText;
 
 	var text1:FlxText;
 	var text3:FlxText;
 	var text2:FlxText;
+
+	public var BPM:Float = 90;
+	public var nextTriggerTime:Float = 0;
+	public var interval:Float;
+	public var BopsPerNumOfBeats:Int = 1000;
+
+	public var leaving:Bool = false;
+	public var canBop:Bool = false;
 
 	public function new(saveSlot:Int = 1,) {
 		super();
@@ -549,6 +572,20 @@ class DeathState extends FlxState {
 		add(bg2);
 		bg.y = 720;
 		bg2.visible = false;
+
+		Msg = new FlxTypeText(470, 500, 1000, text, 24);
+		Msg.font = Assets.font('terminus');
+		var sound:Array<flixel.sound.FlxSound> = [];
+		for(i in 0...4){
+			sound.push(FlxG.sound.load(backend.Assets.sound('clicks/click$i.ogg')));
+		}
+		Msg.sounds = sound;
+		Msg.color = 0xFFFFFFFF;
+		add(Msg);
+		Msg.cursorCharacter = '█';
+		Msg.showCursor = false;
+		Msg.txtPerFrame = 1;
+		Msg.cursorBlinkSpeed = 0.2;
 
 
 		text1 = new FlxText(0, 0, FlxG.width, 'RECONNECTING', 86, false);
@@ -595,20 +632,37 @@ class DeathState extends FlxState {
 
 			text2.setFormat(backend.Assets.font('terminus'), 74, FlxColor.RED, CENTER, FlxTextBorderStyle.NONE, FlxColor.TRANSPARENT, true);
 			text2.text = 'FAILED';
-			FlxFlicker.flicker(text2, 9999, 0.5, true, false);
-			FlxTween.tween(bg, {y: 0}, 0.5, { ease: FlxEase.expoOut });
+			canBop = true;
+			FlxG.sound.playMusic(backend.Assets.music('Miscalculation.ogg'), 1, true);
+			FlxFlicker.flicker(text2, 4, 0.5, true, false);
+			FlxTween.tween(bg, {y: 100}, 0.5, { ease: FlxEase.expoOut });
+			wait(4.5, ()->{
+				Msg.showCursor = true;
+				wait(2, ()->{
+					Msg.start();
+					wait(2, ()->{ Msg.showCursor = false; });
+				});
+			});
 		});
 
-		wait(5, ()->{
+
+		wait(10, ()->{
 			deathAnimFinished = true;
 		});
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
+		interval = (60 / BPM * BopsPerNumOfBeats);
+		if(!leaving){
+			FlxG.camera.zoom = FlxMath.lerp(1, FlxG.camera.zoom, Math.exp(-elapsed * 3.125 * 2 * 1));
+		}
 		if (deathAnimFinished) {
 			if (FlxG.keys.anyPressed([ESCAPE])) {
 				deathAnimFinished = false; //* shitty way of blocking input once you press a button, but it works so what do i care
+				leaving = true;
+				canBop = false;
+				FlxG.sound.music.fadeOut(2);
 				text1.y = text1.y - 25;
 				text2.y = text2.y + 5;
 				FlxTween.tween(FlxG.camera, {zoom: 0.001}, 1.6, {
@@ -619,6 +673,7 @@ class DeathState extends FlxState {
 				});
 				FlxTween.tween(bg, {y: 720}, 0.5, { ease: FlxEase.expoIn, onComplete: function(twn:FlxTween) { bg.visible = false; }});
 				FlxFlicker.stopFlickering(text2);
+				Msg.visible = false;
 				text2.text = 'EXCLUSIONS LIST';
 				#if windows
 				text1.text = '[signal.${Sys.environment()["COMPUTERNAME"]}] ADDED TO';
@@ -626,10 +681,12 @@ class DeathState extends FlxState {
 				text1.text = '[signal.${Sys.environment()["USER"]}] ADDED TO';
 				#end
 				wait(2, ()->{
+					FlxG.sound.music.stop();
 					FlxG.switchState(MainMenu.new);
 				});
 			}
-			if (FlxG.keys.anyPressed([ANY]) && !FlxG.keys.anyPressed([ESCAPE])) {
+			if (FlxG.keys.anyPressed([SPACE, ENTER]) && !FlxG.keys.anyPressed([ESCAPE])) {
+				deathAnimFinished = false;
 				FlxFlicker.stopFlickering(text2);
 				bg.visible = false;
 				bg2.visible = true;
@@ -645,6 +702,7 @@ class DeathState extends FlxState {
 				text1.color = 0xFF00FF00;
 				text3.x = 800;
 				text3.visible = true;
+				Msg.visible = false;
 				text3.color = 0xFF00FF00;
 				wait(0, ()->{
 					text3.text = '';
@@ -667,13 +725,29 @@ class DeathState extends FlxState {
 						});
 					});
 				});
+				FlxG.sound.music.fadeOut(2.3);
 				wait(2.3, ()->{
 					FlxTween.tween(FlxG.camera, {alpha: 0}, 0.2, { ease: FlxEase.expoIn, onComplete: function (twn:FlxTween) {
 						wait(0.2, ()->{
+							FlxG.sound.music.stop();
 							PlayerSaveStateUtil.LoadPlayerSaveState(saveSlot);
 						});
 					}});
 				});
+			}
+		}
+		//hehe, cool bopping :wink:
+		if(canBop){
+			if (FlxG.sound.music != null) {
+				FlxG.sound.music.onComplete = () -> {
+					nextTriggerTime = 0;
+				};
+				if (FlxG.sound.music.time >= nextTriggerTime && canBop) {
+					FlxG.camera.zoom += 0.02;
+					bg.y = 0;
+					FlxTween.tween(bg, {y:100}, 0.5, { ease: FlxEase.expoOut });
+					nextTriggerTime += interval;
+				}
 			}
 		}
 	}

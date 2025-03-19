@@ -17,7 +17,7 @@
 
  - [ ] Chapter select needs to be rewritten
  - [x] Create a BPM system for the camera bopping
- - [ ] Create the death animation
+ - [x] Create the death animation
  - [ ] Make logo for CS2020 intro
  - [ ] Fix the health tween on hud init
  - [ ] make damage indicators work

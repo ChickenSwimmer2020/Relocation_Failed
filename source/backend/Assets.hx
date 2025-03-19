@@ -52,6 +52,15 @@ class Assets {
 		return FileSystem.exists('assets/fonts/$Key.ttf') ? 'assets/fonts/$Key.ttf' : 'assets/fonts/$Key.otf';
 
 	/**
+	 * Returns the path to a shader asset.
+	 * @param Key The key of the shader.
+	 * @return The path to the shader.
+	 * @since RF_DEV_0.4.0
+	 */
+	 public static function shader(Key:String):String
+		return 'assets/shaders/$Key.frag';
+
+	/**
 	 * Returns the frames of a sparrow atlas.
 	 * @param key 
 	 * @return The frames of the sparrow atlas.

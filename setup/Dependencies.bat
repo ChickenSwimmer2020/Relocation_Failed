@@ -18,6 +18,7 @@ haxelib install hlwnative
 haxelib install flixel-ui
 haxelib install flixel-addons
 haxelib install hxdiscord
+haxelib install loreline
 
 :: Test lime command
 echo Running lime command as a test...
