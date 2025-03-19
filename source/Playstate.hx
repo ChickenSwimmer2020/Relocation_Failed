@@ -92,124 +92,7 @@ class Playstate extends FlxTransitionableState {
 		instance = this;
 		this.saveSlot = saveSlot;
 		_LEVEL = levelToLoad;
-		// Test dialogue
-		var dialogue:Dialogue = {
-			strings: [
-				{
-					dialogueBox: {
-						texPath: '',
-						idleAnim: {
-							name: 'idle',
-							frame: [100, 70],
-							looped: true,
-							fps: 24,
-							flipX: false,
-							flipY: false
-						},
-						scaleX: 1,
-						scaleY: 1,
-						xOffset: 0,
-						yOffset: 0
-					},
-					fontTex: '',
-					charLeft: 'gilbert',
-					charRight: 'chillbert',
-					charCenter: '',
-					speakingCharacters: ['gilbert'],
-					sounds: [
-						{
-							voiceMode: 'perChar',
-							soundPath: 'assets/sound/voices/gilbert/1.wav',
-							volume: 1
-						},
-						{
-							voiceMode: 'perChar',
-							soundPath: 'assets/sound/voices/chillbert/1.wav',
-							volume: 1
-						}
-					],
-					text: [
-						{
-							autoplayNext: true,
-							animsToPlay: [
-								{
-									charName: 'gilbert',
-									animName: 'speak'
-								},
-								{
-									charName: 'chillbert',
-									animName: 'speak'
-								}
-							],
-							speed: 1,
-							text: 'I,',
-							postTextPause: 1,
-							format: {
-								color: '0xFF000000',
-								borderColor: '0xFF000000',
-								underlined: false
-							}
-						},
-						{
-							autoplayNext: true,
-							animsToPlay: [
-								{
-									charName: 'gilbert',
-									animName: 'speak'
-								},
-								{
-									charName: 'chillbert',
-									animName: 'speak'
-								}
-							],
-							speed: 1,
-							text: 'AM,',
-							postTextPause: 1,
-							format: {
-								color: '0xFF000000',
-								borderColor: '0xFF000000',
-								underlined: false
-							}
-						},
-						{
-							autoplayNext: true,
-							animsToPlay: [
-								{
-									charName: 'gilbert',
-									animName: 'yell'
-								},
-								{
-									charName: 'chillbert',
-									animName: 'yell'
-								}
-							],
-							speed: 1,
-							text: 'THE ONE!!!!!',
-							postTextPause: 1,
-							format: {
-								color: '0xFFFF0000',
-								borderColor: '0xFFFF0000',
-								underlined: true
-							}
-						}
-					]
-				}
-			],
-			bgMusic: {
-				songs: [
-					{
-						volume: 1,
-						path: 'assets/sound/mus/WeightLess.ogg',
-						looped: false
-					}
-				],
-			},
-			hscriptPath: ''
-		};
-		// Clipboard.text = TJSON.encode(dialogue, 'fancy'); //! SOLAR CAN YOU LIKE, NOT?!
-		//* sorry, i was angry from a bug. but writing to my clipboard is annoying when i have code stored, because it overwrites the last result in clipboard history.
-		// trace('JSON DIALOGUE: \n${TJSON.encode(dialogue, 'fancy')}');
-
+		
 		if (PlayerPosition == null)
 			PlayerPosition = [0, 0, 0];
 
@@ -353,7 +236,7 @@ class Playstate extends FlxTransitionableState {
 		FlxG.watch.addQuick('TriggerTime', nextTriggerTime);
 		#end
 
-		for(object in Playstate.instance.members){
+		for(object in members){
 			if(Std.isOfType(object, FlxSprite)){
 				var obj:FlxSprite = cast object;
 				if(!obj.isOnScreen()){
