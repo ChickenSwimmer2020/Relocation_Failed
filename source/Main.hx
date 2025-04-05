@@ -40,6 +40,10 @@ class Main extends Sprite {
 		var fromCrash = FileSystem.exists('idied.rfDUMP');
 		trace('${dateNow.substr(0, dateNow.length - 9)}');
 		var game:FlxGame = new FlxGame(0, 0, Decide, 60, 60, true, false);
+		#if modded
+		if(!FileSystem.exists('mods'))
+			FileSystem.createDirectory('mods'); //TODO: auto mod loading system directly from the menu and/or main file itself.
+		#end
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, handleCrash);
 		Lib.current.loaderInfo.addEventListener(NativeProcessExitEvent.EXIT, onExit);
 		if (fromCrash) {

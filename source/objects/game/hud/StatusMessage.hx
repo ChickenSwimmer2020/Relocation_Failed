@@ -74,7 +74,14 @@ class StatusMessageHolder extends FlxSpriteGroup {
 			wait(0.5, () -> {
 				CreateStatusMessage('initilizing...', 1, 1, 10);
 				wait(0.5, () -> {
-					CreateStatusMessage('insert startup dialouge here', 1, 1, 10);
+					var text:String = openfl.Assets.getText('assets/game/HUDMSG.txt');
+					var lines:Array<String> = text.split("/n");
+					lines = [for (l in lines) if(l != "") '$l'];
+					for (i in 0...lines.length)
+					{
+						CreateStatusMessage(lines[i], 1, 1, 10);
+					}
+					////CreateStatusMessage('insert startup dialouge here', 1, 1, 10);
 				});
 			});
 			wait(1, () -> {

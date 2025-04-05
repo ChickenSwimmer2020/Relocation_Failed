@@ -9,7 +9,6 @@ import objects.menu.ChapterBox;
 import openfl.geom.Rectangle;
 import rf_flixel.addons.ui.FlxUIAssets as FlxUIAssets;
 import flixel.addons.ui.FlxUI9SliceSprite;
-import rf_flixel.ui.FlxSquareButton;
 
 using flixel.util.FlxSpriteUtil;
 
@@ -18,7 +17,7 @@ class ChapterSelectSubState extends FlxSubState {
 	var BG:FlxUI9SliceSprite;
 	var BG2:FlxUI9SliceSprite;
 	var windowtitle:FlxText;
-	var xbutt:FlxSquareButton;
+	var xbutt:FlxButton;
 	var FlxSprite:Rectangle;
 
 	static var clipSquare:FlxRect;
@@ -77,14 +76,15 @@ class ChapterSelectSubState extends FlxSubState {
 		wait(1, () -> {
 			FlxTween.tween(Chapters, {alpha: 1}, 0.5, {ease: FlxEase.expoOut});
 		});
-		xbutt = new FlxSquareButton(BG.x, BG.y, "X", () -> {
+		xbutt = new FlxButton(BG.x, BG.y, "X", () -> {
 			close();
 			Chapters.destroy();
 		});
+		xbutt.loadGraphic("assets/ui/buttonSQR.png", true, 20, 20);
+        xbutt.label.fieldWidth = 20;
 		add(xbutt);
-		if(HC){
-			xbutt.loadGraphic('assets/ui/buttonSQRHC.png', true, 20, 20);
-		}
+		if(HC) xbutt.loadGraphic('assets/ui/buttonSQRHC.png', true, 20, 20);
+		
 		doCoolTweenin();
 	}
 

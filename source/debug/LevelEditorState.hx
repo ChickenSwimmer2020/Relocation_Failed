@@ -9,8 +9,6 @@ import backend.level.LevelLoader;
 import sys.io.File;
 import math.RFMath;
 import openfl.events.MouseEvent;
-import rf_flixel.ui.FlxSquareButton;
-import rf_flixel.ui.FlxSquareButtonLarger;
 import flixel.addons.ui.*;
 import haxe.io.Path;
 import sys.FileSystem;
@@ -21,7 +19,7 @@ using StringTools;
 class LevelEditorState extends FlxState {
 	var DefaultObjectData:Array<LevelObject> = [];
 	var Level:Level;
-	var closeButton:FlxSquareButton;
+	var closeButton:FlxButton;
 	var saveButton:FlxButton;
 	var loadButton:FlxButton;
 	var curTool:String = '';
@@ -41,10 +39,10 @@ class LevelEditorState extends FlxState {
 	var LevelLoad:String = '';
 
 	//* BUTTONS
-	var SelecterTool:FlxSquareButton2;
-	var ObjectTool:FlxSquareButton2;
-	var ItemTool:FlxSquareButton2;
-	var TriggerTool:FlxSquareButton2;
+	var SelecterTool:FlxButton;
+	var ObjectTool:FlxButton;
+	var ItemTool:FlxButton;
+	var TriggerTool:FlxButton;
 	//* UI
 	var TabGroups:FlxUITabMenu;
 	var tabs = [
@@ -133,9 +131,11 @@ class LevelEditorState extends FlxState {
 		add(uiGroup);
 		uiGroup.scrollFactor.set(0, 0);
 
-		closeButton = new FlxSquareButton(1260, 0, 'X', () -> {
+		closeButton = new FlxButton(1260, 0, 'X', () -> {
 			FlxG.switchState(menu.MainMenu.new);
 		});
+		closeButton.loadGraphic("assets/ui/buttonSQR.png", true, 20, 20);
+        closeButton.label.fieldWidth = 20;
 		uiGroup.add(closeButton);
 		saveButton = new FlxButton(1180, 0, 'Save', () -> {
 			saveLevel();
@@ -161,26 +161,38 @@ class LevelEditorState extends FlxState {
 	}
 
 	public function CreateUI() {
-		SelecterTool = new FlxSquareButton2(300, 0, '', () -> {
+		SelecterTool = new FlxButton(300, 0, '', () -> {
 			ToolSwap('Selector');
 		});
+		SelecterTool.loadGraphic("assets/ui/buttonSQR2.png", true, 30, 30);
+        SelecterTool.label.fieldWidth = 30;
 		SelecterTool.label.font = 'assets/fonts/SEGMDL2.TTF';
 		SelecterTool.label.antialiasing = false;
-		ObjectTool = new FlxSquareButton2(300, 30, '', () -> {
+
+		ObjectTool = new FlxButton(300, 30, '', () -> {
 			ToolSwap('Object');
 		});
+		ObjectTool.loadGraphic("assets/ui/buttonSQR2.png", true, 30, 30);
+        ObjectTool.label.fieldWidth = 30;
 		ObjectTool.label.font = 'assets/fonts/SEGMDL2.TTF';
 		ObjectTool.label.antialiasing = false;
-		ItemTool = new FlxSquareButton2(300, 60, '', () -> {
+
+		ItemTool = new FlxButton(300, 60, '', () -> {
 			ToolSwap('Item');
 		});
+		ItemTool.loadGraphic("assets/ui/buttonSQR2.png", true, 30, 30);
+        ItemTool.label.fieldWidth = 30;
 		ItemTool.label.font = 'assets/fonts/SEGMDL2.TTF';
 		ItemTool.label.antialiasing = false;
-		TriggerTool = new FlxSquareButton2(300, 90, '', () -> {
+
+		TriggerTool = new FlxButton(300, 90, '', () -> {
 			ToolSwap('Trigger');
 		});
+		TriggerTool.loadGraphic("assets/ui/buttonSQR2.png", true, 30, 30);
+        TriggerTool.label.fieldWidth = 30;
 		TriggerTool.label.font = 'assets/fonts/SEGMDL2.TTF';
 		TriggerTool.label.antialiasing = false;
+
 		TabGroups = new FlxUITabMenu(null, tabs, true);
 
 		//* tab group one -- metadata (the level header's data.)

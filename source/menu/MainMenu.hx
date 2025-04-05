@@ -1,5 +1,6 @@
 package menu;
 
+import flixel.ui.FlxButton.FlxButtonState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxRandom;
 import flixel.addons.transition.FlxTransitionableState;
@@ -71,13 +72,19 @@ class MainMenu extends FlxState {
 
 		shipCam = new FlxCamera(0, 0, 1280, 720, 1);
 		shipCam.bgColor = 0x00000000;
-		FlxG.cameras.add(shipCam);
+		FlxG.cameras.add(shipCam, true);
 
 		verCam = new FlxCamera(0, 0, 1280, 720, 1);
 		verCam.bgColor = 0x00000000;
-		FlxG.cameras.add(verCam);
+		FlxG.cameras.add(verCam, false);
 		
-		FlxG.sound.playMusic(Assets.music('ConnectionEstablished.ogg'));
+		if(FlxG.sound.music == null){
+			FlxG.sound.playMusic(Assets.music('ConnectionEstablished.ogg'));
+		}else{
+			if(!FlxG.sound.music.playing)
+				FlxG.sound.playMusic(Assets.music('ConnectionEstablished.ogg'));
+		}
+		
 		// background
 		planet = new FlxSprite(0, 200, 'assets/menu/planet.png');
 		planet.camera = planetCam;
@@ -194,7 +201,12 @@ class MainMenu extends FlxState {
 
         #if (debug || modded)
         var LevelEditorButton:FlxButton = new FlxButton(1200, 0, 'Level Editor', ()->{ FlxG.switchState(debug.LevelEditorState.new); });
+        var ModViewerButton:FlxButton = new FlxButton(1200, 20, 'mods', ()->{ FlxG.switchState(modding.ModViewerState.new); });
         add(LevelEditorButton);
+        LevelEditorButton.camera = verCam;
+        add(ModViewerButton);
+        ModViewerButton.camera = verCam;
+		ModViewerButton.status = FlxButtonState.DISABLED; //! MENU BROKEN. DO NOT USE.
         #end
 
         if(FlxG.save.data.seenFlashWarning != null && FlxG.save.data.seenFlashWarning != true) { 

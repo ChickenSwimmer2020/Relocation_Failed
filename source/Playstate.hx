@@ -1,8 +1,6 @@
 package;
 
-import shaders.DeathBinary.BinaryShader;
-import openfl.filters.ShaderFilter;
-import shaders.DeathStatic.StaticShader;
+import modding.ModFileParser;
 import flixel.effects.FlxFlicker;
 import crash.FlxTypeText;
 import backend.save.GameSave;
@@ -82,10 +80,6 @@ class Playstate extends FlxTransitionableState {
 	var tweenOneDone:Bool = false;
 	var tweenTwoDone:Bool = false;
 
-	//var staticShader:StaticShader;
-	var binary:BinaryShader;
-	//var filter:ShaderFilter;
-	var filter2:ShaderFilter;
 
 	override public function new(levelToLoad:String = 'level0', ?PlayerPosition:Array<Float> = null, ?save:SaveState, ?saveSlot:Int = 1) {
 		super();
@@ -100,6 +94,10 @@ class Playstate extends FlxTransitionableState {
 		Player.Transitioning = false;
 		if (save != null)
 			loadSaveState(save);
+
+		var modder:ModFileParser = new ModFileParser(); //this is stupid, but gets the job done so whatever ig.
+		trace(modder.parseRFM('assets/testing/testmod.rfm')); //hang on, isnt calling new on a non extended class literally what we did for the debug keys?
+		//TODO: make this mod loading automatic when applicable.
 	}
 
 	public function loadSaveState(?state:SaveState) {
@@ -163,11 +161,6 @@ class Playstate extends FlxTransitionableState {
 
 	override public function create() {
 		super.create();
-
-		//staticShader = new StaticShader();
-		binary = new BinaryShader();
-		//filter = new ShaderFilter(staticShader);
-		filter2 = new ShaderFilter(binary);
 
 		FlxG.mouse.visible = true; //* why was this being called in onUpdate(elapsed:Float)?
 
@@ -251,8 +244,6 @@ class Playstate extends FlxTransitionableState {
 
 		if(#if debug FlxG.keys.anyJustPressed([BACKSLASH]) #else null #end){ //! replace with real death logic when applicable
 			if(!dying){
-				binary.createPixels();
-				FlxG.camera.filters = [/*filter,*/filter2];
 				FlxG.camera.zoom += 2;
 				HUDCAM.zoom += 2;
 				FGCAM.zoom += 2;

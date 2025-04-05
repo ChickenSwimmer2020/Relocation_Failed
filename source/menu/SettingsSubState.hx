@@ -12,7 +12,6 @@ import flixel.addons.ui.FlxUITooltip;
 import openfl.geom.Rectangle;
 import rf_flixel.addons.ui.FlxUIAssets as FlxUIAssets;
 import flixel.addons.ui.FlxUI9SliceSprite;
-import rf_flixel.ui.FlxSquareButton;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUISlider;
 import flixel.addons.ui.FlxUI;
@@ -32,7 +31,7 @@ class SettingsSubState extends FlxSubState{
     var HCui:FlxUICheckBox;
     var SS:FlxUICheckBox;
 
-    var Back:FlxSquareButton;
+    var Back:FlxButton;
     var Save:FlxButton;
     var Saved:Bool = false;
     var settingsCAM:FlxCamera;
@@ -178,8 +177,9 @@ class SettingsSubState extends FlxSubState{
 
 
         Save = new FlxButton(TabGroups.x + 400, TabGroups.y + 246.7, "SAVE", function() { FlushToPrefs(); });
-        Back = new FlxSquareButton(Save.x + 80, TabGroups.y + 246.7, "X", function() { close(); });
-        if(HC) Back.loadGraphic('assets/ui/buttonSQRHC.png', true, 20, 20);
+        Back = new FlxButton(Save.x + 80, TabGroups.y + 246.7, "X", function() { close(); });
+        Back.loadGraphic("assets/ui/buttonSQR.png", true, 20, 20);
+        Back.label.fieldWidth = 20;
 
         add(TabGroups);
         add(Back);
@@ -195,6 +195,8 @@ class SettingsSubState extends FlxSubState{
                     spr.loadGraphic("assets/ui/buttonHC.png", true, 80, 20);
                 }
             }
+            Back.loadGraphic('assets/ui/buttonSQRHC.png', true, 20, 20);
+            Back.label.fieldWidth = 20;
         }
         DifficultiesCreated = true;
         TT0 = tooltipgroup.members[0];
@@ -367,7 +369,7 @@ Stamina Drains 25% faster, oxygen drains 75% faster, battery takes 75% more impa
 player will bleed if hit with an enemy melee attack
 ----------------------------------------------------
 Game doesnt autosave
-Backtracking is completely disabled, if you miss an item, your ${if(FlxG.save.data.AdultMode != null && FlxG.save.data.AdultMode == true) 'fucked.\nGame will openly insult you if you die.' else 'done.'}
+Backtracking is completely disabled, if you miss an item, you\'re ${if(FlxG.save.data.AdultMode != null && FlxG.save.data.AdultMode == true) 'fucked.\nGame will openly insult you if you die.' else 'done.'}
 Your save will be deleted if you die' //4
     ];
     public var checksactivity:Array<Bool> = [];

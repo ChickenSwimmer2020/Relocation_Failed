@@ -1,5 +1,6 @@
 package crash;
 
+import sys.io.Process;
 import sys.FileSystem;
 import sys.io.File;
 import lunarps.particles.LunarParticle;
@@ -122,7 +123,9 @@ class CrashState extends FlxState {
 		}
 		if (FlxG.keys.justPressed.SPACE){
 			trace(Main.CrashFileName);
-			Sys.command('notepad ' + '"./crash/crash${Main.CrashFileName}"'); //because apparently "notepad" is an actual command in windows?
+			Sys.command('notepad ' + '"./crash/crash${Main.CrashFileName}"'); //because apparently "notepad" is an actual command in windows? //! DONT DO THIS
+			//* do this instead!
+			//new Process('notepad "./crash/crash${Main.CrashFileName}"', [], true); //TODO: get working.
 			if(FileSystem.exists('idied.rfDUMP')){
 				FileSystem.deleteFile('idied.rfDUMP');
 			}

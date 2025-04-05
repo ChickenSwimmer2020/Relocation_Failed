@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-    <app title="Relocation Failed" file="Relocation Failed" main="Main" version="0.4.0" company="StudioNotFound"/>
+    <app title="Relocation Failed" file="Relocation Failed" main="Main" version="0.4.1" company="StudioNotFound"/>
 
     <app preloader="flixel.system.FlxPreloader"/>
 
@@ -12,9 +12,14 @@
 
     <!--IF YOUR MAKING A MOD, UNCOMMENT THIS-->
     <!--    <define name="modded" if=""/>   -->
+    <if define="modded">
+        <classpath path="source/modding"/> <!-- load the modding libraries only if game is modding supported. -->
+    </if>
     
     <source path="source"/>
     <assets path="assets"/>
+
+    
 
     <undefine name="openfl-disable-handle-error"/>
     <define name="openfl_enable_handle_error"/>
