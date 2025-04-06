@@ -8,7 +8,7 @@ import backend.level.rfl.RFLParser.RFLAssets;
 import flixel.math.FlxMath;
 import objects.RFTriAxisSprite;
 import flixel.math.FlxPoint;
-import debug.LevelEditorState;
+import debug.leveleditor.Editor.EditorState;
 import objects.game.interactables.Door;
 import objects.game.interactables.Item;
 import objects.game.interactables.Item.ItemType;

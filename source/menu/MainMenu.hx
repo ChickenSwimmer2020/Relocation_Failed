@@ -200,7 +200,7 @@ class MainMenu extends FlxState {
 		add(versiontext);
 
         #if (debug || modded)
-        var LevelEditorButton:FlxButton = new FlxButton(1200, 0, 'Level Editor', ()->{ FlxG.switchState(debug.LevelEditorState.new); });
+        var LevelEditorButton:FlxButton = new FlxButton(1200, 0, 'Editor', ()->{ FlxG.switchState(()->new debug.ChooseEditor()); });
         var ModViewerButton:FlxButton = new FlxButton(1200, 20, 'mods', ()->{ FlxG.switchState(modding.ModViewerState.new); });
         add(LevelEditorButton);
         LevelEditorButton.camera = verCam;

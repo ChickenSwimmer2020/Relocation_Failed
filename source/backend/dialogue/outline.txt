@@ -1,0 +1,67 @@
+beat -- sections or places where stuff happens
+
+beats can be moved between using the "->" syntax
+
+characters -- easily defined like this
+```loreline
+character barista
+   name: Alex
+   friendship: 0  // Track relationship with player
+   shiftStarted: true
+```
+which can speak through the identifier, ex:
+```loreline
+barista: Welcome to Coffee Dreams! What can I get you today?
+```
+
+story text can be written by simply typing it out, no custom identifiers.
+
+tags can be used to modify text display, or show more emotion depending on engine capabilities example: <tag>
+
+state, remains persistant throughout the story
+```loreline
+state
+  coffeeBeans: 100 // Track inventory
+  rushHour: false  // Is it busy?
+  dayNumber: 1     // Which day of the story
+```
+these values can also be changed directly
+```loreline
+     coffeeBeans -= 10  // Use some beans
+     rushHour = true    // Start rush hour
+     dayNumber += 1     // Move to next day
+```
+temporary states can be created by using new before a state declaration within a beat.
+
+choices.
+```loreline
+beat OrderDrink
+choice
+  Order a cappuccino
+    coffeeBeans -= 15
+    barista: <happy> One cappuccino coming right up!
+    -> PrepareDrink
+  Ask about tea options
+    barista: We have a lovely selection of green and herbal teas.
+    -> TeaMenu
+  Just browse the menu
+    You take your time reading through the extensive drink list.
+    -> DrinkMenu
+```
+which can also be conditional
+```loreline
+beat SpecialMenu
+     choice
+       Order special roast if coffeeBeans >= 20
+         coffeeBeans -= 20
+         barista: Excellent choice! Our Ethiopian blend is amazing.
+         -> PrepareDrink
+       Chat with barista if barista.friendship > 2
+         barista: <friendly> Want to hear about my coffee journey?
+         -> BaristaChat
+```
+dynamic text is possible, exactly how you would do varible interpolation in normal strings.
+
+characters also can do varible interpolation with there namespace varible, which will show as their name within the dialoug
+
+comments are exactly like haxe, two forward slashes and then commented text, multiline comments are also supported.
