@@ -13,6 +13,7 @@
  - [ ] Discord Rich Presence Integration?
  - [ ] Gamepad support [Flixel-Controls](https://github.com/Geokureli/FlxControls/) maybe?
  - [ ] shaders, UGHHHHHHHH-
+ - [ ] Weapons reading data from a .json file, easier weapon implementation!
 
 ## ***NEEDS TO BE FIXED***
 

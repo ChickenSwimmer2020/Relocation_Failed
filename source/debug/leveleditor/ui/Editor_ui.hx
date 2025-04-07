@@ -1,5 +1,6 @@
 package debug.leveleditor.ui;
 
+import flixel.addons.ui.FlxUICheckBox;
 import flixel.tweens.FlxEase;
 import sys.FileSystem;
 import sys.io.File;
@@ -16,6 +17,9 @@ class EditorUI extends FlxCamera{
     var graphicnotexist:FlxText;
     var GraphicInput:FlxInputText;
     var tmr:FlxTimer = new FlxTimer(); //central.
+
+    var hasReturnCondition:FlxUICheckBox;
+    var returnCondition:FlxInputText;
     public function new(x:Int, y:Int, width:Int, height:Int, zoom:Float, uiType:String = 'level'){
         super(x, y, width, height, zoom);
         UI = new FlxSpriteGroup(x, y);
@@ -113,7 +117,24 @@ class EditorUI extends FlxCamera{
                     Graphics.add(text);
                 
                 var Behavior:FlxSpriteGroup = new FlxSpriteGroup();
-                    
+                    //return condition
+                    hasReturnCondition = new FlxUICheckBox(0, 0, null, null, 'Has return condition', 150, null, ()->{
+                        trace('item has a return condition!');
+                    });
+                    Behavior.add(hasReturnCondition);
+
+                    returnCondition = new FlxInputText(0, 20, 200, 'ps.Player.suit != null;', 8, FlxColor.BLACK, FlxColor.WHITE, true);
+                    Behavior.add(returnCondition);
+
+                    //statusMessage = 'administering medical assistance...';
+                    //onPickup = () -> {
+                    //    ps.Player.Health += 25;
+                    //    wait(parent._STATMSGWAITTIME, () -> {
+                    //        ps.Hud.StatMSGContainer.CreateStatusMessage('Health Restored By [CHANGABLE VALUE]%!', parent._STATMSGTWEENTIME, parent._STATMSGWAITTIME,
+                    //            parent._STATMSGFINISHYPOS);
+                    //    });
+                    //};
+
 
                 //create the ui box.
                 box = new EditorUITABBOX({tabsAlign: 180}, 0, 0, 500, 180, ["Graphics", "Behavior"], [Graphics, Behavior]);
@@ -131,8 +152,11 @@ class EditorUI extends FlxCamera{
                 graphicnotexist.visible = false;
             }
         }
+        if(hasReturnCondition != null && returnCondition != null){
+            returnCondition.visible = hasReturnCondition.checked;
+        }
     }
-    
+
     public function generateItemFile(){
 
     }
