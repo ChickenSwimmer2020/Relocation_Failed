@@ -630,6 +630,6 @@ class DeathState extends FlxState {
 class IntroState extends FlxState {
 	public function new(lor:String = 'assets/intro.lor'){
 		super();
-		openSubState(new DialogueSubState(lor));
+		//make animated thingy, somehow? we cant just use some massive spritesheet can we?
 	}
 }
