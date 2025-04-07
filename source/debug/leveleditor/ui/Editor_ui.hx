@@ -24,6 +24,8 @@ class EditorUI extends FlxCamera{
     var StatusMessage:FlxInputText;
     var filePreview:FlxText;
     var onComplete:FlxInputText;
+    var isWeapon:FlxUICheckBox;
+    var itemName:FlxInputText;
     public function new(x:Int, y:Int, width:Int, height:Int, zoom:Float, uiType:String = 'level'){
         super(x, y, width, height, zoom);
         UI = new FlxSpriteGroup(x, y);
@@ -140,10 +142,19 @@ class EditorUI extends FlxCamera{
 
                     onComplete = new FlxInputText(200, 0, 280, 'ps.Player.Health += 25;
 wait(parent._STATMSGWAITTIME, () -> {
-    ps.Hud.StatMSGContainer.CreateStatusMessage(\'Health Restored By [CHANGABLE VALUE]%!\', parent._STATMSGTWEENTIME, parent._STATMSGWAITTIME,
-        parent._STATMSGFINISHYPOS);
+    ps.Hud.StatMSGContainer.CreateStatusMessage(\'Health Restored By [CHANGABLE VALUE]%!\',
+parent._STATMSGTWEENTIME,
+parent._STATMSGWAITTIME,
+parent._STATMSGFINISHYPOS);
 });', 8, FlxColor.BLACK, FlxColor.WHITE, true);
                     Behavior.add(onComplete);
+
+                    isWeapon = new FlxUICheckBox(0, 80, null, null, 'is Weapon?', 150, null, ()->{
+                        trace('item is a weapon!');
+                    });
+                    Behavior.add(isWeapon);
+                    itemName = new FlxInputText(0, 100, 200, 'SuitBattery', 8, FlxColor.BLACK, FlxColor.WHITE, true);
+                    Behavior.add(itemName);
 
 
                 //create the ui box.
@@ -175,7 +186,7 @@ wait(parent._STATMSGWAITTIME, () -> {
             StatusMessage.visible = hasStatusMessage.checked;
         }
         if(filePreview != null){// THE FILE PREVIEW LOOKS SO BAD :sob:
-            filePreview.text = 'class Buckshell extends BaseItem {
+            filePreview.text = 'class ${itemName.text} extends ${if(!isWeapon.checked) 'BaseItem' else 'BaseWeapon'} {
 public function new(parent:Item) {
 super(parent);${if(hasStatusMessage.checked) '\nstatusMessage = \"${StatusMessage.text}\"' else ''}
 onPickup = () -> {${onComplete.text}};

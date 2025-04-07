@@ -1,5 +1,8 @@
 package debug.leveleditor;
 
+import flixel.sound.FlxSound;
+import debug.ChooseEditor;
+
 class EditorState extends FlxState {
 	public static var editorMode:String = '';
 	public var StageCAM:FlxCamera;
@@ -21,5 +24,76 @@ class EditorState extends FlxState {
 		uiCAM.bgColor = 0x00000000;
 		FlxG.cameras.add(uiCAM, false);
 		add(uiCAM.UI);
+	}
+	override public function update(elapsed:Float){
+		super.update(elapsed);
+		switch(uiCAM.tpe){ //FOR MUSIC DO NOT TOUCH
+			case 'Level': //THIS. SYSTEM. SUCKS. but it works so idfc
+				ChooseEditor.BALLS.volume = FlxG.sound.volume;
+				ChooseEditor.BASS.volume = FlxG.sound.volume;
+				ChooseEditor.DEEPERBASS.volume = FlxG.sound.volume;
+				ChooseEditor.DRUMS.volume = FlxG.sound.volume;
+				ChooseEditor.NPC.volume = FlxG.sound.volume;
+				ChooseEditor.AI.volume = FlxG.sound.volume;
+				ChooseEditor.ITEM.volume = FlxG.sound.volume;
+				ChooseEditor.ANIM.volume = FlxG.sound.volume;
+				ChooseEditor.LEVEL.volume = FlxG.sound.volume;
+				ChooseEditor.WEAPONS.volume = FlxG.sound.volume;
+			case 'Item':
+				ChooseEditor.BALLS.volume = FlxG.sound.volume;
+				ChooseEditor.BASS.volume = FlxG.sound.volume;
+				ChooseEditor.DEEPERBASS.volume = FlxG.sound.volume;
+				ChooseEditor.DRUMS.volume = FlxG.sound.volume;
+				ChooseEditor.NPC.volume = 0;
+				ChooseEditor.AI.volume = 0;
+				ChooseEditor.ITEM.volume = FlxG.sound.volume;
+				ChooseEditor.ANIM.volume = 0;
+				ChooseEditor.LEVEL.volume = 0;
+				ChooseEditor.WEAPONS.volume = 0;
+			case 'AI':
+				ChooseEditor.BALLS.volume = FlxG.sound.volume;
+				ChooseEditor.BASS.volume = FlxG.sound.volume;
+				ChooseEditor.DEEPERBASS.volume = FlxG.sound.volume;
+				ChooseEditor.DRUMS.volume = FlxG.sound.volume;
+				ChooseEditor.NPC.volume = 0;
+				ChooseEditor.AI.volume = FlxG.sound.volume;
+				ChooseEditor.ITEM.volume = 0;
+				ChooseEditor.ANIM.volume = 0;
+				ChooseEditor.LEVEL.volume = 0;
+				ChooseEditor.WEAPONS.volume = 0;
+			case 'NPC':
+				ChooseEditor.BALLS.volume = FlxG.sound.volume;
+				ChooseEditor.BASS.volume = FlxG.sound.volume;
+				ChooseEditor.DEEPERBASS.volume = FlxG.sound.volume;
+				ChooseEditor.DRUMS.volume = FlxG.sound.volume;
+				ChooseEditor.NPC.volume = FlxG.sound.volume;
+				ChooseEditor.AI.volume = 0;
+				ChooseEditor.ITEM.volume = 0;
+				ChooseEditor.ANIM.volume = 0;
+				ChooseEditor.LEVEL.volume = 0;
+				ChooseEditor.WEAPONS.volume = 0;
+			case 'Anim':
+				ChooseEditor.BALLS.volume = FlxG.sound.volume;
+				ChooseEditor.BASS.volume = FlxG.sound.volume;
+				ChooseEditor.DEEPERBASS.volume = FlxG.sound.volume;
+				ChooseEditor.DRUMS.volume = FlxG.sound.volume;
+				ChooseEditor.NPC.volume = 0;
+				ChooseEditor.AI.volume = 0;
+				ChooseEditor.ITEM.volume = 0;
+				ChooseEditor.ANIM.volume = FlxG.sound.volume;
+				ChooseEditor.LEVEL.volume = 0;
+				ChooseEditor.WEAPONS.volume = 0;
+			case 'Weapon':
+				ChooseEditor.BALLS.volume = FlxG.sound.volume;
+				ChooseEditor.BASS.volume = FlxG.sound.volume;
+				ChooseEditor.DEEPERBASS.volume = FlxG.sound.volume;
+				ChooseEditor.DRUMS.volume = FlxG.sound.volume;
+				ChooseEditor.NPC.volume = 0;
+				ChooseEditor.AI.volume = 0;
+				ChooseEditor.ITEM.volume = 0;
+				ChooseEditor.ANIM.volume = 0;
+				ChooseEditor.LEVEL.volume = 0;
+				ChooseEditor.WEAPONS.volume = FlxG.sound.volume;
+		}
 	}
 }
