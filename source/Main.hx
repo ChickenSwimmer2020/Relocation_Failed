@@ -1,5 +1,6 @@
 package;
 
+import haxe.PosInfos;
 import openfl.events.NativeProcessExitEvent;
 import openfl.events.ErrorEvent;
 import openfl.errors.Error;
@@ -22,14 +23,27 @@ class Main extends Sprite {
 
 	public function new() {
 		super();
+        haxe.Log.trace = (v:Dynamic, ?infos:PosInfos) -> {
+            #if (debug || modded)
+                var str = haxe.Log.formatOutput(v, infos);
+                #if js
+                if (js.Syntax.typeof(untyped console) != "undefined" && (untyped console).log != null)
+                    (untyped console).log(str);
+                #elseif lua
+                untyped __define_feature__("use._hx_print", _hx_print(str));
+                #elseif sys
+                Sys.println(str);
+                #else
+                throw new haxe.exceptions.NotImplementedException()
+                #end
+            #end
+        }
 		start();
 	}
 
 	function start() {
 		#if !debug //* only on release builds
 			hl.UI.closeConsole(); // It appears after a crash on release builds and looks ugly so im closing it
-		#else
-			//FlxG.log.redirectTraces = true; //redirect ALL trace calls to the debugger's log console
 		#end
 		
 

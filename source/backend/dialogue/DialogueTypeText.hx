@@ -2,6 +2,7 @@ package backend.dialogue;
 
 // TODO: remove this check when min flixel version is 5.6.0,
 // So that FlxAddonDefines will handle this
+import flixel.tweens.FlxEase;
 import backend.dialogue.DialogueMgr.DialogueTag;
 import loreline.Interpreter;
 #if (flixel < version("5.3.0"))
@@ -597,6 +598,20 @@ class DialogueTypeText extends FlxText
                 parent.characterCenter.updateHitbox();
                 trace(val);
 
+            case 'tweenObjX':
+                var fullVal = val.split(', ');
+                FlxTween.tween(Reflect.field(parent, fullVal[0]), {x: Std.parseFloat(fullVal[1])}, Std.parseFloat(fullVal[2]), { ease: Reflect.field(FlxEase, fullVal[3])});
+            case 'tweenObjY':
+                var fullVal = val.split(', ');
+                FlxTween.tween(Reflect.field(parent, fullVal[0]), {y: Std.parseFloat(fullVal[1])}, Std.parseFloat(fullVal[2]), { ease: Reflect.field(FlxEase, fullVal[3])});
+            case 'tweenObjAngle':
+                var fullVal = val.split(', ');
+                FlxTween.tween(Reflect.field(parent, fullVal[0]), {angle: Std.parseFloat(fullVal[1])}, Std.parseFloat(fullVal[2]), { ease: Reflect.field(FlxEase, 'linear')});
+            case 'tweenObjAlpha':
+                var fullVal = val.split(', ');
+                FlxTween.tween(Reflect.field(parent, fullVal[0]), {alpha: Std.parseFloat(fullVal[1])}, Std.parseFloat(fullVal[2]), { ease: Reflect.field(FlxEase, fullVal[3])});
+            case 'stopTweensOfObj':
+                FlxTween.cancelTweensOf(Reflect.field(parent, val));
             case 'txtDelay': 
                 delay = Std.parseFloat(val);
             case 'screenShake': 
