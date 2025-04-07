@@ -20,7 +20,6 @@ import Xml.XmlType;
 import sys.io.File;
 import flixel.math.FlxMath;
 import lime.system.Clipboard;
-import backend.dialogue.DialogueTypedefs.Dialogue;
 import menu.MainMenu;
 import tjson.TJSON;
 import backend.save.PlayerSaveStateUtil;

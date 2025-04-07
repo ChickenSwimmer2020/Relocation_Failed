@@ -150,7 +150,7 @@ class MainMenu extends FlxState {
         add(Button_Load);
 
         Button_Settings = new Button('Settings', Button_Load.DaButton.x + 250, Button_Load.DaButton.y + 10, Assets.image('menu/ButtonTEST'),
-        ()->{ FlxG.state.openSubState(new menu.SettingsSubState(this)); }, 1, false);
+        ()->{ openSubState(new substates.DialogueSubState()); }, 1, false);
         Button_Settings.updateTextPosition();
         Button_Settings.camera = verCam;
         add(Button_Settings);
@@ -206,7 +206,7 @@ class MainMenu extends FlxState {
         LevelEditorButton.camera = verCam;
         add(ModViewerButton);
         ModViewerButton.camera = verCam;
-		ModViewerButton.status = FlxButtonState.DISABLED; //! MENU BROKEN. DO NOT USE.
+		//ModViewerButton.status = FlxButtonState.DISABLED; //! MENU BROKEN. DO NOT USE.
         #end
 
         if(FlxG.save.data.seenFlashWarning != null && FlxG.save.data.seenFlashWarning != true) { 

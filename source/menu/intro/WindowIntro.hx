@@ -5,6 +5,7 @@ import haxe.io.Error;
 import flixel.tweens.FlxEase;
 import flixel.math.FlxMath;
 import sys.thread.Thread;
+import objects.game.interactables.ai.Task.TaskInterface;
 import lime.math.Vector2;
 #if hl import hlwnative.HLNativeWindow; #end
 import lime.ui.Window;
@@ -25,6 +26,10 @@ class WindowIntro extends FlxState {
                 itm.remove();
                 itm.destroy();
             }
+            try{
+            for (task in TaskInterface.taskClasses) // ensure to compile all tasks.
+                Type.createInstance(task, [null]);
+            }catch(_){} // Ignore it, its prob compiled alr
 		});
 		HLNativeWindow.setWindowDarkMode(true); // It just looks cleaner
 		window = Application.current.window;

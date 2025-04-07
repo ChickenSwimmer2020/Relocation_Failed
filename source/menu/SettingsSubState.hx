@@ -472,26 +472,26 @@ Your save will be deleted if you die' //4
                     } //hardcore tooltip
                 }
             }
-            for(object in diffigroup.members){
-                if(Std.isOfType(object, FlxUICheckBox)){
-                    var checkbox:FlxUICheckBox = cast object;
-                        if(FlxG.save.data.Difficulty != ''){
-                            var difficultySplit:String = FlxG.save.data.Difficulty;
-                            //trace('${difficultySplit.split(',')[0]}, ${difficultySplit.split(',')[1]}'); //bogs the console, keep disabled
-                            if(checkbox.ID == Std.parseInt(difficultySplit.split(',')[1])){
-                                checkbox.checked = true;
-                            }//TODO: add fallback for difficulty selection to automatically select normal mode if a difficulty is not selected or found from the save file
-                        }//else{
-                        //    if(FlxG.save.data.Difficulty == ''){
-                        //        if(difficultySelectedCheck()){
-                        //            if(checkbox.ID == 0){
-                        //                checkbox.checked = true;
-                        //            }
-                        //        }
-                        //    }
-                        //}
-                }
-            }
+            //for(object in diffigroup.members){
+            //    if(Std.isOfType(object, FlxUICheckBox)){
+            //        var checkbox:FlxUICheckBox = cast object;
+            //            if(FlxG.save.data.Difficulty != ''){
+            //                var difficultySplit:String = FlxG.save.data.Difficulty;
+            //                //trace('${difficultySplit.split(',')[0]}, ${difficultySplit.split(',')[1]}'); //bogs the console, keep disabled
+            //                if(checkbox.ID == Std.parseInt(difficultySplit.split(',')[1])){
+            //                    checkbox.checked = true;
+            //                }//TODO: add fallback for difficulty selection to automatically select normal mode if a difficulty is not selected or found from the save file
+            //            }//else{
+            //            //    if(FlxG.save.data.Difficulty == ''){
+            //            //        if(difficultySelectedCheck()){
+            //            //            if(checkbox.ID == 0){
+            //            //                checkbox.checked = true;
+            //            //            }
+            //            //        }
+            //            //    }
+            //            //}
+            //    }
+            //}
         }
     }
     //private function difficultySelectedCheck():Bool {

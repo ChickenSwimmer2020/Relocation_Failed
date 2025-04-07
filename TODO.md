@@ -23,7 +23,7 @@
  - [ ] Make logo for CS2020 intro
  - [ ] Fix the health tween on hud init
  - [ ] make damage indicators work
- - [ ] npcs
+ - [X] npcs (in-progress! -ZSolarDev)
  - [ ] health display value tweens
  - [x] optimize crash handler
 

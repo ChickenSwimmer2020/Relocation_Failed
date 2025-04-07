@@ -1,5 +1,7 @@
 package menu.intro;
 
+import objects.game.interactables.Item;
+import objects.game.interactables.ai.Task.TaskInterface;
 import flixel.sound.FlxSoundGroup;
 import rf3d.MeshData;
 import rf3d.ModelView;
@@ -32,6 +34,14 @@ class WaterMarks extends FlxState {
 
 	override public function create() {
 		super.create();
+
+        for (item in Item.itemClasses){ // ensure to compile all items.
+            var itm = Type.createInstance(item, [null]);
+            itm.remove();
+            itm.destroy();
+        }
+        for (task in TaskInterface.taskClasses) // ensure to compile all tasks.
+            Type.createInstance(task, [null]);
 
 		overlayWhite.makeGraphic(1280, 720);
 

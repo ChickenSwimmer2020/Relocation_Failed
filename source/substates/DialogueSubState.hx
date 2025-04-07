@@ -1,19 +1,16 @@
 package substates;
 
-import openfl.Assets;
-import haxe.Json;
-import backend.dialogue.DialogueTypedefs;
+import sys.thread.Thread;
+import sys.io.File;
+import backend.dialogue.DialogueMgr;
 
 class DialogueSubState extends FlxSubState {
-	public var dialogue:Dialogue;
+	public var dialogue:DialogueMgr;
 
-	override public function new(jsonPath:String) {
+	override public function new() {
 		super();
-		var jsonData = Json.parse(Assets.getText(jsonPath));
-		// cast my beloved
-		dialogue = cast jsonData;
-
-		trace(jsonData);
-		close();
+        dialogue = new DialogueMgr(File.getContent("assets/test.lor"));
+        add(dialogue);
+        Thread.create(dialogue.startDialogue);
 	}
 }

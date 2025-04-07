@@ -19,19 +19,20 @@
     <source path="source"/>
     <assets path="assets"/>
 
-    
-
     <undefine name="openfl-disable-handle-error"/>
     <define name="openfl_enable_handle_error"/>
 
 	<haxelib name="flixel"/>
+    <haxelib name="loreline"/>
     <haxelib name="away3d" />
+    <haxelib name="hscript" />
     <haxelib name="lunarps" />
     <haxelib name="hlwnative" if="hl" />
 	<haxelib name="flixel-ui" />
 	<haxelib name="flixel-addons" />
     <haxelib name="hxdiscord"/>
 
+    <haxedef name="hscriptPos" />
     <haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
     <haxedef name="FLX_NO_MOUSE" if="mobile"/>
     <haxedef name="FLX_NO_KEYBOARD" if="mobile"/>
