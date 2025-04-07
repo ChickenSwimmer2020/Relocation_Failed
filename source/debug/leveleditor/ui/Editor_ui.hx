@@ -19,7 +19,11 @@ class EditorUI extends FlxCamera{
     var tmr:FlxTimer = new FlxTimer(); //central.
 
     var hasReturnCondition:FlxUICheckBox;
-    var returnCondition:FlxInputText;
+    var returnCondition:FlxInputText; //https://www.youtube.com/watch?v=Ea3r5fCZH9Y
+    var hasStatusMessage:FlxUICheckBox;
+    var StatusMessage:FlxInputText;
+    var filePreview:FlxText;
+    var onComplete:FlxInputText;
     public function new(x:Int, y:Int, width:Int, height:Int, zoom:Float, uiType:String = 'level'){
         super(x, y, width, height, zoom);
         UI = new FlxSpriteGroup(x, y);
@@ -57,7 +61,7 @@ class EditorUI extends FlxCamera{
                     //scale input
                     var txt01:FlxText = new FlxText(40, 150, 35, 'Scale:', 8, true);
                     Graphics.add(txt01);
-                    var scaleInput:FlxInputText = new FlxInputText(75, 150, 20, '1, 1', 8, FlxColor.BLACK, FlxColor.WHITE, true);
+                    var scaleInput:FlxInputText = new FlxInputText(75, 150, 20, '1, 1', 8, FlxColor.BLACK, FlxColor.WHITE, true); //TODO: make this work.
                     Graphics.add(scaleInput);
                     scaleInput.onEnter.add(function(txt:String){
                         item.scale.set(Std.parseFloat(scaleInput.text.split(',')[0]) * 10, Std.parseFloat(scaleInput.text.split(',')[1]) * 10);
@@ -108,7 +112,7 @@ class EditorUI extends FlxCamera{
                     });
 
                     if(item != null && item.exists){ //also run once because of yes.
-                        item.loadGraphic('assets/' + GraphicInput.text + '.png');
+                        item.loadGraphic('assets/' + GraphicInput.text + '.png'); //TODO: make this acutally choose the item graphic, because APPARENTLY the item doesnt.
                     }
 
                     //placeholder for animation shtuff
@@ -126,20 +130,32 @@ class EditorUI extends FlxCamera{
                     returnCondition = new FlxInputText(0, 20, 200, 'ps.Player.suit != null;', 8, FlxColor.BLACK, FlxColor.WHITE, true);
                     Behavior.add(returnCondition);
 
-                    //statusMessage = 'administering medical assistance...';
-                    //onPickup = () -> {
-                    //    ps.Player.Health += 25;
-                    //    wait(parent._STATMSGWAITTIME, () -> {
-                    //        ps.Hud.StatMSGContainer.CreateStatusMessage('Health Restored By [CHANGABLE VALUE]%!', parent._STATMSGTWEENTIME, parent._STATMSGWAITTIME,
-                    //            parent._STATMSGFINISHYPOS);
-                    //    });
-                    //};
+                    hasStatusMessage = new FlxUICheckBox(0, 40, null, null, 'Has Status Message', 150, null, ()->{
+                        trace('item has a status message!');
+                    });
+                    Behavior.add(hasStatusMessage);
+
+                    StatusMessage = new FlxInputText(0, 60, 200, '[ITEM] aquired!', 8, FlxColor.BLACK, FlxColor.WHITE, true);
+                    Behavior.add(StatusMessage);
+
+                    onComplete = new FlxInputText(200, 0, 280, 'ps.Player.Health += 25;
+wait(parent._STATMSGWAITTIME, () -> {
+    ps.Hud.StatMSGContainer.CreateStatusMessage(\'Health Restored By [CHANGABLE VALUE]%!\', parent._STATMSGTWEENTIME, parent._STATMSGWAITTIME,
+        parent._STATMSGFINISHYPOS);
+});', 8, FlxColor.BLACK, FlxColor.WHITE, true);
+                    Behavior.add(onComplete);
 
 
                 //create the ui box.
                 box = new EditorUITABBOX({tabsAlign: 180}, 0, 0, 500, 180, ["Graphics", "Behavior"], [Graphics, Behavior]);
                 box.screenCenter(X);
                 UI.add(box);
+
+                var PREVIEWBG:FlxSprite = new FlxSprite(box.x + 500, 0).makeGraphic(230, 400, FlxColor.GRAY);
+                UI.add(PREVIEWBG);
+                filePreview = new FlxText(box.x + 500, 0, 230, '', 8, true);
+                filePreview.color = FlxColor.BLACK;
+                UI.add(filePreview);
             default:
                 // Handle unknown uiType
         }
@@ -154,6 +170,21 @@ class EditorUI extends FlxCamera{
         }
         if(hasReturnCondition != null && returnCondition != null){
             returnCondition.visible = hasReturnCondition.checked;
+        }
+        if(hasStatusMessage != null && StatusMessage != null){
+            StatusMessage.visible = hasStatusMessage.checked;
+        }
+        if(filePreview != null){// THE FILE PREVIEW LOOKS SO BAD :sob:
+            filePreview.text = 'class Buckshell extends BaseItem {
+public function new(parent:Item) {
+super(parent);${if(hasStatusMessage.checked) '\nstatusMessage = \"${StatusMessage.text}\"' else ''}
+onPickup = () -> {${onComplete.text}};
+}${if(hasReturnCondition.checked)
+'override function get_returnCondition():Bool
+return ${returnCondition.text}' else ''
+}
+}
+';
         }
     }
 

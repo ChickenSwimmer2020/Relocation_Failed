@@ -11,11 +11,11 @@ class ChooseEditor extends FlxState {
 
         var editors:Array<String> = [
 'Level Editor',
-'AI Editor',
-'NPC Editor',
-'Item Editor',
+'AI Editor', //theme added!
+'NPC Editor', //theme added!
+'Item Editor', //theme added!
 'Anim Offset',
-'Weapon Editor'];
+'Weapon Editor']; //theme added!
         for(i in 0...editors.length){
             var btn:FlxButton = new FlxButton(0, if(i == 0) 20 else 20 * i, editors[i], function() {
                 trace("Switching to " + editors[i]);
