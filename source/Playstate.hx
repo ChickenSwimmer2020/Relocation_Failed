@@ -1,5 +1,6 @@
 package;
 
+import substates.DialogueSubState;
 import modding.ModFileParser;
 import flixel.effects.FlxFlicker;
 import crash.FlxTypeText;
@@ -623,5 +624,12 @@ class DeathState extends FlxState {
 				}
 			}
 		}
+	}
+}
+
+class IntroState extends FlxState {
+	public function new(lor:String = 'assets/intro.lor'){
+		super();
+		openSubState(new DialogueSubState(lor));
 	}
 }

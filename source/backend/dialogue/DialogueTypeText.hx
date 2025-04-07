@@ -634,6 +634,16 @@ class DialogueTypeText extends FlxText
                     FlxG.sound.playMusic(fullVal[0], Std.parseFloat(fullVal[1]), fullVal[2] == 'true');
                 else
                     FlxG.sound.music.stop();
+			case 'BGX':
+				trace('BGX: ' + Std.parseFloat(val));
+				var fullVal = val.split(', ');
+				parent.targetBGRatio = Std.parseFloat(fullVal[1]);
+				parent.targetBGX = Std.parseFloat(fullVal[0]);
+			case 'BGY':
+				trace('BGY: ' + Std.parseFloat(val));
+				var fullVal = val.split(', ');
+				parent.targetBGRatio = Std.parseFloat(fullVal[1]);
+				parent.targetBGY = Std.parseFloat(fullVal[0]);
         }
     }
 

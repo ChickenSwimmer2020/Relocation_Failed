@@ -38,6 +38,12 @@ class DialogueMgr extends FlxGroup{
     public var targetCamX:Float = 0;
     public var targetCamY:Float = 0;
 
+    public var targetBGX:Float = 0;
+    public var targetBGY:Float = 0;
+    public var targetBGRatio:Float = 0.1;
+
+    public var onComplete:Void->Void;
+
     public function new(lorContent:String) {
         super();
         var finalLor = lorContent + '\n\nendOfLor';
@@ -71,8 +77,10 @@ class DialogueMgr extends FlxGroup{
         Loreline.play(script,
             // on dialogue line
             (_:Interpreter, character, text, tags, done) -> {
+                #if (debug || modded)
                 trace('dialogue line: ' + text);
                 trace('character: ' + character);
+                #end
                 bg.loadGraphic(_.getCharacterField('_HEADER', 'bgAsset'));
                 box.loadGraphic(_.getCharacterField('_HEADER', 'boxAsset'));
                 var dialogueTags:Array<DialogueTag> = [for (tag in tags) new DialogueTag(tag)];
@@ -82,25 +90,8 @@ class DialogueMgr extends FlxGroup{
                 add(typeText);
                 complete = false;
                 skip = false;
-                while(true)
-                {
-                    if (skip)
-                    {
-                        typeText.destroy();
-                        done();
-                        skip = false;
-                        break; 
-                    }
-                    if (FlxG.keys.justPressed.ENTER){
-                        if (!complete)
-                            typeText.runThroughTags();
 
-                        typeText.destroy();
-                        done();
-                        complete = false;
-                        break;
-                    }
-                }
+                onComplete = done;
             },
             
             // on choice
@@ -115,24 +106,44 @@ class DialogueMgr extends FlxGroup{
 
             // on complete
             _ -> {
-                trace('e');
+                #if (debug || modded)
+                trace('function is complete...hehehe, penis is funny. dialouge is complete');
+                #end
             });
         }catch (e) {
+            #if (debug || modded)
             trace(e.message + '\n' + e.stack);
+            #end
         }
     }
 
     override public function update(elapsed:Float) {
         try{
         super.update(elapsed);
+
+        if (skip){
+            typeText.destroy();
+            remove(typeText);
+            onComplete();
+            skip = false;
+        }
+        if (FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.SPACE){
+            if (!complete)
+                typeText.runThroughTags();
+
+            typeText.destroy();
+            remove(typeText);
+            onComplete();
+            complete = false;
+        }
+
         dialogueCam.angle = FlxMath.lerp(dialogueCam.angle, targetCamAngle, 0.1);
-        dialogueCamTop.angle = FlxMath.lerp(dialogueCamTop.angle, targetCamAngle, 0.1);
         dialogueCam.zoom = FlxMath.lerp(dialogueCam.zoom, targetCamZoom, 0.1);
-        dialogueCamTop.zoom = FlxMath.lerp(dialogueCamTop.zoom, targetCamZoom, 0.1);
         dialogueCam.x = FlxMath.lerp(dialogueCam.x, targetCamX, 0.1);
-        dialogueCamTop.x = FlxMath.lerp(dialogueCamTop.x, targetCamX, 0.1);
         dialogueCam.y = FlxMath.lerp(dialogueCam.y, targetCamY, 0.1);
-        dialogueCamTop.y = FlxMath.lerp(dialogueCamTop.y, targetCamY, 0.1);
+
+        bg.x = FlxMath.lerp(bg.x, targetBGX, targetBGRatio);
+        bg.y = FlxMath.lerp(bg.y, targetBGY, targetBGRatio);
         }catch(e){}
     }
 }

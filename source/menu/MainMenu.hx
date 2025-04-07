@@ -139,7 +139,16 @@ class MainMenu extends FlxState {
         add(shipGlow2);
 
         //button handling
-        Button_Play = new Button('New\nGame', 560, 280, Assets.image('menu/ButtonTEST'), ()->{ FlxG.state.openSubState(new substates.ChapterSelectSubState(this)); }, 1, false);
+        Button_Play = new Button('New\nGame', 560, 280, Assets.image('menu/ButtonTEST'), ()->{
+			var black:FlxSprite = new FlxSprite(0, 0);
+			black.makeGraphic(FlxG.width, FlxG.height, 0xff000000);
+			black.alpha = 0;
+			add(black);
+			black.camera = verCam;
+			FlxTween.tween(black, {alpha: 1}, 1, { onComplete: function(twn:FlxTween) {
+				FlxG.switchState(()->new Playstate.IntroState('assets/intro.lor'));
+			}});
+		}, 1, false);
         Button_Play.updateTextPosition();
         Button_Play.camera = verCam;
         add(Button_Play);
