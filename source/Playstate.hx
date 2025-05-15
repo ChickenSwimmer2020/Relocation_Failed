@@ -74,7 +74,7 @@ class Playstate extends FlxTransitionableState {
 
 	public var defaultCamZoom:Float = 1;
 	public var FgCamDefaultZoom:Float = 1;
-	public var items:Array<BaseItem> = [];
+	//public var items:Array<BaseItem> = [];
 	public var dying:Bool = false;
 	public var activlyDying:Bool = false;
 	var tweenOneDone:Bool = false;
@@ -114,7 +114,7 @@ class Playstate extends FlxTransitionableState {
 			if (state.hassuit) {
 				var suit:Suit = new Suit(null);
 				suit.ps = this;
-				items.push(suit);
+				//items.push(suit);
 				Player.suit = suit;
 			}
 			if (state.haspistol) {
@@ -122,7 +122,7 @@ class Playstate extends FlxTransitionableState {
 				pistol.ps = this;
 				pistol.ammoRemaining = state.pisremain;
 				pistol.ammoCap = state.piscap;
-				items.push(pistol);
+				//items.push(pistol);
 				Player.weaponInventory.set(Player.weaponInventory.getNextFreeInIntMap(), pistol);
 			}
 			if (state.hasshotgun) {
@@ -130,7 +130,7 @@ class Playstate extends FlxTransitionableState {
 				shotgun.ps = this;
 				shotgun.ammoRemaining = state.shtremain;
 				shotgun.ammoCap = state.shtcap;
-				items.push(shotgun);
+				//items.push(shotgun);
 				Player.weaponInventory.set(Player.weaponInventory.getNextFreeInIntMap(), shotgun);
 			}
 			if (state.hassmg) {
@@ -138,7 +138,7 @@ class Playstate extends FlxTransitionableState {
 				smg.ps = this;
 				smg.ammoRemaining = state.smgremain;
 				smg.ammoCap = state.smgcap;
-				items.push(smg);
+				//items.push(smg);
 				Player.weaponInventory.set(Player.weaponInventory.getNextFreeInIntMap(), smg);
 			}
 			if (state.hasrifle) {
@@ -146,7 +146,7 @@ class Playstate extends FlxTransitionableState {
 				rifle.ps = this;
 				rifle.ammoRemaining = state.rifremain;
 				rifle.ammoCap = state.rifcap;
-				items.push(rifle);
+				//items.push(rifle);
 				Player.weaponInventory.set(Player.weaponInventory.getNextFreeInIntMap(), rifle);
 			}
 			// other.
@@ -184,13 +184,13 @@ class Playstate extends FlxTransitionableState {
 		Hud = new HUD(this); // hud does get init, BUT doesnt actually show anything until you pickup the suit.
 		Hud.cameras = [HUDCAM];
 		Player2 = new Aimer(this);
-		// Level = new Level(LevelLoader.ParseLevelData(RFLParser.LoadRFLData(_LEVEL, '', 'Level')), this);
+		Level = new Level(LevelLoader.parseLevelData('assets/levels/level2'), this);
 		Player3 = new InteractionBox();
 		Player3.scrollFactor.set();
 		Player3.camera = HUDCAM;
-		Level = new Level(RFLParser.LoadRFLData(Assets.asset('levels/$_LEVEL.rfl')), this);
-		Level.EditorMode = false;
-		Level.loadLevel();
+		//Level = new Level(RFLParser.LoadRFLData(Assets.asset('levels/$_LEVEL.rfl')), this);
+		//Level.EditorMode = false;
+		//Level.loadLevel();
 
 		for (obj in Level.objects) {
 			if (obj.doubleAxisCollide && !obj.isForegroundSprite)
@@ -244,6 +244,7 @@ class Playstate extends FlxTransitionableState {
 
 		if(#if debug FlxG.keys.anyJustPressed([BACKSLASH]) #else null #end){ //! replace with real death logic when applicable
 			if(!dying){
+				Player3.kill();
 				FlxG.camera.zoom += 2;
 				HUDCAM.zoom += 2;
 				FGCAM.zoom += 2;
@@ -302,27 +303,13 @@ class Playstate extends FlxTransitionableState {
 			}
 			dying = true;
 		}
-
-		for(FlxSprite in ShellGroup){
-			var Sprite = cast FlxSprite;
-			if(Sprite.velocity.x > 0){
-				Sprite.velocity.x--;
-			}else if(Sprite.velocity.x < 0){
-				Sprite.velocity.x++;
-			}
-			if(Sprite.velocity.y > 0){
-				Sprite.velocity.y--;
-			}else if(Sprite.velocity.y < 0){
-				Sprite.velocity.y++;
-			}
-		}
-		for (item in items){
-			item.update(elapsed);
-			//if(Std.isOfType(item, BaseItem)){ //TODO: item logic to hide it offscreen, hard to do since BaseItem is a FlxBasic
-			//	var itm:FlxBasic = cast item;
-//
-			//}
-		}
+		//for (item in items){
+		//	item.update(elapsed);
+		//	//if(Std.isOfType(item, BaseItem)){ //TODO: item logic to hide it offscreen, hard to do since BaseItem is a FlxBasic
+		//	//	var itm:FlxBasic = cast item;
+////
+		//	//}
+		//}
 
 		switch (Level.CameraFollowStyle) {
 			case 'LOCKON':
@@ -628,8 +615,18 @@ class DeathState extends FlxState {
 }
 
 class IntroState extends FlxState {
-	public function new(lor:String = 'assets/intro.lor'){
+	public function new(){
 		super();
 		//make animated thingy, somehow? we cant just use some massive spritesheet can we?
+		//TODO: finish the intro animation and implement it
+		//TODO: video rendering
+	}
+	override public function update(elapsed:Float){
+		super.update(elapsed);
+		if(FlxG.keys.anyJustPressed([SPACE, ENTER, ESCAPE, BACKSPACE])){
+			FlxG.sound.music.stop();
+			FlxG.sound.playMusic(backend.Assets.music('WeightLess.ogg'));
+			FlxG.switchState(()-> new Playstate('level0', [0, 0, 0], null, 1));
+		}
 	}
 }

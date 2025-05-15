@@ -1,0 +1,76 @@
+{
+"Data":[   
+    {
+        "Name": "TestObjectOne",
+        "Graphic": "menu/ButtonTEST.png",
+        "alpha": 1,
+        "XYZ": [
+            500,
+            500,
+            500],
+        "Scale": [
+            1,
+            1],
+        "Scrollfactor": [
+            1,
+            1],
+        "Visible": true,
+        "Tripleaxiscollide": true,
+        "Renderoverplayer": true
+    },
+    {
+        "Name": "TestObjectTwo",
+        "Graphic": "menu/ButtonTEST.png",
+        "alpha": 1,
+        "XYZ": [
+            500,
+            500,
+            500],
+        "Scale": [
+            1,
+            1],
+        "Scrollfactor": [
+            1,
+            1],
+        "Visible": true,
+        "Tripleaxiscollide": true,
+        "Renderoverplayer": true
+    },
+    {
+        "Name": "TestObjectThree",
+        "Graphic": "menu/planet.png",
+        "alpha": 1,
+        "XYZ": [
+            500,
+            500,
+            500],
+        "Scale": [
+            1,
+            1],
+        "Scrollfactor": [
+            1,
+            1],
+        "Visible": false,
+        "Tripleaxiscollide": true,
+        "Renderoverplayer": true
+    },
+    {
+        "Name": "Rule. check alpha.",
+        "Graphic": "menu/logo.png",
+        "alpha": 0.34,
+        "XYZ": [
+            323,
+            433,
+            101],
+        "Scale": [
+            1.5,
+            1.1],
+        "Scrollfactor": [
+            5,
+            0],
+        "Visible": true,
+        "Tripleaxiscollide": true,
+        "Renderoverplayer": true
+    }
+]
+}

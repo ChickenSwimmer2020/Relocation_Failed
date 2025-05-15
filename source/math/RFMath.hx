@@ -86,4 +86,22 @@ class RFMath {
 		else
 			return false;
 	}
+
+	/**
+	 * Constant value deceleration per frame.
+
+	 * sorta like friction but not friction.
+
+	 * WRITTEN BY CHATGPT
+	 * @param current beginning value
+	 * @param target target value
+	 * @param amount how much friction
+	 * @since RF_DEV_0.2.7
+	 */
+	public static function approach(current:Float, target:Float, amount:Float):Float {
+		if (current < target)
+			return Math.min(current + amount, target);
+		else
+			return Math.max(current - amount, target);
+	}
 }

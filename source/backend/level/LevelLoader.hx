@@ -179,7 +179,15 @@ class LevelLoader {
 	 */
 	public static function parseLevelData(jsonFileData:String):LevelData
 		try {
-			return TJSON.parse(jsonFileData, 'Level');
+			var LVLDAT:LevelData = {
+				items: null,//TJSON.parse(openfl.Assets.getText('assets/levels/level2/items.json')),
+				objects: TJSON.parse(openfl.Assets.getText('assets/levels/level2/objects.json')),
+				header: null,//RFLParser.LoadRFLData('level.ini')
+				doors: null,
+				interactables: null,
+				triggers: null
+			}
+			return LVLDAT;
 		} catch (e) {
 			trace(new LevelExceptions.LevelParseErrorException(e.message, e.stack.toString()).toString());
 			return null;

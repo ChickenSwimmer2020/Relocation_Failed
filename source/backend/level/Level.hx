@@ -48,6 +48,8 @@ class Level extends FlxGroup {
 	public var EditorMode:Bool;
 	public var parent:Playstate;
 
+	//TODO: re-write to work with the new level system.
+
 	override public function new(levelAssets:RFLAssets, parent:Playstate, ?inEditor:Bool = false, ?_:PosInfos) {
 		super();
 		this.levelAssets = levelAssets;

@@ -44,7 +44,7 @@ class EditorUITABBOX extends FlxSpriteGroup{
             tab.updateHitbox();
             add(tab);
             tabs.push({spr:tab, name:TabsNames[i]});
-            trace(tabs);
+            //trace(tabs);
 
 
             var tabText:FlxText = new FlxText(tab.x, 0 -20, cast bgSpr.width / TabsNames.length, TabsNames[i], 12, true);
@@ -73,9 +73,11 @@ class EditorUITABBOX extends FlxSpriteGroup{
                 tabText.color = FlxColor.BLACK;
                 if(tbmnu[i] != null && tbmnu[i].exists){ //should work? probably wont knowing me.
                     tbmnu[i].visible = true; //holy fuck it actually worked!
+                    tbmnu[i].active = true;
                     for(j in 0...tbmnu.length){
                         if(j != i){
                             tbmnu[j].visible = false;
+                            tbmnu[j].active = false; //* switch from `visible` to `active` so that the items in tab-groups cant be used at all. might cause issues but hopefully not.
                         }
                     }
                 }
@@ -88,7 +90,7 @@ class EditorUITABBOX extends FlxSpriteGroup{
                     tabText.color = FlxColor.BLACK;
                     if(FlxG.mouse.justPressed){
                         tab.scale.set(0.8, 0.8);
-                        trace("Tab " + tabs[i].name + " clicked!");
+                        //trace("Tab " + tabs[i].name + " clicked!");
                         currentActiveTab = tabs[i].name; //set the current active tab to current clicked one.
                     }
                 }else{

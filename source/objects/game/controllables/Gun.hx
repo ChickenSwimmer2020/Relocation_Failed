@@ -1,5 +1,7 @@
 package objects.game.controllables;
 
+import objects.game.controllables.Bullet.Shell;
+import sys.thread.Thread;
 import math.RFMath;
 import math.RFVector;
 import lunarps.math.LunarInterp;
@@ -8,6 +10,29 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import backend.Functions;
 import flixel.group.FlxSpriteGroup;
+
+using StringTools;
+
+//TODO: rewrite this entire object's code. it is WAY too messy :/
+
+typedef GunData = { //this is the data that can be gotten from [weaponname]_BEHAVIOR.json
+	X:Float, //TODO: make work.
+	Y:Float,
+	Texture:String,
+	pumpAction:Bool,
+	FrameWidth:Float,
+	FrameHeight:Float,
+	Damage:Int,
+	maxMag:Int,
+	maxPool:Int,
+	bulletData:{
+		DMG:Int, //damage
+		SPD:Float, //speed
+		TRC:Bool, //tracers
+		EJC:Bool, //shell ejection (NOT AN OVERRIDE)
+		LBH:Bool //leave bullt holes
+	}
+}
 
 class Gun extends FlxSpriteGroup {
 	/**
@@ -45,6 +70,7 @@ class Gun extends FlxSpriteGroup {
 	public function new() {
 		super();
 		// moveCallback = () -> { ratio = 0; }; //this is causing problems somehow
+		//TODO: make loading gun data from a json work right.
 	}
 
 	/**
@@ -54,8 +80,8 @@ class Gun extends FlxSpriteGroup {
 	 * @param Y the Y position of the gun texture, these are seperate so we can have offsets for the guns themselves.
 	 * @param Texture texture to use, just put file name, dont include extension.
 	 * @param isShotgun is the weapon a shotguntype weapon? defaults to false.
-	 * @param FrameWidth how wide is each frame, int. defaults to 32
-	 * @param FrameHeight how tall is each frame, int. defaults to 32
+	 * @param FrameWidth how wide is each frame, int. defaults to 64
+	 * @param FrameHeight how tall is each frame, int. defaults to 64
 	 * @since RF_DEV_0.3.0
 	 */
 	public function changeTexture(X:Float, Y:Float, Texture:String, isShotgun:Bool = false, FrameWidth:Int = 64, FrameHeight:Int = 64) {
@@ -74,7 +100,11 @@ class Gun extends FlxSpriteGroup {
 		}
 		ShotgunPassthrough = isShotgun;
 
-		loadInitialAnimationData();
+		theGunTexture.animation.add('Idle', [0], 24, false, false, false); //added once here to make sure the animations exist.
+		theGunTexture.animation.add('Pew', [1, 2, 3, 4, 5], 12, false, false, false);
+		if (ShotgunPassthrough) {
+			theGunTexture.animation.add('Cock', [6, 7, 8, 9, 10, 11, 12, 13], 12, false, false, false); //accurate name.
+		}
 
 		// Verify animations exist
 		trace('Available animations: ${[for (name in theGunTexture.animation.getNameList()) name]}');
@@ -84,6 +114,11 @@ class Gun extends FlxSpriteGroup {
 		// realGunYPOS = Y;
 		// realGunANGLE = theGunTexture.angle;
 
+		theGunTexture.animation.remove('Idle'); //remove the animations since they arent needed on this sprite.
+		theGunTexture.animation.remove('Pew');
+		if(ShotgunPassthrough)
+			theGunTexture.animation.remove('Cock');
+
 		Playstate.instance.AimerGroup.add(theGunTexture);
 		loadRealAnimationData(); // add the animations to the actual gun within playstate itself
 		theGunTexture.animation.play('Idle');
@@ -92,15 +127,6 @@ class Gun extends FlxSpriteGroup {
 	public function updateTexturePosition(X:Float, Y:Float) {
 		realGunXPOS = X;
 		realGunYPOS = Y;
-	}
-
-	public function loadInitialAnimationData() {
-		// Add animations and verify they were added
-		theGunTexture.animation.add('Idle', [0], 24, false, false, false);
-		theGunTexture.animation.add('Pew', [1, 2, 3, 4, 5], 12, false, false, false);
-		if (ShotgunPassthrough) {
-			theGunTexture.animation.add('Cock', [6, 7, 8, 9, 10, 11, 12, 13], 12, false, false, false);
-		}
 	}
 
 	public function loadRealAnimationData() {
@@ -115,22 +141,34 @@ class Gun extends FlxSpriteGroup {
 	public function shoot(WeaponType:Bullet.BulletType) {
 		var OffsetX:Float;
 		var OffsetY:Float;
+		var EJECTOffsetX:Float;
+		var EJECTOffsetY:Float;
 		switch (WeaponType) {
 			case PISTOLROUNDS:
 				OffsetX = 30;
 				OffsetY = 30;
+				EJECTOffsetX = 30;
+				EJECTOffsetY = 30;
 			case SHOTGUNSHELL:
 				OffsetX = 0; // not needed, offsets for the shotgun are forced since its a single weapon type, just kept to prevent errors.
 				OffsetY = 0;
+				EJECTOffsetX = 0;
+				EJECTOffsetY = 0;
 			case SMGROUNDS:
 				OffsetX = 0;
 				OffsetY = 0;
+				EJECTOffsetX = 0;
+				EJECTOffsetY = 0;
 			case RIFLEROUNDS:
 				OffsetX = 0;
 				OffsetY = 0;
-			default: // default the bullet fire offsets.
+				EJECTOffsetX = 0;
+				EJECTOffsetY = 0;
+			default: // default the bullet fire offsets. prevents null access
 				OffsetX = 0;
 				OffsetY = 0;
+				EJECTOffsetX = 0;
+				EJECTOffsetY = 0;
 		}
 		var mousePos = FlxG.mouse.getPosition();
 		Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.x + OffsetX, Playstate.instance.Player2.y + OffsetY, mousePos,
@@ -141,19 +179,23 @@ class Gun extends FlxSpriteGroup {
 		////theGunTexture.angle = -15;
 		Playstate.instance.AimerGroup.members[0].animation.play('Pew', true);
 		if(Preferences.save.ShellEjection)
-			EjaculateShell('', [100, 100]);
+			Shell.EjectShell(WeaponType, {X: EJECTOffsetX, Y: EJECTOffsetY}, new FlxPoint(cast(new FlxRandom().int(-100, 100)), cast(new FlxRandom().int(-100, 100))), false); //should work MUCH better? more customizability.
 	}
 
 	public function shotgunShoot() {
 		var OffsetX:Float = 15;
 		var OffsetY:Float = 15;
+		var EJECTOffsetX:Float = 15;
+		var EJECTOffsetY:Float = 15;
 		Playstate.instance.AimerGroup.members[0].animation.play('Pew', true);
 		var Spread:Array<FlxPoint> = getShotgunSpread(FlxG.mouse.getPosition(), Playstate.instance.Player2.angle, 240, 9, 100);
 		for (spread in 0...8)
 			Playstate.instance.BulletGroup.add(new Bullet(Playstate.instance.Player2.x + OffsetX, Playstate.instance.Player2.y + OffsetY, Spread[spread],
 				SHOTGUNSHELL, true));
+		Shell.EjectShell(Playstate.instance.Player.CurWeaponChoice, {X: EJECTOffsetX, Y: EJECTOffsetY}, new FlxPoint(cast(new FlxRandom().int(-100, 100)), cast(new FlxRandom().int(-100, 100))), true);
 	}
 
+	//TODO: re-write this, was coded by chatgpt and isnt the best.
 	public function getShotgunSpread(center:FlxPoint, facingAngle:Float, fov:Float, numBullets:Int, range:Float):Array<FlxPoint> {
 		var spread:Array<FlxPoint> = [];
 		var halfFov = fov / 2;
@@ -177,35 +219,10 @@ class Gun extends FlxSpriteGroup {
 		return spread;
 	}
 
-	/**
-	 * ITS A JOKE! ITS FOR SHELL EJECTION!!
-	 * @since RF_DEV_0.4.0
-	 */
-	public function EjaculateShell(Type:String, Velocity:Array<Int>) { //im so keeping this, FUCK YOU KARENS!! --ChickenSwimmer2020
-		var Shell:FlxSprite = new FlxSprite(0, 0);
-		switch(Type){
-			default:
-				Shell.makeGraphic(5, 1, FlxColor.YELLOW);
-		}
-		Shell.setPosition(Playstate.instance.Player2.x, Playstate.instance.Player2.y);
-		Shell.velocity.x = cast(new FlxRandom()).float(-Velocity[0], Velocity[1]); //cast my beloved --ChickenSwimmer2020
-		Shell.velocity.y = cast(new FlxRandom()).float(-Velocity[0], Velocity[1]);
-
-		Playstate.instance.ShellGroup.add(Shell);
-
-		wait(10, ()->{
-			FlxTween.tween(Shell, {alpha: 0}, 1, {onComplete: function(Twn:FlxTween) {
-				Shell.kill();
-			}});
-		});
-	}
-
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 		this.angle = Playstate.instance.Player2.angle; // change the group angle to the players instead of the gun, since it will move the gun with it and hopefully center the guns rotation possibly.
 		if (ratio < 1)
 			ratio += 0.0001;
-		Playstate.instance.AimerGroup.members[0].x = LunarInterp.easedInterp(Playstate.instance.Player2.x + 15, realGunXPOS, ratio, 'smootherStepInOut');
-		////Playstate.instance.AimerGroup.members[0].angle = LunarInterp.easedInterp(Playstate.instance.Player2.angle, 0, ratio, 'smootherStepInOut');
 	}
 }
