@@ -132,7 +132,7 @@ class Item extends FlxGroup{
             }catch(e){
                 trace('Item return condition failed: ' + e.message);
             }
-            ps.items.push(item);
+            //ps.items.push(item);
             if (Std.isOfType(item, BaseWeapon)){ //weapon item type
                 ps.onWeaponPickup();
             }

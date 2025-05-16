@@ -1,5 +1,8 @@
 package debug.leveleditor.ui;
 
+import debug.leveleditor.ui.EditorUI_dropdown.EditorUIDropdownMenu;
+import debug.leveleditor.ui.EditorUI_list.ListObject;
+import debug.leveleditor.ui.EditorUI_list.EditorUIList;
 import backend.level.LevelLoader.LevelObject;
 import debug.leveleditor.ui.EditorUI_slider.EditorUISlider;
 import debug.leveleditor.ui.EditorUI_NumericStepper.EditorUIStepper;
@@ -50,12 +53,12 @@ class EditorUI extends FlxCamera{
     public var objects:FlxSpriteGroup;
     //actual ui elements
     var saveMetadata:EditorUIButton;
-    var saveObjects:EditorUIButton;
 
     var loadMetadata:EditorUIButton;
-    var loadObjects:EditorUIButton;
 
     var createObject:EditorUIButton;
+
+    var ObjectsList:EditorUIList;
 
     var isBeatstate:FlxUICheckBox; //TODO: make RFUI varient
     var CameraLocked:FlxUICheckBox; //TODO: make RFUI varient
@@ -113,19 +116,6 @@ class EditorUI extends FlxCamera{
         beat: false,
         bpm: 0
     };
-
-    var levelobjectsarray:Array<LevelObject> = [];
-
-    var OBJ:Array<{Name:String, ?Data:{X:Float, Y:Float, Z:Float, Graphic:FlxSprite}, ?Extra:String}> = [
-        {Name: 'Load a objects.json/RFL to see objects!', Data:{X:0, Y:0, Z:0, Graphic:null}} //cant belive i have to force nulls here.
-    ];
-
-    //* scrollable areas (objects, items, etc)
-    var bg:FlxSprite;
-    public static var cliprect:flixel.math.FlxRect;
-    var list:Array<ListObject> = [];
-    var listName:FlxText;
-    var clearlist:EditorUIButton;
 
     public function new(x:Int, y:Int, width:Int, height:Int, zoom:Float, uiType:String = 'level'){
         super(x, y, width, height, zoom);
@@ -210,6 +200,22 @@ class EditorUI extends FlxCamera{
                     CameraFollowStyle.setData(FlxUIDropDownMenu.makeStrIdLabelArray(CameraOptions, true));
                     metaData.add(CameraFollowStyle);
 
+
+                    var testDropdown:EditorUIDropdownMenu = new EditorUIDropdownMenu(500, 0, {
+                        width: 120,
+                        height: 20,
+                        Options: [
+                            '', //fix for a bug
+                            'LOCKON',
+                            'PLATFORMER',
+                            'TOPDOWN',
+                            'TOPDOWN_TIGHT',
+                            'SCREEN_BY_SCREEN',
+                            'NO_DEAD_ZONE'
+                        ]
+                    });
+                    metaData.add(testDropdown);
+
                     bpmslider = new EditorUISlider(0, 0, {
                         width: 380,
                         labelText: 'Beats Per Minute',
@@ -254,29 +260,6 @@ class EditorUI extends FlxCamera{
                     metaData.add(tooltip);
 
                 objects = new FlxSpriteGroup();
-                    bg = new FlxSprite(0, 200).makeGraphic(400, 500, FlxColor.GRAY);
-                    saveObjects = new EditorUIButton(0, 155, ()->{generateObjectsFile(null, null);}, { //TODO: warning box if you dont save a level and try to leave.
-                        width: 100,
-                        height: 25,
-                        text: 'Save',
-                        textBaseColor: FlxColor.WHITE,
-                        alpha: 0.5,
-                        baseColor: FlxColor.BLACK,
-                        hoverColor: FlxColor.CYAN,
-                        clickColor: FlxColor.RED
-                    });
-                    
-                    loadObjects = new EditorUIButton(100, 155, ()->{loadObjectFile();}, { //TODO: warning box if you dont save a level and try to leave.
-                        width: 100,
-                        height: 25,
-                        text: 'Load',
-                        textBaseColor: FlxColor.WHITE,
-                        alpha: 0.5,
-                        baseColor: FlxColor.BLACK,
-                        hoverColor: FlxColor.CYAN,
-                        clickColor: FlxColor.RED
-                    });
-
                     createObject = new EditorUIButton(400, 155, ()->{addObject();}, { //TODO: warning box if you dont save a level and try to leave.
                         width: 100,
                         height: 25,
@@ -361,8 +344,6 @@ class EditorUI extends FlxCamera{
                     tooltip2 = new FlxText(200, 155, 200, 'TEST', 8, true);
 
                     objects.add(tooltip2);
-                    objects.add(saveObjects);
-                    objects.add(loadObjects);
 
                     objects.add(OBJName);
                     objects.add(OBJIMG);
@@ -387,49 +368,17 @@ class EditorUI extends FlxCamera{
                     objects.add(OBJParrallaxBG);
 
                     objects.add(createObject);
-                    for(entry in 0...OBJ.length){
-                        list.push(
-                            if(OBJ[entry].Extra != null){ 
-                                if(OBJ[entry].Data.Graphic != null)
-                                    new ListObject(0, 220, OBJ[entry].Data.Graphic, OBJ[entry].Name, OBJ[entry].Extra, null);
-                                else
-                                    new ListObject(0, 220, new FlxSprite(0, 0), OBJ[entry].Name, OBJ[entry].Extra, null);
-                            }else{
-                                if(OBJ[entry].Data.Graphic != null)
-                                    new ListObject(0, 220, OBJ[entry].Data.Graphic, OBJ[entry].Name, null, null);
-                                else
-                                    new ListObject(0, 220, new FlxSprite(0, 0), OBJ[entry].Name, null, null);
-                            }
-                        );
-                    }
-                    ////list = [
-                    ////    new ListObject(0, 190, new FlxSprite(0, 0), 'testObject01', list),
-                    ////    new ListObject(0, 190, new FlxSprite(0, 0), 'testObject02', list),
-                    ////    new ListObject(0, 190, new FlxSprite(0, 0), 'testObject03', list),
-                    ////    new ListObject(0, 190, new FlxSprite(0, 0), 'testObject04', list)
-                    ////];
-                    listName = new FlxText(0, 200, 400, 'Objects', 12, true);
-                    objects.add(bg);
-                    objects.add(listName);
-                    //cliprect = new FlxRect(-1, 180, 400, 500); //TODO: make clip-rect work.
-                    for(i in 0...list.length){
-                        objects.add(list[i]);
-                        if(i > 0)
-                            list[i].y += 10 * i;
-                    }
 
-                    clearlist = new EditorUIButton(350, 200, ()->{clearObjectsList();}, {
-                        width: 50,
-                        height: 12.5,
-                        text: 'clear',
-                        textSize: 8,
-                        textBaseColor: FlxColor.WHITE,
-                        alpha: 0.5,
-                        baseColor: FlxColor.BLACK,
-                        hoverColor: FlxColor.CYAN,
-                        clickColor: FlxColor.RED
+                    ObjectsList = new EditorUIList(0, 200, {
+                        width: 400,
+                        height: 500,
+                        textP: {
+                            fieldwidth: 100,
+                            text: 'Objects',
+                            size: 16,
+                        }
                     });
-                    objects.add(clearlist);
+                    objects.add(ObjectsList);
 
                 var items:FlxSpriteGroup = new FlxSpriteGroup();
                 var doors:FlxSpriteGroup = new FlxSpriteGroup();
@@ -680,53 +629,10 @@ return ${returnCondition.text}' else ''
                 tooltip2.text = 'Object collides on two axis';
             }else if(FlxG.mouse.overlaps(OBJTripleAxisCollide)){
                 tooltip2.text = 'Object collides on three axis';
-            }else if(FlxG.mouse.overlaps(loadObjects)){
-                tooltip2.text = 'Load an objects.json file';
-            }else if(FlxG.mouse.overlaps(saveObjects)){
-                tooltip2.text = 'Save an objects.json file';
             }else{
                 tooltip2.text = '';
             }
         }
-    }
-    var addeditems:Int = 0;
-    var b:Int = 0;
-    public function clearObjectsList(){
-        OBJ = [];
-        OBJ.clearArray();
-        for(i in 0...list.length){ //clear the list entirely.
-            list[i].destroy();
-        }
-        list.clearArray();
-        addeditems = 0;
-        b = 0;
-        list = []; //reset the numbering like this.
-        levelobjectsarray.clearArray();
-        levelobjectsarray = [];
-    }
-
-    public function generateObjectsFile(Data:Dynamic, Reference:Dynamic){
-        var fr:FileReference = new FileReference();
-        var objects:String = '';
-        var metadata:String = '"Meta":{
-        "0": "Generated with the RF:LE",
-        "1": "V${Application.current.meta.get('version')}"
-    }';
-        var filedata:String = '{
-    ${metadata},
-    "Data":[\n';
-        for(object in 0...levelobjectsarray.length){
-            objects += '       {"Name":"${levelobjectsarray[object].Name}","Graphic":"${levelobjectsarray[object].IMG}","alpha":${levelobjectsarray[object].Alpha},"XYZ":[${levelobjectsarray[object].X},${levelobjectsarray[object].Y},${levelobjectsarray[object].Z}],"Scale":[${levelobjectsarray[object].ScaleX},${levelobjectsarray[object].ScaleY}],"Scrollfactor":[${levelobjectsarray[object].SFX},${levelobjectsarray[object].SFY}],"Visible":${levelobjectsarray[object].VIS},"DoubleAxisCollide":${levelobjectsarray[object].DoubleAxisCollide},"TripleAxisCollide":${levelobjectsarray[object].TripleAxisCollide},"IndentationPixels":${levelobjectsarray[object].IndentationPixels},"DynamicTranparency":${levelobjectsarray[object].DynamicTranparency},"IsBackground":${levelobjectsarray[object].IsBackground},"RenderOverPlayer":${levelobjectsarray[object].RenderBehindPlayer},"RenderBehindPlayer":${levelobjectsarray[object].RenderBehindPlayer},"IsAnimated":${levelobjectsarray[object].IsAnimated},"ParrallaxBG":${levelobjectsarray[object].ParrallaxBG}},\n';
-        }
-
-
-        
-        var realdata:String = objects.substr(0, objects.length - 2);
-        realdata += '\n';
-        filedata += realdata;
-        filedata += '    ]\n}'; //ending of the file. kinda important?
-        trace(filedata);
-        fr.save(filedata, 'objects.json');
     }
 
     
@@ -744,16 +650,8 @@ return ${returnCondition.text}' else ''
 }';
         var jsonfaked = TJSON.parse(fakejsondata);
 
-        list.push(new ListObject(0, 220, new FlxSprite(0, 0).loadGraphic(backend.Assets.asset(OBJIMG.text)), OBJName.text, null, jsonfaked.Data[0])); //since listobject makes use of json data, we fake that data to not lose functionality
-
-        for(i in 0...list.length){ //TODO: fix the list positioning stuff.
-            if(i >= addeditems){
-                objects.add(list[i]);
-                addeditems++;
-            }
-        }
-
-        levelobjectsarray.push({
+        ObjectsList.addObjectToList(new ListObject(0, 20, new FlxSprite(0, 0).loadGraphic(OBJIMG.text), OBJName.text, "", jsonfaked.Data[0]), 
+        {
             Name: OBJName.text,
             Alpha: OBJAlpha.value,
             X: Std.parseFloat(OBJX.text),
@@ -797,110 +695,6 @@ return ${returnCondition.text}' else ''
         OBJRenderBehindPlayer.checked = false;
         OBJIsAnimated.checked = false;
         OBJParrallaxBG.checked = false;
-
-        //DEBUG
-        trace(OBJ);
-        trace(levelobjectsarray);
-        trace(list);
-    }
-
-    public function loadObjectFile(){
-        var jsonloadergroup:FlxSpriteGroup = new FlxSpriteGroup();
-        var objname:FlxInputText = new FlxInputText(0, 0, 100, "", 8, FlxColor.BLACK, FlxColor.WHITE, true);
-        objname.screenCenter();
-
-        var loadobj:FlxButton = new FlxButton(0, 0, 'Load', ()->{object(objname.text); wait(0.5, ()->{jsonloadergroup.destroy();});});
-
-        jsonloadergroup.add(loadobj);
-        jsonloadergroup.add(objname);
-
-        UI.add(jsonloadergroup);
-
-        OBJ = []; //clear array before loading the json
-        for(i in 0...list.length){ //clear the list entirely.
-            list[i].destroy();
-        }
-        list = []; //reset the numbering like this.
-    }
-
-    private function object(JsonName:String):String{
-        if(JsonName != ''){
-            try{
-                //trace(Assets.getText(backend.Assets.asset('$JsonName') + '.json'));
-                var jsondata:Dynamic = TJSON.parse(Assets.getText(backend.Assets.asset('$JsonName') + '.json')); //get our actual json data
-
-
-                for(i in 0...jsondata.Data.length){
-                    OBJ.push(
-                        {
-                            Name: jsondata.Data[i].Name,
-                                Data:{
-                                    X: jsondata.Data[i].XYZ[0],
-                                    Y: jsondata.Data[i].XYZ[1],
-                                    Z: jsondata.Data[i].XYZ[2],
-                                    Graphic: new FlxSprite(0, 0).loadGraphic(backend.Assets.asset(jsondata.Data[i].Graphic))
-                                }
-                        }
-                    );
-                    trace('OBJECTS: ' + OBJ);
-
-                    levelobjectsarray.push({
-                        Name: jsondata.Data[i].Name,
-                        Alpha: jsondata.Data[i].alpha,
-                        X: jsondata.Data[i].XYZ[0],
-                        Y: jsondata.Data[i].XYZ[1],
-                        Z: jsondata.Data[i].XYZ[2],
-                        ScaleX: jsondata.Data[i].Scale[0],
-                        ScaleY: jsondata.Data[i].Scale[1],
-                        SFX: jsondata.Data[i].Scrollfactor[0],
-                        SFY: jsondata.Data[i].Scrollfactor[1],
-                        IMG: jsondata.Data[i].Graphic,
-                        VIS: jsondata.Data[i].Visible,
-                        DoubleAxisCollide: jsondata.Data[i].DoubleAxisCollide != null ? jsondata.Data[i].DoubleAxisCollide : false,
-                        TripleAxisCollide: jsondata.Data[i].TripleAxisCollide != null ? jsondata.Data[i].TripleAxisCollide : false,
-                        IndentationPixels: jsondata.Data[i].IndentationPixels != null ? jsondata.Data[i].IndentationPixels : 0,
-                        DynamicTranparency: jsondata.Data[i].DynamicTranparency != null ? jsondata.Data[i].DynamicTranparency : false,
-                        IsBackground: jsondata.Data[i].IsBackground != null ? jsondata.Data[i].IsBackground : false,
-                        RenderOverPlayer: jsondata.Data[i].RenderOverPlayer != null ? jsondata.Data[i].RenderOverPlayer : false,
-                        RenderBehindPlayer: jsondata.Data[i].RenderBehindPlayer != null ? jsondata.Data[i].RenderBehindPlayer : false,
-                        IsAnimated: jsondata.Data[i].IsAnimated != null ? jsondata.Data[i].IsAnimated : false,
-                        ParrallaxBG: jsondata.Data[i].ParrallaxBG != null ? jsondata.Data[i].ParrallaxBG : false
-                    });
-                    trace(levelobjectsarray);
-                }
-
-                wait(0.5, ()->{
-                    for(entry in 0...OBJ.length){ //and finally, reload the array properly.
-                        list.push(
-                            if(OBJ[entry].Extra != null){ 
-                                if(OBJ[entry].Data.Graphic != null)
-                                    new ListObject(0, 220, OBJ[entry].Data.Graphic, OBJ[entry].Name, OBJ[entry].Extra, jsondata.Data[entry]);
-                                else
-                                    new ListObject(0, 220, new FlxSprite(0, 0), OBJ[entry].Name, OBJ[entry].Extra, jsondata.Data[entry]);
-                            }else{
-                                if(OBJ[entry].Data.Graphic != null)
-                                    new ListObject(0, 220, OBJ[entry].Data.Graphic, OBJ[entry].Name, null, jsondata.Data[entry]);
-                                else
-                                    new ListObject(0, 220, new FlxSprite(0, 0), OBJ[entry].Name, null, jsondata.Data[entry]);
-                            }
-                        );
-                    }
-                    for(i in 0...list.length){
-                        objects.add(list[i]);
-                        if(i > 0)
-                            list[i].y += 10 * i;
-                    }
-                });
-
-                return 'success!';
-            }catch(e){
-                trace(e.message + ' // ' + e.stack.toString());
-                return 'failure...';
-            }
-        }else{
-            trace('crash averted. please input an actual json file name.');
-            return 'file not found.';
-        }
     }
 
     public function generateItemFile(){ //TODO: implement
@@ -935,43 +729,4 @@ beatstateframetime="${dat.bpm}"
         fr.save(filedata, 'level.ini');
     }
     
-}
-
-class ListObject extends FlxSpriteGroup{
-    var txt:FlxText;
-    var sprite:FlxSprite;
-    public function new(x:Float, y:Float, spr:FlxSprite, text:String, ?ExtraData:String = '', datapassthrough:Dynamic){
-        super(x, y);
-        trace('created a new ListObject :::: ' + this);
-        if(spr != null){
-            if(spr.graphic == null)
-                spr.makeGraphic(10, 10, FlxColor.MAGENTA);
-            spr.alpha = 0.5;
-            spr.setGraphicSize(10, 10);
-            spr.updateHitbox();
-            add(spr);
-            var eye:FlxSprite = new FlxSprite(0, 0).loadGraphic(backend.Assets.asset('ui/visability.png'), true, 10, 10);
-            eye.animation.add('open', [0], 1, );
-            eye.animation.add('closed', [1], 1, );
-            if(datapassthrough != null && datapassthrough.Visible != false){
-                eye.animation.play('open');
-            }else{
-                eye.animation.play('closed');
-            }
-            add(eye);
-            txt = new FlxText(10, 0, 400, text, true);
-            if(ExtraData != null || ExtraData != ''){
-                txt.text += ' ' + ExtraData;
-            }
-            if(datapassthrough != null)
-                txt.text += ' x:${Std.string(datapassthrough.XYZ[0])} y:${Std.string(datapassthrough.XYZ[1])} z:${Std.string(datapassthrough.XYZ[2])} scl:[${Std.string(datapassthrough.Scale[0])},${Std.string(datapassthrough.Scale[1])}] srf:[${Std.string(datapassthrough.Scrollfactor[0])},${Std.string(datapassthrough.Scrollfactor[1])}], alpha:${Std.string(datapassthrough.alpha)}';
-            add(txt);
-        }else{
-            trace('SPRITE IS NULL. ABORTING CREATION OF LIST OBJECT.');
-        }
-    }
-
-    override public function update(elapsed:Float){
-        super.update(elapsed);
-    }
 }

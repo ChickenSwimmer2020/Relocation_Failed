@@ -38,6 +38,8 @@ class EditorUIButton extends FlxSpriteGroup{
     public var txt:FlxText;
     public var spr:FlxSprite;
 
+    public var Pressed:Bool = false;
+
     /**
      * create a new instance of a RFUI button
      * @param x menu X position
@@ -69,6 +71,7 @@ class EditorUIButton extends FlxSpriteGroup{
             spr.color = varibles.hoverColor;
             if(varibles.textHoverColor != null) txt.color = varibles.textHoverColor;
             if(FlxG.mouse.pressed){
+                Pressed = true;
                 spr.color = varibles.clickColor;
                 if(varibles.textClickColor != null) txt.color = varibles.textClickColor;
                 if(FlxG.mouse.justPressed){
@@ -87,10 +90,12 @@ class EditorUIButton extends FlxSpriteGroup{
                 else
                     txt.size = 16;
                 txt.updateHitbox();
+                Pressed = false;
             }
         }else{
             spr.color = FlxColor.WHITE;
             txt.color = FlxColor.WHITE;
+            Pressed = false;
         }
     }
 }

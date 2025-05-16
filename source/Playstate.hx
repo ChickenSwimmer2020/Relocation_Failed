@@ -184,7 +184,7 @@ class Playstate extends FlxTransitionableState {
 		Hud = new HUD(this); // hud does get init, BUT doesnt actually show anything until you pickup the suit.
 		Hud.cameras = [HUDCAM];
 		Player2 = new Aimer(this);
-		Level = new Level(LevelLoader.parseLevelData('assets/levels/level2'), this);
+		//Level = new Level(LevelLoader.ParseLevelData('RFLParser.LoadRFLData(_LEVEL, '', 'Level')'), this);
 		Player3 = new InteractionBox();
 		Player3.scrollFactor.set();
 		Player3.camera = HUDCAM;
