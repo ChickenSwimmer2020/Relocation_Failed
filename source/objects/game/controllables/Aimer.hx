@@ -38,6 +38,7 @@ class Aimer extends RFTriAxisSprite {
 		updateHitbox(); // since angle stuff changes, we want this to update. right?
 		AimAtCusor();
 		curAngle = angle;
+		this.z = ps.Player.z += 1; //ATTEMPT to keep the aimer on-top of the player //*kinda* works.
 
 		// we need to calculate the shooting from the player so we can check ammo numberss
 		if (FlxG.mouse.pressed && !shotgunPumping) {
@@ -181,16 +182,18 @@ class InteractionBox extends FlxSprite {
 	public function new() {
 		super();
 		makeGraphic(15, 15, FlxColor.WHITE);
-		this.scrollFactor.set();
+		scrollFactor.set();
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
-		if(FlxG.mouse.justPressed) {
-			this.color = FlxColor.BLUE;
-			wait(0.5, ()->{
-				this.color = FlxColor.WHITE;
-			});
+		if(alive){
+			if(FlxG.mouse.justPressed) {
+				color = FlxColor.BLUE;
+				wait(0.5, ()->{
+					color = FlxColor.WHITE;
+				});
+			}
 		}
 	}
 }

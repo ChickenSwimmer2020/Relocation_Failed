@@ -106,11 +106,11 @@ class Item extends FlxGroup{
             throw 'Item type: \"$type\" not implemented/incorrect!'; //you know you didnt need the { + type + }, right? --ChickenSwimmer2020
         return instance;
     }
-    override public function update(elapsed:Float) {
+    override public function update(elapsed:Float) {//I KNOW WHY ITEMS ARE DISSAPPEARING!!!!!!!!!
         super.update(elapsed);
         if(!EditorMode) {
             if(itemTex.overlaps(ps.Player)) {
-                if(processItem(curItemType) == 0){
+                if(processItem(curItemType) == 0){ //processItem, curItemType is SOMEHOW hitting zero, which is SOMEHOW affecting EVERY item, look into this solar!!!
                     groupParent.remove(itemTex);
                     directParent.remove(this);
                     itemTex.destroy();
@@ -132,7 +132,7 @@ class Item extends FlxGroup{
             }catch(e){
                 trace('Item return condition failed: ' + e.message);
             }
-            ps.items.push(item);
+            //ps.items.push(item);
             if (Std.isOfType(item, BaseWeapon)){ //weapon item type
                 ps.onWeaponPickup();
             }

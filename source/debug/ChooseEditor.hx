@@ -16,8 +16,10 @@ class ChooseEditor extends FlxState {
     public static var WEAPONS:FlxSound;
     public static var DEEPERBASS:FlxSound;
     public static var DRUMS:FlxSound;
+    public static var MODIFIER:FlxSound; //FOR SYNCING
 
     public var audioVolCheck:Bool = false;
+    public var fixSync:Bool = false;
 
     override public function create() {
         super.create();
@@ -63,9 +65,14 @@ class ChooseEditor extends FlxState {
             DEEPERBASS = new FlxSound().loadEmbedded('assets/sound/mus/Modifier/808.ogg', true, false); //GLOBAL
         if(DRUMS == null || !DRUMS.alive)
             DRUMS = new FlxSound().loadEmbedded('assets/sound/mus/Modifier/DRUMS.ogg', true, false); //GLOBAL
+        if(MODIFIER == null || !MODIFIER.alive)
+            MODIFIER = new FlxSound().loadEmbedded('assets/sound/mus/Modifier.ogg', true, false); //SYNCING
         var tmr:FlxTimer = new FlxTimer();
         tmr.start(0.1, function(tmr:FlxTimer) {
             audioVolCheck = true;
+            fixSync = true;
+            if(!MODIFIER.playing)
+                MODIFIER.play();
             if(!BALLS.playing)
                 BALLS.play();
             if(!BASS.playing)
@@ -93,11 +100,39 @@ class ChooseEditor extends FlxState {
             ANIM.volume = 0; //force set volume to 0 so they arent audible.
             LEVEL.volume = 0; //force set volume to 0 so they arent audible.
             WEAPONS.volume = 0; //force set volume to 0 so they arent audible.
+            MODIFIER.volume = 0.0001;
+            tmr.destroy(); //prevent an memory leak by destroying the timer, it gets recreated anyways.
         });
     }
 
     override public function update(elapsed:Float){
         super.update(elapsed);
+        if(fixSync){
+            //syncing (I CANT BE-FUCKING-LIVE I HAVE TO DO THIS MANUALLY. FLIXEL. YOUR FUCKING STUPID SOMTIMES ISTFG.)
+            if(elapsed % 2 == 0){ //on every second frame, hopefully to make it not sound choppy?
+                if(DRUMS != null || DRUMS.exists){
+                    DRUMS.time = MODIFIER.time;
+                    if(BALLS != null)
+                        BALLS.time = MODIFIER.time;
+                    if(BASS != null)
+                        BASS.time = MODIFIER.time;
+                    if(DEEPERBASS != null)
+                        DEEPERBASS.time = MODIFIER.time;
+                    if(NPC != null)
+                        NPC.time = MODIFIER.time;
+                    if(AI != null)
+                        AI.time = MODIFIER.time;
+                    if(ITEM != null)
+                        ITEM.time = MODIFIER.time;
+                    if(ANIM != null)
+                        ANIM.time = MODIFIER.time;
+                    if(LEVEL != null)
+                        LEVEL.time = MODIFIER.time;
+                    if(WEAPONS != null)
+                        WEAPONS.time = MODIFIER.time;
+                }
+            }
+        }
         if(audioVolCheck){
             if(BALLS != null)
                 BALLS.volume = FlxG.sound.volume; //band-aid fix
@@ -119,9 +154,13 @@ class ChooseEditor extends FlxState {
                 LEVEL.volume = 0; //force set volume to 0 so they arent audible.
             if(WEAPONS != null)
                 WEAPONS.volume = 0; //force set volume to 0 so they arent audible.
+            if(MODIFIER != null)
+                MODIFIER.volume = 0.0001; //so its BARELY audible under the actual song mechanics, but we still need this for syncing
         }
+        trace(MODIFIER.time);
         if(FlxG.keys.anyJustPressed([ESCAPE])){
             audioVolCheck = false;
+            fixSync = false;
             if(BALLS != null)
                 BALLS.kill();
             if(BASS != null)
@@ -142,6 +181,8 @@ class ChooseEditor extends FlxState {
                 DEEPERBASS.kill();
             if(DRUMS != null)
                 DRUMS.kill();
+            if(MODIFIER != null)
+                MODIFIER.kill();
             FlxG.sound.playMusic(Assets.music('ConnectionEstablished.ogg'));
             FlxG.switchState(()->new MainMenu());
         }

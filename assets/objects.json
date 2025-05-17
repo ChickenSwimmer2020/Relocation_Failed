@@ -1,0 +1,12 @@
+{
+    "Meta":{
+        "0": "Generated with the RF:LE",
+        "1": "V0.4.1"
+    },
+    "Data":[
+       {"Name":"","Graphic":"","alpha":1,"XYZ":[0,0,0],"Scale":[1,1],"Scrollfactor":[1,1],"Visible":true,"DoubleAxisCollide":false,"TripleAxisCollide":false,"IndentationPixels":0,"DynamicTranparency":false,"IsBackground":false,"RenderOverPlayer":false,"RenderBehindPlayer":false,"IsAnimated":false,"ParrallaxBG":false},
+       {"Name":"","Graphic":"","alpha":1,"XYZ":[0,0,0],"Scale":[1,1],"Scrollfactor":[1,1],"Visible":true,"DoubleAxisCollide":false,"TripleAxisCollide":false,"IndentationPixels":0,"DynamicTranparency":false,"IsBackground":false,"RenderOverPlayer":false,"RenderBehindPlayer":false,"IsAnimated":false,"ParrallaxBG":false},
+       {"Name":"","Graphic":"","alpha":1,"XYZ":[0,0,0],"Scale":[1,1],"Scrollfactor":[1,1],"Visible":true,"DoubleAxisCollide":false,"TripleAxisCollide":false,"IndentationPixels":0,"DynamicTranparency":false,"IsBackground":false,"RenderOverPlayer":false,"RenderBehindPlayer":false,"IsAnimated":false,"ParrallaxBG":false},
+       {"Name":"","Graphic":"","alpha":1,"XYZ":[0,0,0],"Scale":[1,1],"Scrollfactor":[1,1],"Visible":true,"DoubleAxisCollide":false,"TripleAxisCollide":false,"IndentationPixels":0,"DynamicTranparency":false,"IsBackground":false,"RenderOverPlayer":false,"RenderBehindPlayer":false,"IsAnimated":false,"ParrallaxBG":false}
+    ]
+}

@@ -27,6 +27,18 @@ class EditorState extends FlxState {
 	}
 	override public function update(elapsed:Float){
 		super.update(elapsed);
+		if(elapsed % 2 == 0){ //on every second frame, hopefully to make it not sound choppy?
+			ChooseEditor.DRUMS.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.BALLS.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.BASS.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.DEEPERBASS.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.NPC.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.AI.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.ITEM.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.ANIM.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.LEVEL.time = ChooseEditor.MODIFIER.time;
+			ChooseEditor.WEAPONS.time = ChooseEditor.MODIFIER.time;
+		}
 		switch(uiCAM.tpe){ //FOR MUSIC DO NOT TOUCH
 			case 'Level': //THIS. SYSTEM. SUCKS. but it works so idfc
 				ChooseEditor.BALLS.volume = FlxG.sound.volume;

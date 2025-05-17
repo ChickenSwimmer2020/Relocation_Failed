@@ -22,7 +22,7 @@
     <undefine name="openfl-disable-handle-error"/>
     <define name="openfl_enable_handle_error"/>
 
-	<haxelib name="flixel"/>
+	<haxelib name="flixel" version="6.0.0"/>
     <haxelib name="loreline"/>
     <haxelib name="away3d" />
     <haxelib name="hscript" />
@@ -31,6 +31,7 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="flixel-addons" />
     <haxelib name="hxdiscord"/>
+    <haxelib name="systools"/>
 
     <haxedef name="hscriptPos" />
     <haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />

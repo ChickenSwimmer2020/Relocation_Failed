@@ -1,0 +1,9 @@
+{
+    "Meta":{
+        "0": "Generated with the RF:LE",
+        "1": "V0.4.1"
+    },
+    "Data":[
+       {"Name":"fuck","Graphic":"game/Player_upper.png","alpha":1,"XYZ":[9,6,3],"Scale":[1,1],"Scrollfactor":[1,1],"Visible":true,"DoubleAxisCollide":true,"TripleAxisCollide":true,"IndentationPixels":11,"DynamicTranparency":true,"IsBackground":true,"RenderOverPlayer":true,"RenderBehindPlayer":true,"IsAnimated":true,"ParrallaxBG":false}
+    ]
+}

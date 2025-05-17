@@ -146,7 +146,7 @@ class MainMenu extends FlxState {
 			add(black);
 			black.camera = verCam;
 			FlxTween.tween(black, {alpha: 1}, 1, { onComplete: function(twn:FlxTween) {
-				FlxG.switchState(()->new Playstate.IntroState('assets/intro.lor'));
+				FlxG.switchState(()->new Playstate.IntroState());
 			}});
 		}, 1, false);
         Button_Play.updateTextPosition();
@@ -159,7 +159,7 @@ class MainMenu extends FlxState {
         add(Button_Load);
 
         Button_Settings = new Button('Settings', Button_Load.DaButton.x + 250, Button_Load.DaButton.y + 10, Assets.image('menu/ButtonTEST'),
-        ()->{ openSubState(new substates.DialogueSubState()); }, 1, false);
+        ()->{ openSubState(new menu.SettingsSubState(this)); }, 1, false);
         Button_Settings.updateTextPosition();
         Button_Settings.camera = verCam;
         add(Button_Settings);
