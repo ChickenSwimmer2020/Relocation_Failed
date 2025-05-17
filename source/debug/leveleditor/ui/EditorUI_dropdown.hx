@@ -16,6 +16,7 @@ class EditorUIDropdownMenu extends FlxSpriteGroup{
     private var texts:Array<DropdownItem> = [];
     private var funcs:Array<Void->Void> = [];
     private var textBG2:FlxSprite;
+    private var textBG1:FlxSprite;
 
     @:isVar public var selectedLabel(get, set):String;   
     public var down:Bool = true;
@@ -30,7 +31,7 @@ class EditorUIDropdownMenu extends FlxSpriteGroup{
             texts.push(txt); //so we can access the texts later;
         }
 
-        var textBG1:FlxSprite = new FlxSprite(0, 0).makeGraphic(1, 1, FlxColor.BLACK);
+        textBG1 = new FlxSprite(0, 0).makeGraphic(1, 1, FlxColor.BLACK);
         textBG1.setGraphicSize(p.width, p.height);
         textBG1.updateHitbox();
         add(textBG1);
@@ -44,7 +45,7 @@ class EditorUIDropdownMenu extends FlxSpriteGroup{
         add(text_field);
 
         for(j in 0...texts.length){
-            texts[j].y = textBG2.y;
+            texts[j].y = textBG1.y;
         }
 
         sqaure = new EditorUIButton(textBG1.width - p.width/4, 0, ()->{ dropdown(); }, {
@@ -79,15 +80,15 @@ class EditorUIDropdownMenu extends FlxSpriteGroup{
         if(down){ //go up
             FlxTween.tween(sqaure.txt, {angle: 180}, 0.2, {ease: FlxEase.cubeOut});
             for(i in 0...texts.length){
-                FlxTween.tween(texts[i], {y: textBG2.y}, 0.2, {ease: FlxEase.cubeOut});
+                FlxTween.tween(texts[i], {y: textBG1.y}, 0.2, {ease: FlxEase.cubeOut});
             }
         }else if(!down){ //go down
             FlxTween.tween(sqaure.txt, {angle: 0}, 0.2, {ease: FlxEase.cubeOut});
             for(i in 0...texts.length){
                 if(i == 0){
-                    FlxTween.tween(texts[i], {y: textBG2.y + 20}, 0.2, {ease: FlxEase.cubeOut});
+                    FlxTween.tween(texts[i], {y: textBG1.y + 20}, 0.2, {ease: FlxEase.cubeOut});
                 }else{
-                    FlxTween.tween(texts[i], {y: textBG2.y + 20 + 10 * (i * 2)}, 0.2, {ease: FlxEase.cubeOut});
+                    FlxTween.tween(texts[i], {y: textBG1.y + 20 + 10 * (i * 2)}, 0.2, {ease: FlxEase.cubeOut});
                 }
             }
         }
