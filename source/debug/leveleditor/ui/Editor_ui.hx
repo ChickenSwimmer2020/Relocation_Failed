@@ -62,7 +62,7 @@ class EditorUI extends FlxCamera{
 
     var isBeatstate:FlxUICheckBox; //TODO: make RFUI varient
     var CameraLocked:FlxUICheckBox; //TODO: make RFUI varient
-    var CameraFollowStyle:FlxUIDropDownMenu; //TODO: make RFUI varient
+    var CameraFollowStyle:EditorUIDropdownMenu;
     var bpmslider:EditorUISlider;
     var levelBounds:FlxUIInputText; //TODO: make RFUI varient
     var cameraLerpSpeed:EditorUIStepper;
@@ -164,48 +164,10 @@ class EditorUI extends FlxCamera{
                     metaData.add(isBeatstate);
                     metaData.add(CameraLocked);
 
-                    CameraFollowStyle = new FlxUIDropDownMenu(380, 0, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(pressed:String) {
-                        switch (pressed) {
-                            case '0': //why are these strings when they should be ints?
-                                trace('CameraOptions: LOCKON');
-                                CameraFollowType = 'LOCKON';
-                            case '1':
-                                trace('CameraOptions: PLATFORMER');
-                                CameraFollowType = 'PLATFORMER';
-                            case '2':
-                                trace('CameraOptions: TOPDOWN');
-                                CameraFollowType = 'TOPDOWN';
-                            case '3':
-                                trace('CameraOptions: TOPDOWN_TIGHT');
-                                CameraFollowType = 'TOPDOWN_TIGHT';
-                            case '4':
-                                trace('CameraOptions: SCREEN_BY_SCREEN');
-                                CameraFollowType = 'SCREEN_BY_SCREEN';
-                            case '5':
-                                trace('CameraOptions: NO_DEAD_ZONE');
-                                CameraFollowType = 'NO_DEAD_ZONE';
-                            default:
-                                trace('no value detected');
-                                CameraFollowType = '';
-                        }
-                    });
-                    var CameraOptions:Array<String> = [
-                        'LOCKON',
-                        'PLATFORMER',
-                        'TOPDOWN',
-                        'TOPDOWN_TIGHT',
-                        'SCREEN_BY_SCREEN',
-                        'NO_DEAD_ZONE'
-                    ];
-                    CameraFollowStyle.setData(FlxUIDropDownMenu.makeStrIdLabelArray(CameraOptions, true));
-                    metaData.add(CameraFollowStyle);
-
-
-                    var testDropdown:EditorUIDropdownMenu = new EditorUIDropdownMenu(500, 0, {
+                    CameraFollowStyle = new EditorUIDropdownMenu(380, 0, {
                         width: 120,
                         height: 20,
                         Options: [
-                            '', //fix for a bug
                             'LOCKON',
                             'PLATFORMER',
                             'TOPDOWN',
@@ -214,7 +176,15 @@ class EditorUI extends FlxCamera{
                             'NO_DEAD_ZONE'
                         ]
                     });
-                    metaData.add(testDropdown);
+                    metaData.add(CameraFollowStyle);
+                    CameraFollowStyle.functions = [
+                        ()->{CameraFollowStyle.setSelectedLabel('LOCKON');},
+                        ()->{CameraFollowStyle.setSelectedLabel('PLATFORMER');},
+                        ()->{CameraFollowStyle.setSelectedLabel('TOPDOWN');},
+                        ()->{CameraFollowStyle.setSelectedLabel('TOPDOWN_TIGHT');},
+                        ()->{CameraFollowStyle.setSelectedLabel('SCREEN_BY_SCREEN');},
+                        ()->{CameraFollowStyle.setSelectedLabel('NO_DEAD_ZONE');}
+                    ];
 
                     bpmslider = new EditorUISlider(0, 0, {
                         width: 380,
@@ -566,7 +536,7 @@ return ${returnCondition.text}' else ''
             };
             //INI GENERATION.
 
-            if(FlxG.mouse.overlaps(CameraFollowStyle.header)){
+            @:privateAccess if(FlxG.mouse.overlaps(CameraFollowStyle.text_field)){
                 tooltip.text = 'Camera Follow Style';
             }else if(FlxG.mouse.overlaps(bpmslider)){
                 tooltip.text = 'Beats Per Minute\nUsed in stages with the checkbox \"Beatstate\" to control how fast the camera bops\nWhy a slider? because It\'s funny.';
