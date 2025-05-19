@@ -203,7 +203,7 @@ class EditorUI extends FlxCamera{
                     levelID = new FlxUIInputText(0, 95, 120, 'Cryo0', 16, FlxColor.BLACK, FlxColor.WHITE, true);
                     metaData.add(levelID);
 
-                    chapterID = new FlxUIInputText(0, 120, 120, 'CyroBays', 8, FlxColor.BLACK, FlxColor.WHITE, true);
+                    chapterID = new FlxUIInputText(0, 120, 120, 'CryoBays', 8, FlxColor.BLACK, FlxColor.WHITE, true);
                     metaData.add(chapterID);
 
                     cameraLerpSpeed = new EditorUIStepper(0, 135, {
